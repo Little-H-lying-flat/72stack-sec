@@ -1,0 +1,25 @@
+id: spring-actuator-env-exposure
+
+info:
+  name: Spring Boot Actuator /env Exposure
+  author: 72stack-sec
+  severity: high
+  description: Spring Boot Actuator env endpoint exposed without auth. Source payload: playbooks/unauth-access.md (5.3 heapdump chain).
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: spring,actuator,exposure,unauth
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/actuator/env"
+    matchers:
+      - type: word
+        words:
+          - "propertySources"
+          - "management.endpoints"
+        condition: or
+      - type: status
+        status:
+          - 200
+    matchers-condition: and

