@@ -71,6 +71,8 @@ level: 2
 
 **MUST 输出**:活资产矩阵——`域 → 端口 → 服务 → 指纹 → JS endpoint`。
 
+**工具推荐**:国内目标子域收集首选 OneForAll(见 `tools/frameworks-2026.md`);规模化初筛用 `tools/nuclei-templates/`(payload 均出自本库 playbook),命中后回 playbook 走完整流程。
+
 **条件触发 Read**(命中就必读,不命中不读):
 
 | 命中信号 | MUST Read |

@@ -1,0 +1,20 @@
+id: shiro-rememberme-detect
+
+info:
+  name: Apache Shiro Detection (rememberMe=deleteMe)
+  author: 72stack-sec
+  severity: info
+  description: Non-destructive Shiro fingerprint. Response sets rememberMe=deleteMe when Shiro is present - precondition for the deserialization chain (playbooks/rce/10-framework.md, shiro-deserialize).
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: shiro,fingerprint,deserialization
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "rememberMe=deleteMe"
