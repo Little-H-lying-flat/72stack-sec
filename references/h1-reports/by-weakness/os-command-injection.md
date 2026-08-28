@@ -3180,3 +3180,39 @@ P.S. I took the CVSS Score from the Subversion Advisory
 the Redhat advisory states a score of 6.3 (CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:L) I guess the truth is somewhere in between.
 
 ---
+### [Command Injection via Unsanitized Bundling Options in `aws-cdk-lib/aws-lambda-nodejs`](https://hackerone.com/reports/3558713)
+
+- **Report ID:** `3558713`
+- **Severity:** High
+- **Weakness:** OS Command Injection
+- **Program:** AWS VDP
+- **Reporter:** @inkerton
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-11T16:54:20.737Z
+- **CVE(s):** -
+
+---
+### [OS Command Injection in `aws-cdk-lib` NodejsFunction via Unsanitized `OsCommand` Helper (Supply Chain RCE)](https://hackerone.com/reports/3637898)
+
+- **Report ID:** `3637898`
+- **Severity:** High
+- **Weakness:** OS Command Injection
+- **Program:** AWS VDP
+- **Reporter:** @kaporia
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-06T17:48:30.989Z
+- **CVE(s):** -
+
+---
+### [Node --run POSIX positional argument escaping allows shell command injection](https://hackerone.com/reports/3817602)
+
+- **Report ID:** `3817602`
+- **Severity:** High
+- **Weakness:** OS Command Injection
+- **Program:** Node.js
+- **Reporter:** @yottt
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-23T09:53:20.439Z
+- **CVE(s):** -
+
+---

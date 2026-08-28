@@ -19658,3 +19658,63 @@ PoC:
 This vulnerability has been fixed.
 
 ---
+### [page.line.me Open Redirect Leading to OAuth Authorization Code Exposure and Access Token Compromise](https://hackerone.com/reports/3423013)
+
+- **Report ID:** `3423013`
+- **Severity:** High
+- **Weakness:** -
+- **Program:** LY Corporation
+- **Reporter:** @imnotr3al
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-02T03:30:35.141Z
+- **CVE(s):** -
+
+---
+### [`exportReportPdf` mutation shows internal Activity](https://hackerone.com/reports/3577216)
+
+- **Report ID:** `3577216`
+- **Severity:** High
+- **Weakness:** -
+- **Program:** HackerOne
+- **Reporter:** @0v3rw4tch
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-29T15:01:10.273Z
+- **CVE(s):** -
+
+---
+### [RCE + Supply Chain Attack via pull_request_target in content-scope-scripts/semver-label.yml — Affects All DuckDuckGo Browsers](https://hackerone.com/reports/3619287)
+
+- **Report ID:** `3619287`
+- **Severity:** Critical
+- **Weakness:** -
+- **Program:** DuckDuckGo
+- **Reporter:** @6r1ff1n
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-11T14:28:34.804Z
+- **CVE(s):** -
+
+---
+### [RCE + PAT Exfiltration via pull_request_target in privacy-configuration/auto-respond-pr.yml — Direct Supply Chain to All DDG Browsers](https://hackerone.com/reports/3619288)
+
+- **Report ID:** `3619288`
+- **Severity:** Critical
+- **Weakness:** -
+- **Program:** DuckDuckGo
+- **Reporter:** @6r1ff1n
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-11T14:30:26.629Z
+- **CVE(s):** -
+
+---
+### [Vulnerability Report: Buffer Overflow in Path Sanitization](https://hackerone.com/reports/3804525)
+
+- **Report ID:** `3804525`
+- **Severity:** Critical
+- **Weakness:** -
+- **Program:** curl
+- **Reporter:** @newstuff321
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-16T11:25:56.700Z
+- **CVE(s):** -
+
+---

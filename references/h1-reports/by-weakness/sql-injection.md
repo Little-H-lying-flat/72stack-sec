@@ -10684,3 +10684,63 @@ docId:"1 and (select substring(@@version,25,1))='8'"
 and so on.. . So we have a MS SQL Server 2008
 
 ---
+### [SQL Injection in Column Type Parameter Allows Arbitrary SQL Execution](https://hackerone.com/reports/3462991)
+
+- **Report ID:** `3462991`
+- **Severity:** High
+- **Weakness:** SQL Injection
+- **Program:** Nextcloud
+- **Reporter:** @suul
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-15T15:13:32.171Z
+- **CVE(s):** -
+
+---
+### [Blind SQL injection via clientid parameter in zone‑include.php](https://hackerone.com/reports/3653196)
+
+- **Report ID:** `3653196`
+- **Severity:** High
+- **Weakness:** SQL Injection
+- **Program:** Revive Adserver
+- **Reporter:** @titanrain
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-03T13:34:45.080Z
+- **CVE(s):** -
+
+---
+### [Critical SQL Injection WDM API (████████)](https://hackerone.com/reports/3778282)
+
+- **Report ID:** `3778282`
+- **Severity:** Critical
+- **Weakness:** SQL Injection
+- **Program:** Essity
+- **Reporter:** @matty69v
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-27T07:23:47.623Z
+- **CVE(s):** -
+
+---
+### [Error-Based SQL Injection in ████████.com Login/Password Reset (username parameter)](https://hackerone.com/reports/3809973)
+
+- **Report ID:** `3809973`
+- **Severity:** Critical
+- **Weakness:** SQL Injection
+- **Program:** Essity
+- **Reporter:** @firecompass-ai
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-03T11:39:13.374Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated SQL Injection via REST Batch Route Confusion ████████](https://hackerone.com/reports/3873072)
+
+- **Report ID:** `3873072`
+- **Severity:** Critical
+- **Weakness:** SQL Injection
+- **Program:** Essity
+- **Reporter:** @matty69v
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-21T13:51:41.136Z
+- **CVE(s):** -
+
+---

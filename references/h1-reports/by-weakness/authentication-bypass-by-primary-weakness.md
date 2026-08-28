@@ -403,3 +403,15 @@ This vulnerability was jointly discovered by multiple researchers:
 Bypass the blacklist/whitelist and access the sensitive resources
 
 ---
+### [SSH/SFTP connection reuse can bypass SSH key identity after ssh_config_matches removal](https://hackerone.com/reports/3788506)
+
+- **Report ID:** `3788506`
+- **Severity:** High
+- **Weakness:** Authentication Bypass by Primary Weakness
+- **Program:** curl
+- **Reporter:** @byteray_ltd
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-09T06:30:39.568Z
+- **CVE(s):** -
+
+---

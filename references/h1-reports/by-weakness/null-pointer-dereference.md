@@ -546,3 +546,27 @@ SUMMARY: AddressSanitizer: SEGV /home/geeknik/libsass/src/eval.cpp:525 Sass::Eva
 ```
 
 ---
+### [wallet-rpc crash via malformed /gettransactions response (empty txs → vector::front() in check_tx_key / check_tx_proof)](https://hackerone.com/reports/3693636)
+
+- **Report ID:** `3693636`
+- **Severity:** High
+- **Weakness:** NULL Pointer Dereference
+- **Program:** Monero
+- **Reporter:** @bebensap
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-05T10:23:32.245Z
+- **CVE(s):** -
+
+---
+### [NULL pointer dereference in node:sqlite DatabaseSync#applyChangeset() via malformed SQLite changeset](https://hackerone.com/reports/3736889)
+
+- **Report ID:** `3736889`
+- **Severity:** High
+- **Weakness:** NULL Pointer Dereference
+- **Program:** Node.js
+- **Reporter:** @junius
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-23T16:10:45.953Z
+- **CVE(s):** -
+
+---

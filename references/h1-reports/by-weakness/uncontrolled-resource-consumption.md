@@ -10188,3 +10188,27 @@ zabbix:x:498:506::/home/zabbix:/bin/bash
 Video (private): https://youtu.be/612SgFdOrB0
 
 ---
+### [Denial of Service (DoS) Vulnerability in Drafts Creation Endpoint](https://hackerone.com/reports/3400140)
+
+- **Report ID:** `3400140`
+- **Severity:** High
+- **Weakness:** Uncontrolled Resource Consumption
+- **Program:** Discourse
+- **Reporter:** @dpaysm
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-30T02:28:06.874Z
+- **CVE(s):** -
+
+---
+### [Incomplete Fix for CVE-2026-21637: OCSPRequest and resumeSession Events Crash Node.js TLS Server via Unhandled Synchronous Exceptions](https://hackerone.com/reports/3781015)
+
+- **Report ID:** `3781015`
+- **Severity:** High
+- **Weakness:** Uncontrolled Resource Consumption
+- **Program:** Node.js
+- **Reporter:** @shinchan_69
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-12T09:46:19.831Z
+- **CVE(s):** -
+
+---

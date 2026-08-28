@@ -433,3 +433,391 @@ Affects: 2.4.50, 2.4.49
 https://httpd.apache.org/security/vulnerabilities_24.html
 
 ---
+### [Path traversal leads to reading of local files on ███████ and ████](https://hackerone.com/reports/1888808)
+
+- **Report ID:** `1888808`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** U.S. Dept Of Defense
+- **Reporter:** @rodriguezjorgex
+- **Bounty:** - usd
+- **Disclosed:** 2023-03-24T17:33:04.996Z
+- **CVE(s):** -
+
+---
+### [Filesystem experimental permissions policy does not handle path traversal cases.](https://hackerone.com/reports/1952978)
+
+- **Report ID:** `1952978`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @haxatron1
+- **Bounty:** - usd
+- **Disclosed:** 2023-07-20T20:57:35.392Z
+- **CVE(s):** -
+
+---
+### [Permission model bypass by specifying a path traversal sequence in a buffer,](https://hackerone.com/reports/2038134)
+
+- **Report ID:** `2038134`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @haxatron1
+- **Bounty:** - usd
+- **Disclosed:** 2023-08-11T16:38:30.023Z
+- **CVE(s):** -
+
+---
+### [process.binding() can bypass the permission model through path traversal](https://hackerone.com/reports/2051257)
+
+- **Report ID:** `2051257`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @rafaelgss
+- **Bounty:** - usd
+- **Disclosed:** 2023-09-10T15:26:16.937Z
+- **CVE(s):** -
+
+---
+### [Nginx Alias Traversal -  babel.bluetab.net](https://hackerone.com/reports/2061826)
+
+- **Report ID:** `2061826`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** IBM
+- **Reporter:** @dk4trin
+- **Bounty:** - usd
+- **Disclosed:** 2023-08-11T13:52:08.713Z
+- **CVE(s):** -
+
+---
+### [Permission model improperly protects against path traversal](https://hackerone.com/reports/2092852)
+
+- **Report ID:** `2092852`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2023-10-13T21:39:40.729Z
+- **CVE(s):** -
+
+---
+### [(CVE-2023-32004) Permission model bypass by specifying a path traversal sequence in a Buffer](https://hackerone.com/reports/2104564)
+
+- **Report ID:** `2104564`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Internet Bug Bounty
+- **Reporter:** @haxatron1
+- **Bounty:** - usd
+- **Disclosed:** 2023-10-07T18:45:48.085Z
+- **CVE(s):** -
+
+---
+### [Path traversal through path stored in Uint8Array](https://hackerone.com/reports/2199818)
+
+- **Report ID:** `2199818`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2023-10-13T21:40:12.582Z
+- **CVE(s):** -
+
+---
+### [Path traversal by monkey-patching Buffer internals](https://hackerone.com/reports/2218653)
+
+- **Report ID:** `2218653`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2024-02-15T18:36:27.124Z
+- **CVE(s):** -
+
+---
+### [Permission model improperly protects against path traversal in Node.js 20](https://hackerone.com/reports/2225660)
+
+- **Report ID:** `2225660`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Internet Bug Bounty
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2023-11-30T15:43:45.568Z
+- **CVE(s):** -
+
+---
+### [Unathenticated file read (CVE-2020-3452)](https://hackerone.com/reports/2233418)
+
+- **Report ID:** `2233418`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** U.S. Dept Of Defense
+- **Reporter:** @r00tdaddy
+- **Bounty:** - usd
+- **Disclosed:** 2023-11-17T18:07:57.503Z
+- **CVE(s):** -
+
+---
+### [Path traversal through path stored in Uint8Array in Node.js 20](https://hackerone.com/reports/2256167)
+
+- **Report ID:** `2256167`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Internet Bug Bounty
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2024-01-20T16:26:31.233Z
+- **CVE(s):** -
+
+---
+### [Multiple permission model bypasses due to improper path traversal sequence sanitization](https://hackerone.com/reports/2259914)
+
+- **Report ID:** `2259914`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @xion
+- **Bounty:** - usd
+- **Disclosed:** 2024-02-15T17:46:41.175Z
+- **CVE(s):** -
+
+---
+### [Path traversal in AcitveStorage, and lead RCE](https://hackerone.com/reports/2334455)
+
+- **Report ID:** `2334455`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Ruby on Rails
+- **Reporter:** @ooooooo_q
+- **Bounty:** - usd
+- **Disclosed:** 2024-10-08T20:26:06.327Z
+- **CVE(s):** -
+
+---
+### [[portswigger.net] Path Traversal al /cms/audioitems](https://hackerone.com/reports/2424815)
+
+- **Report ID:** `2424815`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** PortSwigger Web Security
+- **Reporter:** @0xd0m7
+- **Bounty:** - usd
+- **Disclosed:** 2024-04-04T14:51:59.272Z
+- **CVE(s):** -
+
+---
+### [Path traversal by monkey-patching Buffer internals](https://hackerone.com/reports/2434811)
+
+- **Report ID:** `2434811`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Internet Bug Bounty
+- **Reporter:** @tniessen
+- **Bounty:** - usd
+- **Disclosed:** 2024-05-29T14:32:15.660Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated LFI (Local File Inclusion) using the symbol `!` At the target `https://████/`](https://hackerone.com/reports/2778380)
+
+- **Report ID:** `2778380`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** U.S. Dept Of Defense
+- **Reporter:** @todayisnew-
+- **Bounty:** - usd
+- **Disclosed:** 2024-10-25T16:03:24.555Z
+- **CVE(s):** -
+
+---
+### [Mozilla VPN Clients: RCE via file write and path traversal](https://hackerone.com/reports/2995025)
+
+- **Report ID:** `2995025`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Mozilla
+- **Reporter:** @trein
+- **Bounty:** - usd
+- **Disclosed:** 2025-07-29T09:53:41.088Z
+- **CVE(s):** -
+
+---
+### [Path Traversal Vulnerability found on IBM Cloud](https://hackerone.com/reports/3060373)
+
+- **Report ID:** `3060373`
+- **Severity:** Critical
+- **Weakness:** Path Traversal
+- **Program:** IBM
+- **Reporter:** @0xnullbytex0
+- **Bounty:** - usd
+- **Disclosed:** 2025-05-07T17:43:20.026Z
+- **CVE(s):** -
+
+---
+### [Path Traversal Vulnerability in curl via Unsanitized IPFS_PATH Environment Variable](https://hackerone.com/reports/3100073)
+
+- **Report ID:** `3100073`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @ziad616
+- **Bounty:** - usd
+- **Disclosed:** 2025-06-28T21:11:42.325Z
+- **CVE(s):** -
+
+---
+### [[High] Arbitrary File Write via Path Traversal in cURL CLI (`-o`, `--output`) (CWE-22: Improper Limitation of a Pathname to a Restricted Directory)](https://hackerone.com/reports/3120987)
+
+- **Report ID:** `3120987`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @oicus
+- **Bounty:** - usd
+- **Disclosed:** 2025-06-30T18:55:10.901Z
+- **CVE(s):** -
+
+---
+### [Windows Device Names (CON, PRN, AUX) Bypass Path Traversal Protection in path.normalize()](https://hackerone.com/reports/3160912)
+
+- **Report ID:** `3160912`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @oblivionsage
+- **Bounty:** - usd
+- **Disclosed:** 2025-07-15T22:44:08.515Z
+- **CVE(s):** -
+
+---
+### [Arbitrary File Read via file:// Protocol in cURL](https://hackerone.com/reports/3242087)
+
+- **Report ID:** `3242087`
+- **Severity:** Critical
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @mrtufan
+- **Bounty:** - usd
+- **Disclosed:** 2025-07-09T07:23:25.059Z
+- **CVE(s):** -
+
+---
+### [Windows Device Names Still Allow Path Traversal in UNC Paths After CVE-2025-27210 Fix](https://hackerone.com/reports/3255707)
+
+- **Report ID:** `3255707`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Node.js
+- **Reporter:** @oblivionsage
+- **Bounty:** - usd
+- **Disclosed:** 2025-07-28T18:56:39.737Z
+- **CVE(s):** -
+
+---
+### [Arbitrary File Write](https://hackerone.com/reports/3384150)
+
+- **Report ID:** `3384150`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** arkadiyt-projects
+- **Reporter:** @newby99
+- **Bounty:** - usd
+- **Disclosed:** 2025-10-19T21:19:02.114Z
+- **CVE(s):** -
+
+---
+### [libcurl FTP path normalization flaw allows decoded %2e%2e → CWD .. and directory escape (Path Traversal, CWE-22)](https://hackerone.com/reports/3418861)
+
+- **Report ID:** `3418861`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @ahn0x
+- **Bounty:** - usd
+- **Disclosed:** 2025-11-11T16:16:19.274Z
+- **CVE(s):** -
+
+---
+### [Path Traversal in file:// protocol allows Arbitrary File Read](https://hackerone.com/reports/3445174)
+
+- **Report ID:** `3445174`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @qss
+- **Bounty:** - usd
+- **Disclosed:** 2025-12-01T07:41:46.133Z
+- **CVE(s):** -
+
+---
+### [Path Traversal Bypass in file:// URLs Due to Incomplete URL-Encoded Path Normalization](https://hackerone.com/reports/3465094)
+
+- **Report ID:** `3465094`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @ba5
+- **Bounty:** - usd
+- **Disclosed:** 2025-12-15T08:54:48.420Z
+- **CVE(s):** -
+
+---
+### [Path Traversal in curl file:// Protocol Handler Allows Unauthorized File Access](https://hackerone.com/reports/3485930)
+
+- **Report ID:** `3485930`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** curl
+- **Reporter:** @7hackerstar
+- **Bounty:** - usd
+- **Disclosed:** 2026-01-04T10:34:23.387Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated Path Traversal (LFI) via /custom-sounds/ when CustomSounds uses FileSystem storage](https://hackerone.com/reports/3514640)
+
+- **Report ID:** `3514640`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Rocket.Chat
+- **Reporter:** @howtoplay
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-03T13:35:55.252Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+An unauthenticated path traversal (LFI) vulnerability exists under /custom-sounds/ when CustomSounds storage is configured to FileSystem. By including ../ sequences in the request path, an attacker can read arbitrary files outside the base directory.
+
+---
+### [Active Storage Vips Transformer Missing validate_transformation — CVE-2025-24293 Incomplete Fix](https://hackerone.com/reports/3553340)
+
+- **Report ID:** `3553340`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** Ruby on Rails
+- **Reporter:** @friedchicken112211
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-30T13:47:49.020Z
+- **CVE(s):** -
+
+---
+### [Burp Suite Professional: browser-powered crawl can write attacker-controlled files through file input handling](https://hackerone.com/reports/3712279)
+
+- **Report ID:** `3712279`
+- **Severity:** High
+- **Weakness:** Path Traversal
+- **Program:** PortSwigger Web Security
+- **Reporter:** @kawakatz
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-14T08:08:52.761Z
+- **CVE(s):** -
+
+---

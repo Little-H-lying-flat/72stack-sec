@@ -248,9 +248,9 @@ println "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/A
   "Code" : "Success",
   "LastUpdated" : "2023-07-25T15:06:03Z",
   "Type" : "AWS-HMAC",
-  "AccessKeyId" : "ASIAVAYADSOPOZ46OKUF",
-  "SecretAccessKey" : "zktjDluq7fiPeRPZ/Ptdj0f/RpifcpiverrHZPY9",
-  "Token" : "FwoDYXdzEC4aDOSTrvC1+12bsyz/YCLpBJSWuycc/qloo+gbOS0H0HDHj+qAV6rldadbawPMkpUC2kyF9UW3rayH29j3MQNMDDxoPZTpnWLYuIbBl1iaYciwrOVemd6OTSDTyoAz9JjO1Cc3svhv58rhTx1c+FWpQKxtOgiLPEJWT/sPfdEJDAcLoXfyDi7lLWD5ydyHuKWngG8ZBG/5Ik170XOpYeZpSpJ/pspBNnzbf5dPJo/QVNWN+hoY8+WrK4Hko7y04Z/ZwJWO3Q6DYVM2OSARheKUnih8NrX6pROliySxRzj3fedhz2h95axbt+up+HwvszZv+ksQmZdAOFL4iI8oXWF6RgWz7Mkyot+o+Zk4fKRBZOad0iDg0NjaNvZSOWHCx+Bd55lq/rMmthcYubHgGtLXS8F9cJShYjysU9pDK9M7Hd644KmSVgvRe0pCV4GgwOAqKdSYVQn7A2cBeO4ROL712adCz8wzYDMRavHK8mfeKCd5qAfrd7z7BGIiaIeEYJ52CglOpUFywMnlmPNN1V/Rvih1YX0Ndq0yNso9Rj1FUtiLTWysCkm/YGCK68TILlEX7UaJV3keGpMkpCULsGkcH23RZmp8NjYoIf7okJ28ygVW4GYWF48MWVm96HWDRGJ951x3IOIZBdOhgKrVRQJLUXgVjDwm1QroAyYTRSiLw9YrR5jmN6ONfYnyh06qpl1PUz8C1+iXtRQIjzWjaaHLh2YQERTIo/ejCERtoM/AEjhB6DhdlroSvuPNjD03NPYtxd87vUuG7gsZSYqXOOsU3sYiJra3UrbA9vFR/BmnJcXbxcsWMtCCs9syRp9r+2V3qT6ppN2i5Im9KI/K/6UGMkHbC2LUgZo1VIbWCrN+ePxqijy1CUe9r98gOm9Z2rxKQ+CfKjPJo0nvYc3Z8UmxqKpeG2dtOpW8OYuQZivCMR5ifg==",
+  "AccessKeyId" : "[REDACTED-EXPIRED-2020-DISCLOSURE]",
+  "SecretAccessKey" : "[REDACTED]",
+  "Token" : "[REDACTED-STSTOKEN]",
   "Expiration" : "2023-07-25T21:32:22Z"
 }
 ```

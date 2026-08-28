@@ -835,3 +835,15 @@ This vulnerability has been recognised as a serious security issue and has been 
 Memory corruption with attacker controlled input which can lead to arbitrary code execution
 
 ---
+### [Node.js WebCrypto AES Integer Overflow Leads to Remote Process Abort (DoS)](https://hackerone.com/reports/3760016)
+
+- **Report ID:** `3760016`
+- **Severity:** High
+- **Weakness:** Integer Overflow
+- **Program:** Node.js
+- **Reporter:** @erichen
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-25T04:58:47.000Z
+- **CVE(s):** -
+
+---

@@ -1873,3 +1873,27 @@ The following is the PoC.
 https://{team}.slack.com/customize/emoji?added=1&name=vuln"><script>alert(0);<%2Fscript>
 
 ---
+### [Unauthenticated reflected XSS in Essity "Network Toolbox" CGI (████████ ████████](https://hackerone.com/reports/3793533)
+
+- **Report ID:** `3793533`
+- **Severity:** High
+- **Weakness:** Cross-site Scripting (XSS) - Reflected
+- **Program:** Essity
+- **Reporter:** @larocas
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-23T13:59:07.910Z
+- **CVE(s):** -
+
+---
+### [Reflected XSS in legacy CGI script /cgi-bin/████████.pl on ████████ via `████████` parameter](https://hackerone.com/reports/3830771)
+
+- **Report ID:** `3830771`
+- **Severity:** High
+- **Weakness:** Cross-site Scripting (XSS) - Reflected
+- **Program:** Essity
+- **Reporter:** @marioniangi
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-30T12:12:58.268Z
+- **CVE(s):** -
+
+---

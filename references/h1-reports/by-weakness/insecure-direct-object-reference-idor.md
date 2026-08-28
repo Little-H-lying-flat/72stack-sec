@@ -4460,3 +4460,19 @@ Hacker is able to get the PI(Personal Information) of any Zomato user.
 Hacker is able to cancel the other user's table booking, The same request leaked the private information of the user (email & mobile no).
 
 ---
+### [Autotranslate DDP Method Exposes Private Messages Without Authentication or Room Access Check](https://hackerone.com/reports/3734326)
+
+- **Report ID:** `3734326`
+- **Severity:** High
+- **Weakness:** Insecure Direct Object Reference (IDOR)
+- **Program:** Rocket.Chat
+- **Reporter:** @deprrous
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-25T14:10:05.886Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+The Rocket.Chat DDP method `autoTranslate.translateMessage` accepts a client-supplied `IMessage` object and passes it directly to `translateMessage()` without checking `Meteor.userId()` or verifying room membership. Any authenticated DDP user can read the content of any message by ID from any room (private channels, DMs, E2EE rooms) by calling this method. The parallel REST endpoint was fixed...
+
+---

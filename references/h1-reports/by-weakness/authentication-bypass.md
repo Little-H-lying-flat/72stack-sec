@@ -115,3 +115,15 @@ Pranav Hivarekar
 @coolboss was able to chain multiple security issues, which allowed him to extract SSO tokens from Snapchat users by sending them to a malicious website.
 
 ---
+### [AWS *.a2z.com | Unauthenticated Clickhouse UI : Database access + SSRF](https://hackerone.com/reports/3809407)
+
+- **Report ID:** `3809407`
+- **Severity:** High
+- **Weakness:** Authentication Bypass
+- **Program:** AWS VDP
+- **Reporter:** @notnotnotveg
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-22T19:53:00.934Z
+- **CVE(s):** -
+
+---

@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、19 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS）、305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2887 份 HackerOne 真实 High/Critical 已披露案例、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
+description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、19 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS）、305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---

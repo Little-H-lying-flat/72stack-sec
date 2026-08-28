@@ -14,7 +14,7 @@
     {
       "name": "72stack-sec",
       "source": "./",
-      "description": "实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流。19 个攻击类 playbook、305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2887 份 HackerOne 真实案例、88,636 WooYun 历史案例统计、国产组件指纹库。集成 jshookmcp 工具层。SKILL.md 流程控制式瘦身 + mega-playbook 渐进式拆分（00-index 路由 + 主题子文件）。",
+      "description": "实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流。19 个攻击类 playbook、305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实案例、88,636 WooYun 历史案例统计、国产组件指纹库。集成 jshookmcp 工具层。SKILL.md 流程控制式瘦身 + mega-playbook 渐进式拆分（00-index 路由 + 主题子文件）。",
       "version": "1.3.0",
       "homepage": "https://github.com/Little-H-lying-flat/72stack-sec",
       "category": "security",

@@ -258,3 +258,15 @@ execute_attack()
 I want to thank you for this amazing CTF, and looking forward to CTFs to come!
 
 ---
+### [Privilege-relevant fields are clientModify in SAP CDC schema allowing role escalation to Admin](https://hackerone.com/reports/3726887)
+
+- **Report ID:** `3726887`
+- **Severity:** Critical
+- **Weakness:** Improper Privilege Management
+- **Program:** Essity
+- **Reporter:** @matty69v
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-20T08:54:21.108Z
+- **CVE(s):** -
+
+---

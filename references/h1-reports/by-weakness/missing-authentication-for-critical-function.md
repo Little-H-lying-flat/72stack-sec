@@ -46,3 +46,15 @@ Full write-up available here:
 https://medium.com/@alex.birsan/the-bug-that-exposed-your-paypal-password-539fc2896da9?sk=aeba33c3c331c3f06d230296a21a41e7
 
 ---
+### [Unauthenticated File Upload with CORS Wildcard and No Rate Limiting on ████████ and ████████](https://hackerone.com/reports/3765476)
+
+- **Report ID:** `3765476`
+- **Severity:** High
+- **Weakness:** Missing Authentication for Critical Function
+- **Program:** Essity
+- **Reporter:** @matty69v
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-29T09:02:05.793Z
+- **CVE(s):** -
+
+---
