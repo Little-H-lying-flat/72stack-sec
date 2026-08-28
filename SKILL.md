@@ -123,6 +123,7 @@ level: 2
 - 怀疑自己幻觉 / 想检查证据链 → `references/methodology/03-evidence-discipline.md`
 - 找不到漏洞点 → `references/methodology/04-control-gap-hunting.md`
 - 想对齐 2026 一线打法(选目标哲学 / 攻击面组织 / 链式打点 / AI 分工) → `references/methodology/06-hunter-methodology-2026.md`
+- SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
 
 ---
 
