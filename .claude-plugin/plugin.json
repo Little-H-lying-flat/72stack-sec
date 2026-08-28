@@ -1,13 +1,13 @@
 {
-  "name": "src-hunter",
+  "name": "72stack-sec",
   "description": "实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill 仓库",
   "version": "1.2.1",
   "author": {
-    "name": "MyuriKanao",
-    "email": "sanaraj509@gmail.com",
-    "url": "https://github.com/MyuriKanao"
+    "name": "Little-H-lying-flat",
+    "email": "",
+    "url": "https://github.com/Little-H-lying-flat"
   },
-  "homepage": "https://github.com/MyuriKanao/src-hunter-skill",
-  "repository": "https://github.com/MyuriKanao/src-hunter-skill",
+  "homepage": "https://github.com/Little-H-lying-flat/72stack-sec",
+  "repository": "https://github.com/Little-H-lying-flat/72stack-sec",
   "license": "MIT"
 }
