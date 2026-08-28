@@ -5,6 +5,8 @@
 
 ## 一、可自动化收割(结构化 API/导出)
 
+已镜像:[Google VRP Writeups 273 篇](../writeups/google-vrp-writeups.md)(xdavidhu 清单 CSV,2026-08-28)
+
 | 来源 | 内容 | 接入方式 |
 |---|---|---|
 | **HackerOne hacktivity** | 高质量 High/Critical,全程讨论 | 公开 GraphQL/REST,本库现有管道即此来源(`h1-harvest-*` 脚本),建议月度增量 |
