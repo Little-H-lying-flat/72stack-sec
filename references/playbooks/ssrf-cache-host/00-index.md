@@ -9,7 +9,7 @@
 | 入口信号 | MUST Read |
 |---|---|
 | URL 入参 / 头像抓取 / Webhook / SSO / `url`/`callback`/`return`/`redirect`/`feed`/`image` 等参数让服务端发请求 | `10-ssrf-core.md` |
-| 目标是 AWS / GCP / Azure / K8s 元数据 / S3 / IAM 越权 | `11-cloud.md` |
+| 目标在云上(AWS/GCP/Azure/阿里云/腾讯云/华为云 元数据 / S3/OSS/COS / IAM/RAM/CAM 越权 / K8s) | `11-cloud.md` |
 | 反代 / CDN / Varnish / Cloudflare / Fastly / `Cache-Control` / `Vary` 头 / 静态资源缓存命中规则可控 | `12-cache.md` |
 | Host header / X-Forwarded-* 注入(影响密码重置链接、CSRF token、cache key) | 看本 00-index §3.9 §5(Host Header 利用链) |
 
