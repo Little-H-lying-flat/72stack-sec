@@ -1,6 +1,6 @@
 **中文** · [English](README.en.md)
 
-# src-hunter
+# 72stack-sec
 
 这是一个给 SRC、众测和 Bug bounty 用的 Claude Code skill。
 
@@ -24,14 +24,14 @@ intake → recon → enum → hunt → report
 Marketplace：
 
 ```bash
-/plugin marketplace add Little-H-lying-flat/src-hunter-skill
-/plugin install src-hunter@src-hunter
+/plugin marketplace add Little-H-lying-flat/72stack-sec
+/plugin install 72stack-sec@72stack-sec
 ```
 
 Git：
 
 ```bash
-git clone https://github.com/Little-H-lying-flat/src-hunter-skill.git ~/.claude/skills/src-hunter
+git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skills/72stack-sec
 ```
 
 ## 目录结构
@@ -87,8 +87,8 @@ skill 内置触发词包括：
 也可以显式调用：
 
 ```text
-/src-hunter:src-hunter <target>   # Marketplace 插件安装
-/src-hunter <target>              # Plain git standalone skill
+/72stack-sec:72stack-sec <target>   # Marketplace 插件安装
+/72stack-sec <target>              # Plain git standalone skill
 ```
 
 ## Playbook 列表

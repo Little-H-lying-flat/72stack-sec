@@ -1,6 +1,6 @@
 [中文](README.md) · **English**
 
-# src-hunter
+# 72stack-sec
 
 A Claude Code skill for SRC / bug-bounty / pentest workflows. Loads automatically when you mention things like *bug bounty*, *hackerone*, *waf bypass*, or *任意账号*, and walks Claude through a five-phase hunt: intake → recon → enum → hunt → report.
 
@@ -11,14 +11,14 @@ It bundles a knowledge base built from public sources: nineteen attack-class pla
 Marketplace:
 
 ```
-/plugin marketplace add Little-H-lying-flat/src-hunter-skill
-/plugin install src-hunter@src-hunter
+/plugin marketplace add Little-H-lying-flat/72stack-sec
+/plugin install 72stack-sec@72stack-sec
 ```
 
 Plain git:
 
 ```
-git clone https://github.com/Little-H-lying-flat/src-hunter-skill.git ~/.claude/skills/src-hunter
+git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skills/72stack-sec
 ```
 
 ## What's in here
@@ -62,8 +62,8 @@ The skill loads on any of these (and a few more spelled out in `SKILL.md`):
 Or invoke explicitly:
 
 ```text
-/src-hunter:src-hunter <target>   # Marketplace plugin install
-/src-hunter <target>              # Plain git standalone skill
+/72stack-sec:72stack-sec <target>   # Marketplace plugin install
+/72stack-sec <target>              # Plain git standalone skill
 ```
 
 ## Playbook list
