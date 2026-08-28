@@ -162,3 +162,15 @@ Access token stealing/account takeover.
 This was found In collaboration with @iamnoooob.
 
 ---
+### [SELECT ... INTO OUTFILE does not enforce the FILE WRITE privilege  unprivileged arbitrary file write on the   server](https://hackerone.com/reports/3780695)
+
+- **Report ID:** `3780695`
+- **Severity:** High
+- **Weakness:** Missing Authorization
+- **Program:** SingleStore
+- **Reporter:** @bisht-ji
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-13T19:35:07.345Z
+- **CVE(s):** -
+
+---

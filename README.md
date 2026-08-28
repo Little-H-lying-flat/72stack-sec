@@ -43,7 +43,7 @@ references/
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
   templates/      CVSS 4.0 报告模板
-  h1-reports/     2887 份已披露报告原始数据，并按 weakness 分组
+  h1-reports/     HackerOne High/Critical 披露案例（原始 2887 + 2026-08 增量，分类索引 2836 条/144 类），并按 weakness 分组
   payloader/      305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload、114 个工具命令
 ```
 
@@ -117,7 +117,7 @@ skill 内置触发词包括：
 
 ## 数据来源
 
-- HackerOne hacktivity feed：2887 份已披露 High / Critical 报告，来源为公开数据。
+- HackerOne hacktivity feed：HackerOne High/Critical 披露报告（原始 2887 + 2026-08 增量共 2951 份唯一案例），来源为公开 hacktivity 数据。
 - WooYun 历史档案：覆盖 88,636 条案例，仅保留参数频率、案例 ID 和 bypass 模式等统计残余。
 - Payloader：305 条结构化 payload + 176 个原始 WAF / EDR 绕过 payload + 114 条工具命令，原仓库为 `3516634930/Payloader`。
 

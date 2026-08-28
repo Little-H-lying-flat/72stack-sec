@@ -12919,3 +12919,15 @@ Now go to the project's Files overview: https://gitlab.com/user/project/tree/mas
 An attacker could offload the current user's API token and impersonate the user through the API.
 
 ---
+### [Pre-authentication Stored XSS in Essity Customer-Service Pipeline via ContactApi (reCAPTCHA bypass + no rate limit)](https://hackerone.com/reports/3729501)
+
+- **Report ID:** `3729501`
+- **Severity:** Critical
+- **Weakness:** Cross-site Scripting (XSS) - Stored
+- **Program:** Essity
+- **Reporter:** @matty69v
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-27T07:35:43.411Z
+- **CVE(s):** -
+
+---

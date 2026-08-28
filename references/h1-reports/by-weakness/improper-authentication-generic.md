@@ -7270,3 +7270,67 @@ Subdomain http://kiosk.owox.com/ was preserved from being taken over by an attac
 Unsecured Grafana instance
 
 ---
+### [Authentication Bypass in ID4me handling via Missing JWT Signature Verification in User OIDC](https://hackerone.com/reports/3489490)
+
+- **Report ID:** `3489490`
+- **Severity:** High
+- **Weakness:** Improper Authentication - Generic
+- **Program:** Nextcloud
+- **Reporter:** @priyanka010
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-07T09:16:00.637Z
+- **CVE(s):** -
+
+---
+### [Restricted RPC Policy Bypass on ZMQ JSON-RPC Allows Unauthenticated Remote Admin Actions](https://hackerone.com/reports/3601469)
+
+- **Report ID:** `3601469`
+- **Severity:** High
+- **Weakness:** Improper Authentication - Generic
+- **Program:** Monero
+- **Reporter:** @usagirabbit
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-17T09:16:00.113Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated file deletion via deleteFileMessage DDP method allows permanent destruction of any uploaded file](https://hackerone.com/reports/3611837)
+
+- **Report ID:** `3611837`
+- **Severity:** High
+- **Weakness:** Improper Authentication - Generic
+- **Program:** Rocket.Chat
+- **Reporter:** @eldudareeno
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-16T09:47:25.465Z
+- **CVE(s):** -
+
+---
+### [Wallet RPC Restricted-Mode Policy Bypass](https://hackerone.com/reports/3620006)
+
+- **Report ID:** `3620006`
+- **Severity:** High
+- **Weakness:** Improper Authentication - Generic
+- **Program:** Monero
+- **Reporter:** @usagirabbit
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-17T09:16:13.887Z
+- **CVE(s):** -
+
+---
+### [Authentication Bypass via XML Signature Wrapping in SAML SSO](https://hackerone.com/reports/3827674)
+
+- **Report ID:** `3827674`
+- **Severity:** Critical
+- **Weakness:** Improper Authentication - Generic
+- **Program:** Rocket.Chat
+- **Reporter:** @0jayden
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-27T16:37:05.505Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+Rocket.Chat's SAML SSO verified XML signatures but did not bind the validated signature to `samlp:Response` / `saml:Assertion`. An attacker could submit a wrapped document carrying forged identity attributes alongside any valid signature made by the trusted IdP certificate, and log in as an arbitrary user.
+
+---

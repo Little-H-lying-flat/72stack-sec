@@ -360,3 +360,27 @@ After reading Shopify's summary from #270981 a few of times I was able to replic
 The bug was filed on Christmas Eve, and within 12 hours the Shopify team rolled out a fix to address the immediate issue. It was a pleasure to work with a team that takes security as seriously as they do.
 
 ---
+### [Memory Corruption via TOCTOU Race in SharedArrayBuffer UTF-8 Decode (`StringBytes::Encode`)](https://hackerone.com/reports/3752489)
+
+- **Report ID:** `3752489`
+- **Severity:** High
+- **Weakness:** Time-of-check Time-of-use (TOCTOU) Race Condition
+- **Program:** Node.js
+- **Reporter:** @v1ct0rv0nd00m
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-23T16:05:26.633Z
+- **CVE(s):** -
+
+---
+### [curl_share TOCTOU > RCE via Curl_llist _dtor Function Pointer Hijack](https://hackerone.com/reports/3955945)
+
+- **Report ID:** `3955945`
+- **Severity:** Critical
+- **Weakness:** Time-of-check Time-of-use (TOCTOU) Race Condition
+- **Program:** curl
+- **Reporter:** @k4rasu_s4ma
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-26T06:38:44.863Z
+- **CVE(s):** -
+
+---

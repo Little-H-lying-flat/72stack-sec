@@ -855,3 +855,15 @@ The issue essentially bypasses the `ignore files/folders` feature and allows an 
 The attacker can check the website's backend technology simply by typing site_name/index.php/welcome/index it will display the codeigniter welcome page if the developer dosen't removed the built in controller and view welcome.php and welcome_message.php i attaching a screenshot below as a proof of concept
 
 ---
+### [████████ ████████ Server Full Exposure with Database Credentials](https://hackerone.com/reports/3584078)
+
+- **Report ID:** `3584078`
+- **Severity:** Critical
+- **Weakness:** Information Exposure Through Directory Listing
+- **Program:** Essity
+- **Reporter:** @lazyar
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-10T06:20:52.271Z
+- **CVE(s):** -
+
+---

@@ -71,3 +71,15 @@ It was possible for a user to delete VPN profile from  WARP mobile client on iOS
 The issue was fixed in Warp iOS mobile client v. 6.15.
 
 ---
+### [Splatoon 3 In-Match Integrity Bypass via Consensus Reflection Attack on Unordered Peer Submission](https://hackerone.com/reports/3559522)
+
+- **Report ID:** `3559522`
+- **Severity:** High
+- **Weakness:** Client-Side Enforcement of Server-Side Security
+- **Program:** Nintendo
+- **Reporter:** @hana2736
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-02T01:26:11.834Z
+- **CVE(s):** -
+
+---

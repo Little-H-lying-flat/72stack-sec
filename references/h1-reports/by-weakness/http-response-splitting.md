@@ -239,3 +239,15 @@ Like most HTTP Smuggling issue impact is not always directly targeted on Squid, 
 Cache poisoning,  DOS, XSS, etc.
 
 ---
+### [libcurl: HTTP/1.x bare LF byte in response header value enables cookie jar pollution and POST body/credential exfiltration via redirect — RC=0, curl 8](https://hackerone.com/reports/3785919)
+
+- **Report ID:** `3785919`
+- **Severity:** High
+- **Weakness:** HTTP Response Splitting
+- **Program:** curl
+- **Reporter:** @torkd1
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-08T06:30:49.484Z
+- **CVE(s):** -
+
+---

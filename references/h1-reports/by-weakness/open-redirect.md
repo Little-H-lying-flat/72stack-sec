@@ -744,3 +744,27 @@ In both cases the hiring manager would then unknowingly access the manipulated l
 The affected parameter should be first validated against some regular expression (e.g. allow only links that point to `grnhse-prod-jben-*.s3.amazonaws.com`).
 
 ---
+### [OAuth redirect uri validation bypass for :proxima_first_party_sync apps](https://hackerone.com/reports/3588801)
+
+- **Report ID:** `3588801`
+- **Severity:** High
+- **Weakness:** Open Redirect
+- **Program:** GitHub
+- **Reporter:** @ahacker1
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-21T21:43:34.526Z
+- **CVE(s):** -
+
+---
+### [Incomplete fix for CVE-2022-35406: meta-redirect content-type check bypassable via parameter injection](https://hackerone.com/reports/3775183)
+
+- **Report ID:** `3775183`
+- **Severity:** High
+- **Weakness:** Open Redirect
+- **Program:** PortSwigger Web Security
+- **Reporter:** @hacker-kartel
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-02T15:02:56.586Z
+- **CVE(s):** -
+
+---

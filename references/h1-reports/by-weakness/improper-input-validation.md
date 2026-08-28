@@ -1150,3 +1150,15 @@ Steps
 The impact is unknown, but it is believed to have a cascading side effect.  I was asked to submit this by @jobert.
 
 ---
+### [Reflected HTML Injection in ████████ Login Page via infotext/signintext Parameters](https://hackerone.com/reports/3781785)
+
+- **Report ID:** `3781785`
+- **Severity:** High
+- **Weakness:** Improper Input Validation
+- **Program:** Essity
+- **Reporter:** @firecompass-ai
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-22T13:02:13.157Z
+- **CVE(s):** -
+
+---

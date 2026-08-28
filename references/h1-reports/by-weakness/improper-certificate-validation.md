@@ -1065,3 +1065,27 @@ Driver functionality was not tested. If the Uber Driver role is also implemented
 This particular vulnerability can be implemented as an ARP cache poisoning attack, making it especially relevant to Uber riders who utilize wireless access points at public hotspots to dispatch Uber rides.
 
 ---
+### [`set_daemon` wallet-rpc silently ignores `ssl_allowed_fingerprints` → pinning bypassed, wallet↔daemon MITM](https://hackerone.com/reports/3686259)
+
+- **Report ID:** `3686259`
+- **Severity:** High
+- **Weakness:** Improper Certificate Validation
+- **Program:** Monero
+- **Reporter:** @benisprlh
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-05T05:05:59.944Z
+- **CVE(s):** -
+
+---
+### [GnuTLS OCSP stapling accepts unrelated SingleResponse (no cert-ID binding)](https://hackerone.com/reports/3784125)
+
+- **Report ID:** `3784125`
+- **Severity:** High
+- **Weakness:** Improper Certificate Validation
+- **Program:** curl
+- **Reporter:** @argus-systems
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-05T15:11:38.545Z
+- **CVE(s):** -
+
+---

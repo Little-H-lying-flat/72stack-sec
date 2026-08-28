@@ -16210,3 +16210,67 @@ When attacker click on the old link recieved in the step 2 will be able to login
 Please let me know if anything more is required .!
 
 ---
+### [Windows installer grants low-privileged users write access to executable P2Pool directory, enabling local code execution](https://hackerone.com/reports/3619409)
+
+- **Report ID:** `3619409`
+- **Severity:** High
+- **Weakness:** Improper Access Control - Generic
+- **Program:** Monero
+- **Reporter:** @qttps
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-20T23:47:52.964Z
+- **CVE(s):** -
+
+---
+### [GitHub scoped user to server tokens can escape their installation](https://hackerone.com/reports/3638909)
+
+- **Report ID:** `3638909`
+- **Severity:** High
+- **Weakness:** Improper Access Control - Generic
+- **Program:** GitHub
+- **Reporter:** @ahacker1
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-29T23:35:21.833Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated reading of every file via livechat auth and predicting MongoDB ObjectId()](https://hackerone.com/reports/3687142)
+
+- **Report ID:** `3687142`
+- **Severity:** Critical
+- **Weakness:** Improper Access Control - Generic
+- **Program:** Rocket.Chat
+- **Reporter:** @aikido_security
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-15T23:44:12.686Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+Protected file downloads at `/file-upload/:fileId/:name` authorize livechat access using `rc_room_type=l` with `rc_rid+rc_token`, but the authorization path does not verify that `rc_rid` matches the requested file's `rid`. Furthermore, `:fileId` is predictable via sequential MongoDB IDs, and `:name` can be anything, allowing unauthenticated discovery of all uploaded files.
+
+---
+### [1-Click Account Takeover via Open Redirect through Regex Bypass in Domain Validation](https://hackerone.com/reports/3723458)
+
+- **Report ID:** `3723458`
+- **Severity:** Critical
+- **Weakness:** Improper Access Control - Generic
+- **Program:** Khan Academy
+- **Reporter:** @farr
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-20T15:58:07.357Z
+- **CVE(s):** -
+
+---
+### [Permission Model: --allow-fs-read/--allow-fs-write radix-tree prefix-boundary over-grant](https://hackerone.com/reports/3761342)
+
+- **Report ID:** `3761342`
+- **Severity:** High
+- **Weakness:** Improper Access Control - Generic
+- **Program:** Node.js
+- **Reporter:** @sy2n0
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-29T23:00:05.934Z
+- **CVE(s):** -
+
+---

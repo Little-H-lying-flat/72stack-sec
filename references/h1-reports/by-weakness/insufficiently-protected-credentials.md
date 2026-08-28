@@ -561,3 +561,15 @@ The HackerOne Security Analysts have access to HackerOne customers’ sensitive 
 As the community grows, HackerOne needs to ensure that HackerOne is reinforcing the best practices in bug bounty hunting. The HackerOne Community team will look to increase hacker education around delivering proof of critical severity vulnerabilities in case sensitive information has been accessed by the hacker.
 
 ---
+### [TLS conn reuse and session cache ignore fsslctx callback and ssl_config_data flags ( incomplete fix variant of 7541ae569 )](https://hackerone.com/reports/3761647)
+
+- **Report ID:** `3761647`
+- **Severity:** High
+- **Weakness:** Insufficiently Protected Credentials
+- **Program:** curl
+- **Reporter:** @fg0x0
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-01T06:23:22.482Z
+- **CVE(s):** -
+
+---

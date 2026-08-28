@@ -1241,7 +1241,7 @@ https://█████████/api/v1/download-url?url=http://169.254.169.2
   "LastUpdated" : "2022-07-04T11:22:59Z",
   "Type" : "AWS-HMAC",
   "AccessKeyId" : "███",
-  "SecretAccessKey" : "████",
+  "SecretAccessKey" : "[REDACTED]",
   "Token" : "████
   ```
 ===========================STEPS TO REPRODUCE==========================
@@ -1553,7 +1553,7 @@ and click Send request. If everything went well, the server responds "status ok"
 
 for this PoC. AWS secretkeys were accessed:
 
-`{  "Code" : "Success",  "LastUpdated" : "2022-07-06T02:57:53Z",  "Type" : "AWS-HMAC",  "AccessKeyId" : "███",  "SecretAccessKey" : "████",  "Token" :"██████",  "Expiration" : "2022-07-06T09:04:49Z"}`
+`{  "Code" : "Success",  "LastUpdated" : "2022-07-06T02:57:53Z",  "Type" : "AWS-HMAC",  "AccessKeyId" : "███",  "SecretAccessKey" : "[REDACTED]",  "Token" :"██████",  "Expiration" : "2022-07-06T09:04:49Z"}`
 
 ## Supporting Material/References:
 
@@ -1957,9 +1957,9 @@ Content-Length: 1298`
   "Code" : "Success",
   "LastUpdated" : "2020-09-11T00:36:00Z",
   "Type" : "AWS-HMAC",
-  "AccessKeyId" : "ASIAV6SVWBIPVJNDI4LO",
-  "SecretAccessKey" : "wAwYDQcsfEMUyku//RxXI/NjdAMUtRLj4cfSiEVQ",
-  "Token" : "IQoJb3JpZ2luX2VjEGEaCXVzLWVhc3QtMSJIMEYCIQD8srpZ/87c2HrLYddytORezee2NMx0/PWk4UH+2nahPgIhAOwlCmFgVAcdsUBpbDHI6McTLQcHlUnA/FAMOf5GoMWmKrQDCGoQABoMNDA5Mjc1MzM3MjQ3Igw+zvAcQIYJijsNTWsqkQMfVMu7kgOepBvF96NdZHk4KxICWOBDlrJN/MR9o3Hf6Ohst+4d/tbGeyCL7xClsepu+02nf/sX7Ggtx9ciqAg14OmsUWjzp4ZHntge0oi9AJpfyc76UVFNFdTwbo/hEEHKfjgC18lFW+E5DIP00Ifm7usFgLLABozP9Av/hJLwCWG7UHfnHicvc0eY9Tscc+RS4U0GWvUGGXji1vm/8ud5c7Ou6h2z2fo9fSODgq/c1sZReVtofuhSYOfpYtr4ByrHMVY78aR+VrF//6870MUJWNOI4EK3NFxtPH6HCJRmBwh3iVTqYI+vawove6BG3PmMkeyBZSqCqFCTuf+H/eEdw6orjNQ7BxurtB8ZaymaUABhNKfQTBeDBy8/G/wK75v7YZjPUmalMf89wGvshp5EHQVYySr3RGlS9Ti5FbIzR0Gl+5cLx/0AX6ce8L5UrXACpOLktOJe+l/W1KQchNOs9MEwSTYi+sa1qITd17XS9tp0BuRlZSX4MGQ0SJvDEmNvQq84avF4SLbqJLNZEVn0uDCkjev6BTrqAb5BqJ09VpgjlBloe0SAGp4uNlWheqWl+Vt3S+jcVRqf4LNAM3hbEvRB6pTt9itSE6l4y40QADcmMs0oWc6sm+oCG5enAkRxQBFYFDt+OvbxnSnQmaG3YDuRRJwpsaMA/V0TLqpQq5wvJMOssylXffenYIFpVIbZ5BQ5elDVqVpol/1fe+ej3slNvG6VqD3/OwLyNPjfAhdG3UmYzqyr3ym6uywn0KmLMY9esM7Mde5KA2LmgozCKpkV18u0LGCORGXGnllCWpuifVMYXoLQJgk8LCB5H6FbBbcqVvE5FGabClXZG3UIbhPsfg==",
+  "AccessKeyId" : "[REDACTED-EXPIRED-2020-DISCLOSURE]",
+  "SecretAccessKey" : "[REDACTED]",
+  "Token" : "[REDACTED-STSTOKEN]",
   "Expiration" : "2020-09-11T06:47:23Z"
 }`
 
@@ -9105,5 +9105,29 @@ A DoD website was misconfigured in a manner that could have allowed an attacker 
 **Summary (researcher):**
 
 This bug was an interesting one. I will write extended summary later.
+
+---
+### [SSRF via improper validation after DNS name resolution in the link-preview feature](https://hackerone.com/reports/3393664)
+
+- **Report ID:** `3393664`
+- **Severity:** High
+- **Weakness:** Server-Side Request Forgery (SSRF)
+- **Program:** Rocket.Chat
+- **Reporter:** @button142857
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-11T11:52:25.707Z
+- **CVE(s):** -
+
+---
+### [Unauthenticated SSRF in Voxtelesys integration ('checkUrlForSsrf' Bypass via DNS rebinding)](https://hackerone.com/reports/3473145)
+
+- **Report ID:** `3473145`
+- **Severity:** High
+- **Weakness:** Server-Side Request Forgery (SSRF)
+- **Program:** Rocket.Chat
+- **Reporter:** @button142857
+- **Bounty:** - usd
+- **Disclosed:** 2026-07-29T01:48:49.623Z
+- **CVE(s):** -
 
 ---

@@ -1831,3 +1831,15 @@ I've posted a full writeup over at https://portswigger.net/blog/http-desync-atta
 Kkx
 
 ---
+### [HTTP Request Smuggling](https://hackerone.com/reports/3589269)
+
+- **Report ID:** `3589269`
+- **Severity:** Critical
+- **Weakness:** HTTP Request Smuggling
+- **Program:** Essity
+- **Reporter:** @t0xodile
+- **Bounty:** - usd
+- **Disclosed:** 2026-05-20T08:48:59.445Z
+- **CVE(s):** -
+
+---

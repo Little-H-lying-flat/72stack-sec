@@ -9879,3 +9879,85 @@ Credits
 Thanks John Poulin for reporting this!
 
 ---
+### [PHP code injection via delivery limitation logical](https://hackerone.com/reports/3656781)
+
+- **Report ID:** `3656781`
+- **Severity:** High
+- **Weakness:** Code Injection
+- **Program:** Revive Adserver
+- **Reporter:** @0x4c616e
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-03T13:33:59.927Z
+- **CVE(s):** -
+
+---
+### [Authenticated Elasticsearch Painless script execution via Query.search.sort_query on hackerone.com/graphql](https://hackerone.com/reports/3694007)
+
+- **Report ID:** `3694007`
+- **Severity:** High
+- **Weakness:** Code Injection
+- **Program:** HackerOne
+- **Reporter:** @brumbelow
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-17T14:17:26.678Z
+- **CVE(s):** -
+
+---
+### [PHP code injection via unexpected delivery limitation parameter](https://hackerone.com/reports/3744200)
+
+- **Report ID:** `3744200`
+- **Severity:** High
+- **Weakness:** Code Injection
+- **Program:** Revive Adserver
+- **Reporter:** @rajib_mahmud
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-03T13:29:15.038Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+HackerOne community member rajib_mahmud has reported a missing validation of user input when saving delivery limitations in Revive Adserver 6.0.6 and earlier. A low‑privileged user could add an unexpected `component` parameter and inject malicious PHP code into the `compiledlimitations` field, which would then be executed during banner delivery.
+
+Input sanitisation has been improved to ensure...
+
+---
+### [PHP code injection in delivery-limitation `logical` validation bypass](https://hackerone.com/reports/3780854)
+
+- **Report ID:** `3780854`
+- **Severity:** High
+- **Weakness:** Code Injection
+- **Program:** Revive Adserver
+- **Reporter:** @riodrwn
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-25T13:40:57.721Z
+- **CVE(s):** -
+
+---
+### [PHP code injection in delivery-limitation `logical` validation bypass - XML-RPC setChannelTargeting](https://hackerone.com/reports/3781492)
+
+- **Report ID:** `3781492`
+- **Severity:** High
+- **Weakness:** Code Injection
+- **Program:** Revive Adserver
+- **Reporter:** @doomtech
+- **Bounty:** - usd
+- **Disclosed:** 2026-06-25T13:43:50.823Z
+- **CVE(s):** -
+
+**Summary (reporter):**
+
+HackerOne community member Rio Darmawan (riodrwn) and Mikhail Ilin (doomtech) have independently reported new vectors to bypass the fix for CVE-2026-34916. Variants of such vectors have been also reported by phucrio and offsetmd. The fix can be bypassed either by sending a disallowed but otherwise valid plugin identifier as `type`, or using the `ox.setChannelTargeting` XML-RPC API method.
+
+---
+### [Unauthenticated RCE in Taskcluster web-server via GraphQL filter argument (sift $where)](https://hackerone.com/reports/3782701)
+
+- **Report ID:** `3782701`
+- **Severity:** Critical
+- **Weakness:** Code Injection
+- **Program:** Mozilla
+- **Reporter:** @griffinf
+- **Bounty:** - usd
+- **Disclosed:** 2026-08-05T15:50:21.517Z
+- **CVE(s):** -
+
+---
