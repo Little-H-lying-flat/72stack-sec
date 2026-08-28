@@ -13,6 +13,7 @@
 | 目标是 Agent 平台(可调用工具 / 浏览网页 / 跑代码) | `12-agent-vulns.md`(10 类 Agent 漏洞) |
 | 目标可被探查模型本身(模型窃取 / 对抗样本) | `13-model-attacks.md` |
 | payload 被拦,要 jailbreak / 绕过对齐 | `14-techniques.md`(技法 #2-#6 / 边界操纵 / 认知控制) |
+| AI 对话平台前端侧(XSS / 代码块渲染 / 客户端接管,非注入) | `../xss/12-exploitation.md` 的 `xss-ai-client-escape` 章节 |
 
 ---
 
