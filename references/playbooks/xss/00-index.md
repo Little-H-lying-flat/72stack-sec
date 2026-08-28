@@ -11,6 +11,7 @@
 | 看到自己的输入直接出现在响应 / 评论框 / 个人简介 / DOM 操作 | `10-xss-by-type.md`(反射 / 存储 / DOM 三大类) |
 | payload 试出来被拦,要绕过 CSP / WAF / 过滤器 / 编码 | `11-bypass.md` |
 | XSS 已能弹,要写真正的利用脚本(cookie 窃取 / 键盘记录 / BeEF) | `12-exploitation.md` |
+| AI 对话平台 / 桌面客户端(代码块渲染 + JS bridge) / self-XSS 想变可投递 | `12-exploitation.md` 的 `xss-ai-client-escape` 章节 |
 
 ---
 

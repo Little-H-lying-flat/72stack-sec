@@ -17,6 +17,7 @@
 | XML 解析点 / SOAP / SVG / DOCX/XLSX 上传 | `15-xxe.md` |
 | 自定义依赖 / 私有 npm registry / CI/CD 配置 | `16-supply-chain.md` |
 | Node.js JSON merge / `Object.assign` / lodash `_.merge` 用户输入 | `17-prototype-pollution.md` |
+| 报错含 `VMError`/`NodeVM`/`bridge.js` / 用户 JS 代码在平台侧执行(AI agent 沙箱、在线判题、低代码脚本) | `18-sandbox-escape.md` |
 
 ---
 

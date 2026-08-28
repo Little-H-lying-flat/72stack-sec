@@ -3,7 +3,7 @@
 - Web 攻击 payload: **177** 条 / 23 类
 - 内网渗透 payload: **128** 条 / 11 类
 - 工具命令速查: **114** 条 / 14 类
-- WAF/EDR 绕过变体: **176** 条 → [waf-bypass.md](waf-bypass.md)
+- WAF/EDR 绕过 payload: **176** 条原始 payload（含绕过变体集） → [waf-bypass.md](waf-bypass.md)
 
 ## Web 攻击分类
 
