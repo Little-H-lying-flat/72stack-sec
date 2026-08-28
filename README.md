@@ -38,13 +38,13 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则
+  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
   templates/      CVSS 4.0 报告模板
   h1-reports/     2887 份已披露报告原始数据，并按 weakness 分组
-  payloader/      305 个结构化 payload、263 个 WAF/EDR 绕过步骤、114 个工具命令
+  payloader/      305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload、114 个工具命令
 ```
 
 playbook 是主要入口。所有 playbook 都按黑盒视角编写，默认你只有 URL，没有源码。
@@ -119,7 +119,7 @@ skill 内置触发词包括：
 
 - HackerOne hacktivity feed：2887 份已披露 High / Critical 报告，来源为公开数据。
 - WooYun 历史档案：覆盖 88,636 条案例，仅保留参数频率、案例 ID 和 bypass 模式等统计残余。
-- Payloader：305 条结构化 payload + 263 个 WAF / EDR 绕过步骤 + 114 条工具命令，原仓库为 `3516634930/Payloader`。
+- Payloader：305 条结构化 payload + 176 个原始 WAF / EDR 绕过 payload + 114 条工具命令，原仓库为 `3516634930/Payloader`。
 
 本项目只整理、翻译和重组公开资料，不包含专有数据，也不抓取需要认证的内容。
 
