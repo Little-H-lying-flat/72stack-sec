@@ -22,7 +22,7 @@ level: 2
 - "WAF 绕过 / 任意账号 / 任意修改 / 密码重置 / 未授权访问 / 默认凭据"
 - 用户给一个 URL / API endpoint / APK 让你测
 
-**不应触发**:纯白盒源码审计 → `code-audit` skill;漏洞修复问答 → 通用对话;CTF → 通用对话。
+**不应触发**:纯白盒源码审计 → `src-audit-chain` skill;漏洞修复问答 → 通用对话;CTF → 通用对话。
 
 ---
 
@@ -39,12 +39,13 @@ level: 2
 
 **进入条件**:用户首次给出目标 / 程序名 / URL。
 
-**MUST 输出 checkpoint**(四项缺一不进 Phase 2,缺什么向用户问什么,不要假设):
+**MUST 输出 checkpoint**(五项缺一不进 Phase 2,缺什么向用户问什么,不要假设):
 
 - [ ] **In-scope**:可测域名 / IP 段 / app / endpoint(逐条列)
 - [ ] **Out-of-scope**:禁测项(逐条列)
 - [ ] **规则**:payout tier / disclosure window / safe-harbor / 测试 header(如 `X-Bug-Bounty:<handle>`)
 - [ ] **时间盒**:6h / 单日 / HVV / 月度
+- [ ] **建账**:初始化 `work/<target-slug>/` 四件套(scope / assets / findings / evidence),格式见 `references/methodology/09-target-workspace.md`;scope.md 直接落本 checkpoint 四项
 
 **仅当用户问"哪个最值得先测"** → Read `references/methodology/05-srctimebox-priority.md`。
 
@@ -98,6 +99,8 @@ level: 2
 6. 命中后先走三段差分确认(baseline → attack → 对照,规则见 `references/methodology/03-evidence-discipline.md` §3 原则 2);差分不成立 → 只能标"待验证假设",不进 Phase 5
 7. 差分确认通过后保存 HTTP 包 / 截图 → 进 Phase 5 候选。同一 endpoint + 同一漏洞类只记一个 finding,同源变体确认一次后不再重复触发(去重,防触发风控)
 
+**出口检查(收工门闩)**:从 Phase 4 收工——无论有无 finding——必须输出覆盖率矩阵(applicable playbook 类 × tested / clean / skipped-because),规则见 `references/methodology/09-target-workspace.md` §3。命中与负面结果一律先入 `work/<target-slug>/findings.md` 台账。
+
 | 入口信号 | MUST Read |
 |---|---|
 | Actuator / Swagger / 默认端口 / 弱密码 | `references/playbooks/unauth-access.md` |
@@ -132,6 +135,7 @@ level: 2
 - SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
 - Vue SPA 后台插件路由表过短 / 直访业务路由 404(动态路由、未加载路由、守卫弹回) → `references/methodology/07-js-recon.md` §8
 - 资产矩阵 ≥15 且用户明确要求并行 / 多 agent → `references/methodology/08-multi-agent.md`(设计稿,默认关)
+- 收工前核对覆盖率 / 跨会话续作同一目标 / 建 findings 台账 → `references/methodology/09-target-workspace.md`
 
 ---
 
@@ -152,3 +156,4 @@ level: 2
 ## MCP 工具集成
 
 默认 `mcp__jshook__search_tools` + `mcp__jshook__activate_tools` 按需激活(~3K token)。完整索引仅在用户问"用什么工具 / Burp / Frida / adb"时 Read:`references/tools/mcp-jshook.md`。
+jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器动作回退用户协作(用户手测 + 提供响应),**不虚构工具调用结果**。

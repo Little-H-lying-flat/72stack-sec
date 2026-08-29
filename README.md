@@ -38,7 +38,7 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、多 agent 编排（设计稿）
+  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、多 agent 编排（设计稿）、目标工作区与执行台账
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
@@ -127,6 +127,7 @@ skill 内置触发词包括：
 - Phase 4 加固：命中后强制三段差分确认 + 同 endpoint 同漏洞类去重抑制（借鉴 CyberStrike 的 3-gate / duplicate suppression）
 - 报告模板增加 WSTG / CWE 字段
 - 新增多 agent 执行工作流设计稿（`methodology/08-multi-agent.md`，默认关闭，待实战验证）
+- 新增 `methodology/09-target-workspace.md`：目标工作区四件套、findings 台账（去重登记簿落地）、**Phase 4 出口检查（覆盖率门闩）**、跨会话续作；Phase 1 checkpoint 增加"建账"项；修复 code-audit 失效引用 → src-audit-chain；补充 jshook 不可用时的回退说明
 
 ## 数据来源
 
