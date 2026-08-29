@@ -13,6 +13,12 @@
 | `thinkphp-invokefunction-detect.yaml` | critical | `rce/10-framework.md` thinkphp-rce | 用 phpinfo 变体,非破坏检测 |
 | `log4j-jndi-oob-detect.yaml` | critical | `rce/10-framework.md` log4j-rce | interactsh OOB,多 header 注入点 |
 | `aliyun-oss-anonymous-listing.yaml` | medium | `ssrf-cache-host/11-cloud.md` cn-object-storage | 目标直接给 bucket host |
+| `aws-s3-anonymous-listing.yaml` | medium | `cloud/30-object-storage.md`(oss-perm-matrix) | S3 版匿名列举,喂 bucket host |
+| `tencent-cos-anonymous-listing.yaml` | medium | `cloud/30-object-storage.md`(oss-perm-matrix) | COS 版,S3 兼容 XML 同判 |
+| `k8s-anonymous-api.yaml` | critical | `cloud/40-k8s.md`(k8s-api-unauth) | 匿名 403=RBAC 正常不匹配;`-insecure` 跑 6443 |
+| `kubelet-anonymous-pods.yaml` | high | `cloud/40-k8s.md`(k8s-api-unauth) | 10250 /pods;pod env 常含明文凭据 |
+| `etcd-anonymous-access.yaml` | critical | `cloud/40-k8s.md`(k8s-api-unauth) | 只探 v2 根列举,**禁 recursive 拖库**;v3 走 etcdctl |
+| `k8s-dashboard-exposure.yaml` | info | `cloud/40-k8s.md`(k8s-dashboard-registry) | 指纹;匿名可用性人工按 playbook 验证 |
 
 ## 纪律
 

@@ -1,13 +1,13 @@
-id: aliyun-oss-anonymous-listing
+id: tencent-cos-anonymous-listing
 
 info:
-  name: Aliyun OSS Bucket Anonymous Listing
+  name: Tencent COS Bucket Anonymous Listing
   author: 72stack-sec
   severity: medium
-  description: "OSS bucket allows anonymous ListObjects. Target the bucket host ({BUCKET}.oss-{region}.aliyuncs.com). Source: playbooks/ssrf-cache-host/11-cloud.md (cn-object-storage)."
+  description: "COS bucket allows anonymous ListObjects (S3-compatible XML response). Target the bucket host ({BUCKET}.cos.ap-{region}.myqcloud.com). Source: playbooks/cloud/30-object-storage.md (oss-perm-matrix)."
   reference:
     - https://github.com/Little-H-lying-flat/72stack-sec
-  tags: oss,aliyun,misconfig,cloud
+  tags: cos,tencent,misconfig,cloud
 
 http:
   - method: GET

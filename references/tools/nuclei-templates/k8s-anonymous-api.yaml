@@ -1,0 +1,25 @@
+id: k8s-anonymous-api
+
+info:
+  name: Kubernetes API Server Anonymous Resource Access
+  author: 72stack-sec
+  severity: critical
+  description: "API Server allows anonymous list of pods (system:anonymous not denied by RBAC). Target https://{NODE}:6443, run nuclei with -insecure for self-signed certs. A 403 response is RBAC working correctly and will NOT match. Source: playbooks/cloud/40-k8s.md (k8s-api-unauth)."
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: k8s,kubernetes,unauth,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/v1/pods"
+    matchers:
+      - type: word
+        words:
+          - "\"kind\":\"PodList\""
+          - "\"apiVersion\":\"v1\""
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and
