@@ -25,7 +25,7 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```
 references/
-  methodology/    five-phase workflow, attack-priority, bypass toolkit, evidence rules, 2026 hunter methodology, JS recon & Vue SPA route-maxing, multi-agent orchestration (design draft), target workspace & execution ledger
+  methodology/    five-phase workflow, attack-priority, bypass toolkit, evidence rules, 2026 hunter methodology, JS recon & Vue SPA route-maxing, multi-agent orchestration (design draft), target workspace & execution ledger, target archetype routing
   playbooks/      one file per attack class — each ends with real H1 cases and a payload library
   industry/       banking/finance and telecom/ISP verticals
   dictionaries/   default credentials and component fingerprints (Chinese stack)
@@ -103,6 +103,7 @@ Or invoke explicitly:
 - Report template: WSTG / CWE fields
 - Multi-agent orchestration design draft (`methodology/08-multi-agent.md`, off by default pending live validation)
 - New `methodology/09-target-workspace.md`: workspace quartet per target, findings ledger (dedup registry), **Phase 4 exit gate (coverage matrix)**, cross-session continuity; Phase 1 checkpoint gains a "workspace" item; stale code-audit reference fixed → src-audit-chain; jshook-unavailable fallback documented
+- New `methodology/10-archetype-routing.md`: seven target archetypes (Java admin / SPA+API / legacy / mini-program / cloud / brochure / foothold) → ordered playbook sequences + timebox allocation; compliance.md adds China legal boundaries; sha256 evidence manifest
 
 ## Sources
 

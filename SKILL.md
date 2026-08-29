@@ -91,7 +91,7 @@ level: 2
 **进入条件**:Phase 3 矩阵 ≥1 个候选目标。
 
 **强制流程(每个候选目标走一遍)**:
-1. 看目标信号,从下表选 1 个 playbook
+1. 看目标信号,先判**目标原型**(A-Java 管理面 / B-SPA+API / C-传统站 / D-小程序 / E-云上 / F-官网 / G-已有入口),按 `references/methodology/10-archetype-routing.md` 的序列定打点顺序;再从下表选当前类的 playbook
 2. **Read 该 playbook 文件**(不准跳过、不准凭记忆替代)
 3. 按 playbook 的"参数频率表"挑入口
 4. 按 playbook 的"payload 库"探测——payload 来自文件,不来自训练记忆
@@ -136,6 +136,7 @@ level: 2
 - Vue SPA 后台插件路由表过短 / 直访业务路由 404(动态路由、未加载路由、守卫弹回) → `references/methodology/07-js-recon.md` §8
 - 资产矩阵 ≥15 且用户明确要求并行 / 多 agent → `references/methodology/08-multi-agent.md`(设计稿,默认关)
 - 收工前核对覆盖率 / 跨会话续作同一目标 / 建 findings 台账 → `references/methodology/09-target-workspace.md`
+- 新目标定型(该按什么顺序打) → `references/methodology/10-archetype-routing.md`
 
 ---
 
