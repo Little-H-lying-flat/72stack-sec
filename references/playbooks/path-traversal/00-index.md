@@ -14,6 +14,7 @@
 | 探到包含点,链上 Phar / Session / Proc 等高级利用 | `13-phar-session-proc.md` |
 
 > 与上传场景的路径穿越见 [`../file-upload/11-archive-traversal.md`](../file-upload/11-archive-traversal.md)。
+> **未知 action 判别**（20260830 实战）：`app.php?a=任意未知值` 返回**固定小体积 stub**（如 20B "Undefined Operation."）= switch 分发、非文件包含——包含假设降级为 clean，别再发穿越探针。
 
 ---
 
