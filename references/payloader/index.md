@@ -1,6 +1,6 @@
 # Payload 知识库（结构化）
 
-- Web 攻击 payload: **177** 条 / 23 类
+- Web 攻击 payload: **182** 条 / 23 类
 - 内网渗透 payload: **128** 条 / 11 类
 - 工具命令速查: **114** 条 / 14 类
 - WAF/EDR 绕过 payload: **176** 条原始 payload（含绕过变体集） → [waf-bypass.md](waf-bypass.md)
@@ -24,7 +24,7 @@
 | 业务逻辑漏洞 | 5 | [by-category/web/业务逻辑漏洞.md](by-category/web/业务逻辑漏洞.md) |
 | AI安全 | 4 | [by-category/web/ai安全.md](by-category/web/ai安全.md) |
 | JWT安全 | 4 | [by-category/web/jwt安全.md](by-category/web/jwt安全.md) |
-| 云安全漏洞 | 4 | [by-category/web/云安全漏洞.md](by-category/web/云安全漏洞.md) |
+| 云安全漏洞 | 9 | [by-category/web/云安全漏洞.md](by-category/web/云安全漏洞.md) |
 | 请求走私 | 4 | [by-category/web/请求走私.md](by-category/web/请求走私.md) |
 | WebSocket安全 | 3 | [by-category/web/websocket安全.md](by-category/web/websocket安全.md) |
 | 供应链攻击 | 3 | [by-category/web/供应链攻击.md](by-category/web/供应链攻击.md) |
