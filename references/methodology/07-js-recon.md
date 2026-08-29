@@ -31,7 +31,7 @@
 - 命名规律:`app.[hash].js`、`{N}.{hash}.chunk.js`、`static/js/{N}.{hash}.chunk.js`
 - 遍历法:从 runtime(manifest)chunk 里拿全量 chunk 映射;或对 chunk id 做数字递增尝试(`1.js`~`500.js`,配合 hash 才有效,无 hash 直接试)
 - 框架数据负载:`__NEXT_DATA__`(Next)、`__NUXT__`(Nuxt)——页面级 props 里常有 API base、用户上下文、内部配置
-- 路由提取:react-router/vue-router 的路由表是明文数组——**admin/dashboard/internal 等隐藏路由**直接从路由表读,然后逐个验证后端鉴权(路由隐藏≠授权)
+- 路由提取:react-router/vue-router 的路由表是明文数组——**admin/dashboard/internal 等隐藏路由**直接从路由表读,然后逐个验证后端鉴权(路由隐藏≠授权)。Vue SPA 另有一类"JS 里定义了但 router 实例未注册"的动态路由,插件拿不到,见 §8
 
 ## 4. Endpoint / 密钥正则清单(对 bundle 直接 grep)
 
@@ -82,4 +82,41 @@ grep -rhoE '(AKIA[0-9A-Z]{16}|LTAI[0-9A-Za-z]{12,}|/api/[a-zA-Z0-9_/-]+)' js/ | 
 # → 人工/LLM 分诊 → 后端验证矩阵
 ```
 
-来源:公开常用手法整理(katana/gau/waybackurls 等 README、hakrawler、各 JS 侦察公开文章),无未披露内容。
+## 8. Vue SPA 路由最大化(已加载 vs 未加载路由)
+
+> 适用:Vue 2/3 + vue-router 后台系统。核心认知:**Vue Crack / vue-devtools 类插件调的是 `getRoutes()`,只返回"已加载"路由**。做权限分离的后台(典型如 JeeSite)实例化 router 时只注册 `/login`、`/tokenLogin`;`/dashboard`、`/system` 等业务路由在 JS 里 component 都写好了却未注册,登录后由路由守卫按角色 `addRoute()` 动态补——未授权状态下插件看不见、直访 404。
+
+**第一步:差集法找出"定义了但未加载"的路由**
+
+| 步骤 | 动作 |
+|---|---|
+| 1 | 插件 / 控制台 `getRoutes()` 存档 = 已加载集 |
+| 2 | 全量 js bundle 提取路由定义(findsomething 或直接 grep,正则见下) |
+| 3 | 差集 = JS 里有、getRoutes() 没有 → 未加载路由,通常正是权限分离藏起来的后台模块 |
+
+```
+path:\s*['"]\/[a-zA-Z0-9_:\/-]+['"]
+name:\s*['"][A-Za-z][A-Za-z0-9]*['"]
+component:\s*\(\)\s*=>\s*import\(['"][^'"]+['"]\)
+```
+
+**第二步:手动加载未加载路由(无可靠自动化)**
+
+| 方案 | 操作 | 缺陷 |
+|---|---|---|
+| addRoute | 控制台 / 改 js 拿 router 实例 → `addRoute(路由对象)` | 须实际访问一次该路由触发解析后,`getRoutes()` 才返回 |
+| 塞路由表(推荐) | 改 js,把未加载路由对象并进 `createRouter({routes:[...]})` 的路由表再实例化 | 一次改完,插件直接可见全部路由 |
+
+自动化止步于差集清单:模块化 import 的路由定义在模块局部作用域,油猴注入拿不到;后端接口返回路由表的方案同理。加载这步必须手动改 JS。
+
+**第三步:进了路由被弹回 /login(路由守卫)三解法**
+
+- hook router 的 `push / replace / go` 三个方法——改 js 在 createRouter 之后直接置空最稳
+- 白名单伪造:把目标路由塞进路由守卫的 whitelist 数组——**前提是该路由已加载**,未加载路由改白名单照样 404,仍要走第二步
+- 插件:[AntiDebug_Breaker](https://github.com/0xsdeo/AntiDebug_Breaker)(获取路由 / 清跳转 / 清守卫 / 多 router 实例切换)
+
+**多 router 实例**:一个页面可挂多个 Vue 实例、多个 Router;有的插件扫到一个 Vue 实例就 return,漏掉真正挂 router 的那个——验证时遍历全部实例。
+
+**收口**:路由能进 ≠ 后端放行。所有加载出的路由按 §6 验证矩阵打——匿名直访 + 低权 token 看接口行为;路由可达 + 接口未授权 = P1 链(进 `arbitrary-x-authz.md`)。
+
+来源:公开常用手法整理(katana/gau/waybackurls 等 README、hakrawler、各 JS 侦察公开文章、Spade sec 公众号《最大化获取Vue框架(SPA类型)下的路由》(0xsdeo)),无未披露内容。
