@@ -1,0 +1,24 @@
+id: k8s-dashboard-exposure
+
+info:
+  name: Kubernetes Dashboard Exposure (fingerprint)
+  author: 72stack-sec
+  severity: info
+  description: "Kubernetes Dashboard reachable. Fingerprint only - anonymous access depends on skip-button login being enabled, verify manually per playbook before reporting. Target https://{NODE}:8443, run nuclei with -insecure. Source: playbooks/cloud/40-k8s.md (k8s-dashboard-registry)."
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: k8s,dashboard,fingerprint,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/"
+    matchers:
+      - type: word
+        words:
+          - "kubernetes-dashboard"
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and
