@@ -86,6 +86,7 @@ level: 2
 | 资产含 银行 / 支付 / 网银 / 第三方支付聚合 | `references/industry/banking-finance.md` |
 | 资产含 运营商 / BOSS / 网管 / 物联网卡 | `references/industry/telecom-isp.md` |
 | 指纹含 `aliyuncs/myqcloud/amazonaws` 或端口含 `6443/10250/2379/5000` | `references/playbooks/cloud/10-recon-exposure.md` |
+| 任何指纹命中(含未入库 CMS/系统) | 先查 `references/dictionaries/chinese-srcfingerprints.md` + `default-credentials-cn.md`;未命中 → 把指纹带证据回填字典 |
 
 ---
 

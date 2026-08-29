@@ -53,6 +53,8 @@ WooYun 27,732 案例中，**66% 在登录框、64% 在搜索、60% 在 POST 表�
 # 搜索
 /search.php?keyword=test
 /list.aspx?stid=5882&pageid=2
+# ↑ 先从页面表单提取真实字段名(word/keyword/s 各家不同),别按惯例猜
+#   字段名就在你已存的首页证据的 <input name=""> 里
 
 # 后台
 /admin/login.aspx
