@@ -101,6 +101,8 @@ C 独自汇总,Read compliance.md + templates 走原流程。子 agent 不参与
 
 ## 5. 全局治理(C 维护三本账)
 
+> 三本账的单人落地格式(scope.md / findings.md 台账)见 [`09-target-workspace.md`](09-target-workspace.md);并发模式在同名文件上升级为卡粒度。
+
 | 账 | 内容 | 用途 |
 |---|---|---|
 | **scope 账** | in/out 清单 + 每张卡的派发记录 | 任何越界可追溯到卡 |
