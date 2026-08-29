@@ -91,6 +91,18 @@ Or invoke explicitly:
 | intranet-postexp (post-exploitation reference) | — |
 | cloud (cloud engagements / IAM / object storage / K8s) | 14 |
 
+## Changelog
+
+### 2026-08-30
+
+- **Cloud security sub-playbook** (`playbooks/cloud/`, 5 files): cloud-engagement intake addendum, control-plane exposure, IAM/RAM/CAM privesc, object storage deep-dive, K8s black-box entry; 14 H1 cloud cases, WSTG/CWE mappings
+- **6 new nuclei cloud templates**; also fixed YAML quoting in all existing template descriptions (they previously failed to load in nuclei)
+- payloader cloud entries 4 → 9 (cn-cloud metadata / object storage / credential validation / K8s unauth), payload total 305 → 310
+- compliance.md cloud red-line addendum; cloud routing in SKILL Phase 3/4; cross-reference added to enterprise-src-hunt
+- Phase 4 hardening: mandatory 3-probe differential gate on hit + dedup suppression per endpoint × vuln-class (borrowed from CyberStrike)
+- Report template: WSTG / CWE fields
+- Multi-agent orchestration design draft (`methodology/08-multi-agent.md`, off by default pending live validation)
+
 ## Sources
 
 - HackerOne hacktivity feed — 2887 disclosed High/Critical reports, fetched directly. Public data.

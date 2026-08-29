@@ -116,6 +116,18 @@ skill 内置触发词包括：
 | intranet-postexp（内网 / 后渗透速查） | — |
 | cloud（云授权 / IAM / 对象存储 / K8s） | 14 |
 
+## 更新日志
+
+### 2026-08-30
+
+- **云安全子 playbook**（`playbooks/cloud/`，5 文件）：云授权项目 Intake 增量、控制面暴露识别、IAM/RAM/CAM 提权、对象存储深挖、K8s 黑盒入口；含 14 条 H1 云案例与 WSTG/CWE 映射
+- **6 个 nuclei 云初筛模板**；顺带修复全部既有模板 description 的 YAML 引号问题（此前 nuclei 实际无法加载）
+- payloader 云安全 4 → 9 条（新增国内云元数据 / 对象存储错配 / 凭据验证 / K8s 未授权），payload 总数 305 → 310
+- compliance.md 增补云授权红线；SKILL.md Phase 3/4 增加云路由；enterprise-src-hunt 增加云专项交叉引用
+- Phase 4 加固：命中后强制三段差分确认 + 同 endpoint 同漏洞类去重抑制（借鉴 CyberStrike 的 3-gate / duplicate suppression）
+- 报告模板增加 WSTG / CWE 字段
+- 新增多 agent 执行工作流设计稿（`methodology/08-multi-agent.md`，默认关闭，待实战验证）
+
 ## 数据来源
 
 - HackerOne hacktivity feed：HackerOne High/Critical 披露报告（原始 2887 + 2026-08 增量共 2951 份唯一案例），来源为公开 hacktivity 数据。
