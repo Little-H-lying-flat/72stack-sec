@@ -192,6 +192,13 @@ no throttle
 
 参考案例：健一网 APP（wooyun-2015-0139590）、你我金融。
 
+#### 空会话验证码（ASP GetCode 模式，20260830 实战）
+
+【条件】ASP 站验证码图为独立文件（如 `GetCode.asp`），session("code") 仅在该文件被请求时写入
+【操作】新 cookie jar 只访问表单页、**绝不请求 GetCode**，提交 `verifycode=` 空值——空串 == 空会话，注册/登录双口直过
+【证据】练习靶场 5vshop 实测：注册弹"恭喜，注册成功"、登录 Set-Cookie 用户 cookie + userinfo 渲染用户中心，全程零 GetCode 请求
+【日期】20260830
+
 ### 3.4 支付 / 订单（9 案例）
 
 #### 价格篡改
