@@ -97,7 +97,7 @@ level: 2
 **强制流程(每个候选目标走一遍)**:
 1. 看目标信号,先判**目标原型**(A-Java 管理面 / B-SPA+API / C-传统站 / D-小程序 / E-云上 / F-官网 / G-已有入口),按 `references/methodology/10-archetype-routing.md` 的序列定打点顺序;再从下表选当前类的 playbook
 2. **Read 该 playbook 文件**(不准跳过、不准凭记忆替代)
-3. 按 playbook 的"参数频率表"挑入口
+3. 按 playbook 的"参数频率表"挑入口。**证据先行门闩**:每个新路径/参数标注来源——(a) 已采证据(表单字段/页面链接/base href),(b) 指纹字典,(c) playbook 频率表;三者皆非的纯猜测探针排到 parked 清单尾部,不与来源探针混跑(实战教训:猜 keyword 实为 word、按根目录猜后台在子目录部署下全 404)
 4. 按 playbook 的"payload 库"探测——payload 来自文件,不来自训练记忆
 5. 被 WAF 拦 → Read `references/methodology/02-bypass-toolkit.md` 决策树
 6. 命中后先走三段差分确认(baseline → attack → 对照,规则见 `references/methodology/03-evidence-discipline.md` §3 原则 2);差分不成立 → 只能标"待验证假设",不进 Phase 5

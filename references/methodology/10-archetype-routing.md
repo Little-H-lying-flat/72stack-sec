@@ -36,6 +36,8 @@
 
 **序列前先做**:确定应用**真实根**——从 base href / 静态资源路径 / Set-Cookie path 判断 CMS 实际部署目录。CMS 常被部署在任意子目录(实战案例:MLECMS 整站部署在 `/mlecms/upload/` 下),按域名根拼 admin/install 字典会全 404。
 
+**版本号即线索**:指纹直出版本号(如 MLECMS v2.3 的 copyright 头)→ 先检索公开漏洞库(exploit-db / seebug / 厂商历史公告,以实际检索结果为准,不凭记忆引编号)再决定自挖顺序——2010 年代国产 CMS 的已知洞密度通常远高于新挖产出。
+
 **序列**:`info-disclosure`(.git/.svn/备份/源码泄漏) → `sqli`(老站参数化差) → `file-upload`(后台上传) → `rce/10-framework`(ThinkPHP 系)
 
 **理由**:老站的价值在"泄露面大 + 补丁慢"。.git/备份泄露直接进 01 的升级链(源码 → hardcoded secret → P0)。
