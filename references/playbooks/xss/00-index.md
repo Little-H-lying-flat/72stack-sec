@@ -320,7 +320,7 @@ mXSS / 邮件预览             = 6.5–8.1
 
 ## 相关 MCP 工具
 
-实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../tools/mcp-jshook.md) §推荐 profile)。
+实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md) §推荐 profile)。
 
 | 工具 | 域 | 调用时机 |
 |---|---|---|
@@ -330,7 +330,7 @@ mXSS / 邮件预览             = 6.5–8.1
 | `mcp__jshook__hook_preset` | hooks | 装 eval / atob / Function preset,捕获运行时反序列化 |
 | `mcp__jshook__sourcemap_reconstruct_tree` | sourcemap | 还原原始源码定位 sink |
 
-完整映射:[`../tools/mcp-jshook.md`](../tools/mcp-jshook.md)
+完整映射:[`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md)
 
 ## 8. 不要做的事
 

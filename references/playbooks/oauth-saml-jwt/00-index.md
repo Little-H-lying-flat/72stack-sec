@@ -293,7 +293,7 @@ SAML XSW                            = 9.8 Critical
 
 ## 相关 MCP 工具
 
-实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../tools/mcp-jshook.md) §推荐 profile)。
+实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md) §推荐 profile)。
 
 | 工具 | 域 | 调用时机 |
 |---|---|---|
@@ -303,7 +303,7 @@ SAML XSW                            = 9.8 Critical
 | `mcp__jshook__debugger_evaluate` | debugger | 在前端追 SAML 断言 / JWT 解析逻辑 |
 | `mcp__jshook__detect_crypto` + `mcp__jshook__crypto_extract_standalone` | core / transform | 提取签名函数离线复算 |
 
-完整映射:[`../tools/mcp-jshook.md`](../tools/mcp-jshook.md)
+完整映射:[`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md)
 
 ## 8. 不要做的事
 

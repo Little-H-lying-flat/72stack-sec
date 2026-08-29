@@ -1,6 +1,6 @@
 # 内网/后渗透 — 权限提升 payload 库
 
-> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../compliance.md)
+> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../../compliance.md)
 > 涵盖:UAC bypass / sudo / Linux 内核 / SUID / Windows token / SeImpersonate / Print Spooler
 
 ---
