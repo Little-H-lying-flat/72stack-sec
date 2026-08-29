@@ -121,6 +121,7 @@ skill 内置触发词包括：
 ### 2026-08-30
 
 - 实战会话 +2条（logic-flaws §3.3 新增"空会话验证码"ASP GetCode 模式，注册+登录双口实测绕过）
+- 实战会话 +2条（02 §2.1 "先画像再选技"过滤器画像法；path-traversal switch 分发签名；compliance 补支付网关 scope 规则；logic-flaws 空会话验证码适用面扩展至全部 verifycode 口）
 
 - **云安全子 playbook**（`playbooks/cloud/`，5 文件）：云授权项目 Intake 增量、控制面暴露识别、IAM/RAM/CAM 提权、对象存储深挖、K8s 黑盒入口；含 14 条 H1 云案例与 WSTG/CWE 映射
 - **6 个 nuclei 云初筛模板**；顺带修复全部既有模板 description 的 YAML 引号问题（此前 nuclei 实际无法加载）
