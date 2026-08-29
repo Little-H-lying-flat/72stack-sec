@@ -464,6 +464,27 @@ o (1 例)          cmd (1 例)        trueName (1 例)
 参数：phone / mobile / iccid / imsi / cardId / spid / appid
 ```
 
+### 4.5 国产小型 CMS / 电商（实战回填 20260830）
+
+> 来源:授权练习靶场实测,指纹均可验证。**默认凭据未回填**——实测 admin/admin 与 admin/111111 均失败,未验证的不入库。
+
+**MLECMS(含 v2.3)**
+
+```
+HTML:  <meta name="copyright" content="2009-2011 MLECMS v2.3" />   ← 版本直出
+HTTP:  Set-Cookie: mlecms_global_language=1
+后台:  /admin/ 为 JS 跳转(location="login.php"),title 含 "Powered by mlecms"
+结构:  整个 CMS 可被部署在任意子目录(实例:整站位于 /mlecms/upload/)
+       → 先从 base href / Set-Cookie path 定真实根,再拼路径字典
+```
+
+**5vshop 电商系统(ASP)**
+
+```
+HTML:  <title>5vshop电商系统...</title> / <meta name="author" content="5vShop" />
+特征:  ASP 单入口(index.asp) + gb2312 + IIS
+```
+
 ---
 
 ## 5. 文件指纹检测一行命令

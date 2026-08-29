@@ -27,6 +27,8 @@ YYYYMMDD-HHMMSS_<endpoint-slug>_<vuln-class>_<seq>.<txt|png|har|mp4>
 
 同一 finding 的全部证据共享同一前缀(`日期-时间` 段固定)→ 报告附件一键归集。
 
+**重跑纪律**:同一探针重跑一律用新 `_seq`,禁止覆盖旧文件——首跑数据哪怕疑似脏也保留,台账以重跑结果为准(实测教训:首跑的 URL 变量残留产生过一次假 404)。
+
 **完整性清单**:会话收尾执行 `sha256sum evidence/* > evidence/MANIFEST.sha256`(并记入 scope.md 的 next 节)——平台审核争议时证明证据自采集起未被改动。
 
 ---
