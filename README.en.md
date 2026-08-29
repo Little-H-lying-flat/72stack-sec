@@ -4,7 +4,7 @@
 
 A Claude Code skill for SRC / bug-bounty / pentest workflows. Loads automatically when you mention things like *bug bounty*, *hackerone*, *waf bypass*, or *任意账号*, and walks Claude through a five-phase hunt: intake → recon → enum → hunt → report.
 
-It bundles a knowledge base built from public sources: nineteen attack-class playbooks, three hundred-odd structured payloads with WAF/EDR bypass variants, the full HackerOne hacktivity feed (High and Critical, disclosed) at the time of build, and statistical residue from the old WooYun corpus.
+It bundles a knowledge base built from public sources: twenty attack-class playbooks (including cloud security / Kubernetes / object storage), three hundred-odd structured payloads with WAF/EDR bypass variants, the full HackerOne hacktivity feed (High and Critical, disclosed) at the time of build, and statistical residue from the old WooYun corpus.
 
 ## Install
 
@@ -25,13 +25,13 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```
 references/
-  methodology/    five-phase workflow, attack-priority, bypass toolkit, evidence rules
+  methodology/    five-phase workflow, attack-priority, bypass toolkit, evidence rules, 2026 hunter methodology, JS recon & Vue SPA route-maxing, multi-agent orchestration (design draft)
   playbooks/      one file per attack class — each ends with real H1 cases and a payload library
   industry/       banking/finance and telecom/ISP verticals
   dictionaries/   default credentials and component fingerprints (Chinese stack)
   templates/      submission template (CVSS 4.0)
   h1-reports/     2887 disclosed reports, raw + grouped by weakness
-  payloader/      305 structured payloads, 263 WAF/EDR bypass steps, 114 tool cheats
+  payloader/      310 structured payloads, 263 WAF/EDR bypass steps, 114 tool cheats
 ```
 
 The playbooks are the entry point. They're written from a black-box hunter's perspective — assume you only have a URL — and each one carries the same shape: where to look, what to throw, what response shapes to watch for, how to escalate, and the legal lines.
@@ -47,7 +47,7 @@ Seven high-affinity playbooks (`xss` / `rce` / `ssrf-cache-host` / `mobile` / `o
 ## TODO
 
 - Support more MCP tools
-- Multi-agent execution workflow
+- Multi-agent execution workflow (design draft: [references/methodology/08-multi-agent.md](references/methodology/08-multi-agent.md) — off by default, enable after live validation)
 
 ## Triggers
 
@@ -89,12 +89,13 @@ Or invoke explicitly:
 | llm-prompt-injection | 1 |
 | graphql | 1 |
 | intranet-postexp (post-exploitation reference) | — |
+| cloud (cloud engagements / IAM / object storage / K8s) | 14 |
 
 ## Sources
 
 - HackerOne hacktivity feed — 2887 disclosed High/Critical reports, fetched directly. Public data.
 - WooYun historical archive — 88,636 cases. Only parameter-frequency tables, case IDs, and bypass patterns are retained. The platform is defunct; data is unrecoverable elsewhere.
-- Payloader — 305 structured payloads, 263 WAF/EDR bypass steps, 114 tool cheats from the open-source `3516634930/Payloader` repo.
+- Payloader — 310 structured payloads, 263 WAF/EDR bypass steps, 114 tool cheats, originally from the open-source `3516634930/Payloader` repo (5 of the 9 cloud entries are authored in-repo; see the provenance note in the file).
 
 This project re-organizes and translates these sources into a hunter-oriented skill. No proprietary data, no scraping of authenticated content.
 

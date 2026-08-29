@@ -12,8 +12,8 @@ intake → recon → enum → hunt → report
 
 项目内置了一批从公开来源整理的知识库，包括：
 
-- 19 类攻击 playbook
-- 305 个结构化 payload
+- 20 类攻击 playbook（含云安全 / K8s / 对象存储子 playbook）
+- 310 个结构化 payload
 - WAF / EDR 绕过变体
 - HackerOne 已披露 High / Critical hacktivity 数据
 - WooYun 历史案例统计残余
@@ -38,13 +38,13 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编
-  playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload
+  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、多 agent 编排（设计稿）
+  playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
   templates/      CVSS 4.0 报告模板
   h1-reports/     HackerOne High/Critical 披露案例（原始 2887 + 2026-08 增量，分类索引 2836 条/144 类），并按 weakness 分组
-  payloader/      305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload、114 个工具命令
+  payloader/      310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload、114 个工具命令
 ```
 
 playbook 是主要入口。所有 playbook 都按黑盒视角编写，默认你只有 URL，没有源码。
@@ -71,7 +71,7 @@ playbook 是主要入口。所有 playbook 都按黑盒视角编写，默认你�
 ## TODO
 
 - 支持引入更多 tools
-- 多 agent 执行工作流
+- 多 agent 执行工作流（设计稿：[references/methodology/08-multi-agent.md](references/methodology/08-multi-agent.md)，默认关闭，待实战验证后启用）
 
 ## 触发关键词
 
@@ -114,12 +114,13 @@ skill 内置触发词包括：
 | llm-prompt-injection | 1 |
 | graphql | 1 |
 | intranet-postexp（内网 / 后渗透速查） | — |
+| cloud（云授权 / IAM / 对象存储 / K8s） | 14 |
 
 ## 数据来源
 
 - HackerOne hacktivity feed：HackerOne High/Critical 披露报告（原始 2887 + 2026-08 增量共 2951 份唯一案例），来源为公开 hacktivity 数据。
 - WooYun 历史档案：覆盖 88,636 条案例，仅保留参数频率、案例 ID 和 bypass 模式等统计残余。
-- Payloader：305 条结构化 payload + 176 个原始 WAF / EDR 绕过 payload + 114 条工具命令，原仓库为 `3516634930/Payloader`。
+- Payloader：310 条结构化 payload + 176 个原始 WAF / EDR 绕过 payload + 114 条工具命令，原仓库为 `3516634930/Payloader`（云安全 9 条中 5 条为本库编写，见其文件头溯源标注）。
 
 本项目只整理、翻译和重组公开资料，不包含专有数据，也不抓取需要认证的内容。
 

@@ -16,6 +16,7 @@
 - [ ] 副作用证据（外带 / 数据 / 文件 / 命令输出）
 - [ ] 至少 3 次复现成功（关键漏洞 5 次）
 - [ ] CVSS 3.1 / 4.0 vector + 影响段
+- [ ] WSTG / CWE 分类编号（选填加分项，如 WSTG-INPV-05 / CWE-89）
 - [ ] 修复建议（具体 + 可操作）
 - [ ] 未对生产数据造成不可逆影响
 - [ ] 个人 PII / 第三方数据已脱敏
@@ -60,6 +61,8 @@
 **位置**：`POST /api/search` 的 `keyword` 参数
 **严重程度**：High
 **CVSS 3.1**：8.1（`AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N`）
+**WSTG 分类**：WSTG-INPV-05（SQL Injection Testing）
+**CWE 编号**：CWE-89
 **先决条件**：拥有有效注册账号（免费注册）
 **影响范围**：可拖出 users 表 / 读 admin 密码 hash
 
