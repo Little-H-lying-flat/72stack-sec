@@ -8,6 +8,8 @@
 
 **时机**:Phase 1 checkpoint 的 scope / rules 两项确认后立即建账(建账本身就是 checkpoint 第 5 项)。
 
+**建账后第一个请求**:对主域采 **404 基线**(`evidence/404-baseline.html`)——CMS 自定义 404 常返回 200+模板,没有基线,后续所有"路径存在/不存在"的判断都是裸奔(规则见 `../playbooks/info-disclosure.md` §3.0)。
+
 **位置**:agent 工作区下 `work/<target-slug>/`,target-slug = 主域去 `www`(如 `work/example-com/`)。
 
 ```text

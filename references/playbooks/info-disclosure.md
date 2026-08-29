@@ -149,6 +149,18 @@ https://{bucket}.cos.{region}.myqcloud.com/
 
 ## 3. 探测手法
 
+### 3.0 先建 404 基线（必做，一切路径探测之前）
+
+CMS / 框架的自定义 404 常返回 **200 + 带模板的正文**，按状态码判"存在"会把整个字典判成命中。
+
+```bash
+curl -s -m 8 -o 404-baseline.html -w "%{http_code} %{size_download}B\n" \
+  "https://target/$(openssl rand -hex 8).html"
+grep -oE "<title>[^<]*</title>" 404-baseline.html
+```
+
+把基线的 status / size / title 记入台账。后续每个"命中"必须与基线对照：**status 不同，或 size 差 >30%，或 title 不同**——三者取一，且能在证据里复述，否则按不存在处理。
+
 ### 3.1 一行命令探测
 
 ```bash
