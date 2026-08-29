@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、19 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS）、305 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
+description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -17,6 +17,7 @@ level: 2
 
 命中任一即进入:
 - "src 挖洞 / 漏洞赏金 / bug bounty / 众测 / hackerone / Security Response Center"
+- "Vue SPA 隐藏路由 / 动态路由 / 未加载路由 / 后台菜单不显示"
 - "如何挖 / 怎么测 / 怎么打 + 某目标 / 某接口 / 某参数"
 - "WAF 绕过 / 任意账号 / 任意修改 / 密码重置 / 未授权访问 / 默认凭据"
 - 用户给一个 URL / API endpoint / APK 让你测
@@ -71,7 +72,7 @@ level: 2
 
 **MUST 输出**:活资产矩阵——`域 → 端口 → 服务 → 指纹 → JS endpoint`。
 
-**工具推荐**:国内目标子域收集首选 OneForAll(见 `tools/frameworks-2026.md`);规模化初筛用 `tools/nuclei-templates/`(payload 均出自本库 playbook),命中后回 playbook 走完整流程。
+**工具推荐**:国内目标子域收集首选 OneForAll(见 `references/tools/frameworks-2026.md`);规模化初筛用 `references/tools/nuclei-templates/`(payload 均出自本库 playbook),命中后回 playbook 走完整流程。
 
 **条件触发 Read**(命中就必读,不命中不读):
 
@@ -80,6 +81,7 @@ level: 2
 | 指纹含 `weaver/seeyon/tongda/landray/yongyou/kingdee/hikvision/dahua` | `references/dictionaries/chinese-srcfingerprints.md` + `references/dictionaries/default-credentials-cn.md` |
 | 资产含 银行 / 支付 / 网银 / 第三方支付聚合 | `references/industry/banking-finance.md` |
 | 资产含 运营商 / BOSS / 网管 / 物联网卡 | `references/industry/telecom-isp.md` |
+| 指纹含 `aliyuncs/myqcloud/amazonaws` 或端口含 `6443/10250/2379/5000` | `references/playbooks/cloud/10-recon-exposure.md` |
 
 ---
 
@@ -93,7 +95,8 @@ level: 2
 3. 按 playbook 的"参数频率表"挑入口
 4. 按 playbook 的"payload 库"探测——payload 来自文件,不来自训练记忆
 5. 被 WAF 拦 → Read `references/methodology/02-bypass-toolkit.md` 决策树
-6. 命中后立即保存 HTTP 包 / 截图 → 进 Phase 5 候选
+6. 命中后先走三段差分确认(baseline → attack → 对照,规则见 `references/methodology/03-evidence-discipline.md` §3 原则 2);差分不成立 → 只能标"待验证假设",不进 Phase 5
+7. 差分确认通过后保存 HTTP 包 / 截图 → 进 Phase 5 候选。同一 endpoint + 同一漏洞类只记一个 finding,同源变体确认一次后不再重复触发(去重,防触发风控)
 
 | 入口信号 | MUST Read |
 |---|---|
@@ -116,6 +119,7 @@ level: 2
 | APK / IPA / 移动端 | `references/playbooks/mobile.md` |
 | LLM agent / prompt 入口 / 工具调用 | `references/playbooks/llm-prompt-injection/00-index.md` |
 | 已拿到 shell / 凭据 / 内网 | `references/playbooks/intranet-postexp/00-index.md` |
+| 云上资产 / 云授权项目 / 对象存储(OSS/COS/S3) / K8s 端口 / 云凭据(AK/STS) | `references/playbooks/cloud/00-index.md` |
 
 **两步 Read 模式(已拆分的 playbook)**:目录形式的 playbook(`rce/` / `oauth-saml-jwt/` / `ssrf-cache-host/` / `api-rest/` / `logic-flaws/` / `file-upload/` / `path-traversal/` / `xss/` / `llm-prompt-injection/` / `intranet-postexp/`)第一步只 Read `00-index.md`——它含**子文件路由表**和通用方法论。**不要把 00-index 当 payload 库用**,据子文件路由定位到具体场景后**再 Read 对应子文件**(如 `rce/14-ssti.md` / `oauth-saml-jwt/12-jwt.md`)。单文件形式的 playbook(`sqli.md` / `xxx.md`)直接 Read 即可。
 
@@ -126,6 +130,8 @@ level: 2
 - 找不到漏洞点 → `references/methodology/04-control-gap-hunting.md`
 - 想对齐 2026 一线打法(选目标哲学 / 攻击面组织 / 链式打点 / AI 分工) → `references/methodology/06-hunter-methodology-2026.md`
 - SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
+- Vue SPA 后台插件路由表过短 / 直访业务路由 404(动态路由、未加载路由、守卫弹回) → `references/methodology/07-js-recon.md` §8
+- 资产矩阵 ≥15 且用户明确要求并行 / 多 agent → `references/methodology/08-multi-agent.md`(设计稿,默认关)
 
 ---
 
