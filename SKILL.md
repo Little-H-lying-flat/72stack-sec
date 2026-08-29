@@ -24,11 +24,13 @@ level: 2
 
 **不应触发**:纯白盒源码审计 → `src-audit-chain` skill;漏洞修复问答 → 通用对话;CTF → 通用对话。
 
+**与 enterprise-src-hunt 的分工**:它管**流程与账本**(S0–S7 / 模块账本 / 双账号),本 skill 管**每类漏洞的弹药库**(playbook / payload / H1 案例 / nuclei 模板)——ES 的 S5.G 命中某类 → Read 本 skill 对应 playbook;本 skill 的 Phase 1–5 也可独立于 ES 使用。
+
 ---
 
 ## 反幻觉硬约束(全程适用)
 
-1. **不准凭记忆出 payload**。要给 SQLi/RCE/SSRF/XSS 任何 payload 前,先 Read 对应 `references/playbooks/<type>.md`(或 `<type>/00-index.md` + 具体子文件,见下表)。Phase 4 的 payload 必须能在文件里查到出处。**出处还要标出来**:Phase 4 会话输出中的每个探测 payload,行尾注明 `(出处: <playbook 文件> §N)`——标不出出处的 payload 不准出现在输出里(那说明没 Read 文件)。
+1. **不准凭记忆出 payload**。要给 SQLi/RCE/SSRF/XSS 任何 payload 前,先 Read 对应 `references/playbooks/<type>.md`(或 `<type>/00-index.md` + 具体子文件,见下表)。Phase 4 的 payload 必须能在文件里查到出处。**出处还要标出来**:Phase 4 会话输出中的每个探测 payload,行尾注明 `(出处: <playbook 文件> §N 或场景 slug)`——标不出出处的 payload 不准出现在输出里(那说明没 Read 文件)。
 2. **不准编造案例编号**。引用 H1/WooYun 案例前必须 Read `references/h1-reports/by-weakness/` 下的实际文件。说不出文件路径就别引。
 3. **无证据不下结论**。无 HTTP 包/截图/视频时只能写"待验证 / 假设",不写"已确认 / 发现漏洞"。
 4. **出 scope 立即停**。任何时候发现要测的资产不在 Phase 1 已确认的 in-scope 列表 → 立即停手,回到 Phase 1 重核。
@@ -146,6 +148,7 @@ level: 2
 **进入条件**:Phase 4 至少一个 finding 已具备可重现 HTTP 包 / 截图 / 视频。
 
 **MUST 流程**(顺序执行):
+0. 打开 `work/<target-slug>/findings.md`——`confirmed` 行即本次提交清单,一行一份报告草稿(evidence 列即附件)
 1. Read `references/compliance.md` 核对合规红线(不准跳)
 2. Read `references/templates/report-submission.md` 取模板
 3. 三段式输出:
