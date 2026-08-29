@@ -129,6 +129,7 @@ skill 内置触发词包括：
 - 新增多 agent 执行工作流设计稿（`methodology/08-multi-agent.md`，默认关闭，待实战验证）
 - 新增 `methodology/09-target-workspace.md`：目标工作区四件套、findings 台账（去重登记簿落地）、**Phase 4 出口检查（覆盖率门闩）**、跨会话续作；Phase 1 checkpoint 增加"建账"项；修复 code-audit 失效引用 → src-audit-chain；补充 jshook 不可用时的回退说明
 - 新增 `methodology/10-archetype-routing.md`：七大目标原型（Java 管理面 / SPA+API / 传统站 / 小程序 / 云上 / 官网 / 已有入口）→ 有序 playbook 序列 + 时间盒分配；compliance.md 增补国内法律边界；evidence 增加 sha256 完整性清单
+- 仓库自检入 CI：`scripts/validate.py`（链接 / nuclei YAML / 计数一致性）+ GitHub Actions；SKILL 与 enterprise-src-hunt 明确"流程 vs 弹药库"分工；10 号文件时间盒与 05 模板对齐；Phase 5 从台账起草
 
 ## 数据来源
 

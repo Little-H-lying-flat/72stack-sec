@@ -104,6 +104,7 @@ Or invoke explicitly:
 - Multi-agent orchestration design draft (`methodology/08-multi-agent.md`, off by default pending live validation)
 - New `methodology/09-target-workspace.md`: workspace quartet per target, findings ledger (dedup registry), **Phase 4 exit gate (coverage matrix)**, cross-session continuity; Phase 1 checkpoint gains a "workspace" item; stale code-audit reference fixed → src-audit-chain; jshook-unavailable fallback documented
 - New `methodology/10-archetype-routing.md`: seven target archetypes (Java admin / SPA+API / legacy / mini-program / cloud / brochure / foothold) → ordered playbook sequences + timebox allocation; compliance.md adds China legal boundaries; sha256 evidence manifest
+- Repo self-check in CI: `scripts/validate.py` (links / nuclei YAML / count consistency) + GitHub Actions; SKILL ↔ enterprise-src-hunt division of labor documented ("process vs ammunition"); archetype timebox aligned with methodology/05 templates; Phase 5 drafts from the ledger
 
 ## Sources
 
