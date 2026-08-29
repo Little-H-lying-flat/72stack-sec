@@ -120,6 +120,8 @@ skill 内置触发词包括：
 
 ### 2026-08-30
 
+- 实战会话 +2条（logic-flaws §3.3 新增"空会话验证码"ASP GetCode 模式，注册+登录双口实测绕过）
+
 - **云安全子 playbook**（`playbooks/cloud/`，5 文件）：云授权项目 Intake 增量、控制面暴露识别、IAM/RAM/CAM 提权、对象存储深挖、K8s 黑盒入口；含 14 条 H1 云案例与 WSTG/CWE 映射
 - **6 个 nuclei 云初筛模板**；顺带修复全部既有模板 description 的 YAML 引号问题（此前 nuclei 实际无法加载）
 - payloader 云安全 4 → 9 条（新增国内云元数据 / 对象存储错配 / 凭据验证 / K8s 未授权），payload 总数 305 → 310

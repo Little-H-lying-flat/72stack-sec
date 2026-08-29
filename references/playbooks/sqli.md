@@ -55,6 +55,8 @@ WooYun 27,732 案例中，**66% 在登录框、64% 在搜索、60% 在 POST 表�
 /list.aspx?stid=5882&pageid=2
 # ↑ 先从页面表单提取真实字段名(word/keyword/s 各家不同),别按惯例猜
 #   字段名就在你已存的首页证据的 <input name=""> 里
+#   ASP 老站表单常为大写标签/无引号属性(<FORM action=x.asp>)——提取正则必须 re.I 且兼容无引号,
+#   否则会漏真实 action 导致 POST 发错端点(20260830 实测教训:白跑一轮 findpass.asp)
 
 # 后台
 /admin/login.aspx
