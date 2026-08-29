@@ -1,6 +1,6 @@
 # 内网渗透 / 后渗透 — 决策索引
 
-> ⚠️ **SRC 红线警告**:绝大多数 bug bounty / 众测程序**不允许**内网横向 / 后渗透。在 RCE / 凭据拿到后,**仅证明可达 + 价值**,不实际横向、不读 NTDS、不打 DC。本目录的内容默认用于**红队 / 授权内测 / 已明确允许后渗透的 HVV**。提交 SRC 前必读 [`../compliance.md`](../compliance.md)。
+> ⚠️ **SRC 红线警告**:绝大多数 bug bounty / 众测程序**不允许**内网横向 / 后渗透。在 RCE / 凭据拿到后,**仅证明可达 + 价值**,不实际横向、不读 NTDS、不打 DC。本目录的内容默认用于**红队 / 授权内测 / 已明确允许后渗透的 HVV**。提交 SRC 前必读 [`../compliance.md`](../../compliance.md)。
 
 ---
 
@@ -51,7 +51,7 @@
 | 进入内网(SSRF 触达) | 探测 1-2 个明确受影响端口的 banner | 端口扫描全网段 / 横向 |
 | AWS / GCP credentials | `aws sts get-caller-identity`(只读 identity)| `aws s3 ls` 等枚举操作 |
 
-任何超出"价值证明"的动作 → 立即停 + 回去看 [`../compliance.md`](../compliance.md)。
+任何超出"价值证明"的动作 → 立即停 + 回去看 [`../compliance.md`](../../compliance.md)。
 
 ---
 

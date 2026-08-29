@@ -1,6 +1,6 @@
 # 内网/后渗透 — 横向移动 payload 库
 
-> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../compliance.md)
+> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../../compliance.md)
 > 涵盖:SMB / WMI / PsExec / RDP / WinRM / Pass-the-Hash / Pass-the-Ticket / Overpass-the-Hash
 
 ---

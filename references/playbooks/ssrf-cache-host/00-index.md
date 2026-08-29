@@ -388,7 +388,7 @@ Host 注入 → 密码重置中毒            = 8.1
 
 ## 相关 MCP 工具
 
-实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../tools/mcp-jshook.md) §推荐 profile)。
+实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md) §推荐 profile)。
 
 | 工具 | 域 | 调用时机 |
 |---|---|---|
@@ -397,7 +397,7 @@ Host 注入 → 密码重置中毒            = 8.1
 | `mcp__jshook__network_replay_request` | network | 重放并修改 host / scheme / port 验证不同协议 |
 | `mcp__jshook__proto_infer_state_machine` | protocol-analysis | 自定义协议 SSRF 状态机推断 |
 
-完整映射:[`../tools/mcp-jshook.md`](../tools/mcp-jshook.md)
+完整映射:[`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md)
 
 ## 8. 不要做的事
 

@@ -1,6 +1,6 @@
 # 内网/后渗透 — 信息收集 payload 库
 
-> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../compliance.md)
+> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../../compliance.md)
 > 涵盖:主机发现 / 端口扫描 / 域信息 / Bloodhound 收集 / SharpHound / netview / hosts 列举
 
 ---

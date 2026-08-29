@@ -1,6 +1,6 @@
 # 内网/后渗透 — ADCS 攻击 payload 库
 
-> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../compliance.md)
+> 父文档:[00-index.md](00-index.md) · ⚠️ SRC 场景下大多受限,见 [../compliance.md](../../compliance.md)
 > 涵盖:ESC1 / ESC2 / ESC3 / ESC4 / ESC8 模板滥用与证书申请
 
 ---

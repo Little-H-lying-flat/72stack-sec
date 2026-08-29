@@ -267,7 +267,7 @@ GET /uploads/20250509142312poc-2025-05-09.jsp
 
 ## 相关 MCP 工具
 
-实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../tools/mcp-jshook.md) §推荐 profile)。
+实战中可调用 jshookmcp 完成自动化。**默认 `search` profile 未预加载工具,调用前先用 `mcp__jshook__activate_tools <工具名>` 激活**(详见 [`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md) §推荐 profile)。
 
 | 工具 | 域 | 调用时机 |
 |---|---|---|
@@ -277,7 +277,7 @@ GET /uploads/20250509142312poc-2025-05-09.jsp
 | `mcp__jshook__network_replay_request` | network | 重放上传请求并改 filename / Content-Type |
 | `mcp__jshook__protobuf_decode_raw` | encoding | 上传响应是 protobuf 时盲解元数据 |
 
-完整映射:[`../tools/mcp-jshook.md`](../tools/mcp-jshook.md)
+完整映射:[`../tools/mcp-jshook.md`](../../tools/mcp-jshook.md)
 
 ## 8. 不要做的事
 

