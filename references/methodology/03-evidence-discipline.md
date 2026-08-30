@@ -153,6 +153,8 @@ P0/P1 漏洞，附 30s–2min 录屏极大提升过审速度。
 
 工具：OBS、ScreenToGif、Burp 自带 Logger 录像、ffmpeg `ffmpeg -f x11grab ...`。
 
+**agent 环境取证**：浏览器自动化（如 browser-use 的 `tab.screenshot()`）可直接产出 PNG 落盘 `evidence/`，与文本证据同目录归档；GET 类复现（差分对照/错误页泄露）优先用此法补截图，POST 流程类以文本证据 + fresh repro 为准。
+
 ---
 
 ## 8. 范围 / 合规边界
