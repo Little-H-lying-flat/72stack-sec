@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+靶场首跑校准:11 号管线 8 处补丁——§0 产物隔离(报告/work/证据永不入 git 远端,commit 前核对 git status)、§1 mission 增 report_dir 字段+§1.1 preflight 工具矩阵(实测 nuclei/httpx/browser-harness 缺失,回退链:python socket 端口扫/CT 日志子域/录屏类转出)、§4.1 节流阶梯量化(8→15→30→60s,并发 2→1,三档)、§4.5 reverify 拆 repro/oob 两类(OOB 回调 5/15/60min 轮询,未到≠阴性,防假阴性)、§4.6 账号缺口降级(注册撞验证码→skipped-because: no-account 继续,需求汇入终局清单,不提问)、§5.1 增消费性判别标准动作(全零差分先查证据真实参数形态,再打不存在值区分"未消费/数字归一")+§5.2 触发条件补全零差分、§7 报告产物落 report_dir、§8 增 evidence 同轮前缀核对(中断会话遗留文件防重复烧限额)。校准来源=靶场第 15 轮全托管首跑(F-28 3389/RDP 新面表征级、F-29 mlecms 数字参数族全族 clean 收口、F-03 默认凭据 3/3 closed)。
+
 - 2026-08-30 用户指令:11 号管线吸收 GitHub 三模式——RefPentester 自反思循环落成新 §5(项级三行反思每个队列项收尾必做:试了什么/看到什么信号(含阴性)/下一步假设;深度反思 R=2 轮上限触发于预算耗尽/连续 8 探针无新信息/同类信号重复,四步:复盘→归因(03 §2 查自己+02 §2.1 查目标)→修正计划 ≤3 条标依据→小批试错,反思产出的猜测探针不豁免证据先行;类级信号跨项复用,结论强制落盘 notes/next 节);HackingBuddyGPT 有限步数落成 §3 第 6 条队列项 budget(15 探针或 20 分钟先到为准,耗尽不许继续磨);CAI 双模式落成 mission 块 mode 字段(full/checkpoint,接力不重问)。硬停/终局/接力顺延为 §6/§7/§8,SKILL Phase 1 引用同步为 §6。
 
 - 2026-08-30 用户指令:新增全自动无人值守整站管线 references/methodology/11-fullauto-pipeline.md——scope.md mission 块一次性授权(缺项才问一次)、hunt 队列按 10 号原型路由自动生成(parked 探针主队列清空后补跑)、异常自愈四级不停机(WAF 限流→卡壳换路→candidate 三段差分自动确认→节流错峰)、复现复核轮交叉执行、仅 4 类硬停(出 scope/授权疑问/时间盒用尽/工具全挂)、终局一次性输出覆盖率矩阵+台账+docx 草稿+人工终审清单(提交永远人工)、跨会话接力靠 state.json;Phase 1 增加全自动模式入口,SKILL/README 触发词同步。
