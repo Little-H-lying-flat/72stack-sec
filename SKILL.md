@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
+description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF" 时触发。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -18,8 +18,10 @@ level: 2
 命中任一即进入:
 - "src 挖洞 / 漏洞赏金 / bug bounty / 众测 / hackerone / Security Response Center"
 - "Vue SPA 隐藏路由 / 动态路由 / 未加载路由 / 后台菜单不显示"
+- "无限 debugger / 反调试 / 开 F12 就跳转关页 / 接口参数是密文(sign/aes/encryptData)不知道怎么生成"
 - "如何挖 / 怎么测 / 怎么打 + 某目标 / 某接口 / 某参数"
 - "WAF 绕过 / 任意账号 / 任意修改 / 密码重置 / 未授权访问 / 默认凭据"
+- "全自动跑完整站 / 无人值守挖洞 / 整站自动化测试(不中途提问,例外才停)"
 - 用户给一个 URL / API endpoint / APK 让你测
 
 **不应触发**:纯白盒源码审计 → `src-audit-chain` skill;漏洞修复问答 → 通用对话;CTF → 通用对话。
@@ -49,6 +51,8 @@ level: 2
 - [ ] **规则**:payout tier / disclosure window / safe-harbor / 测试 header(如 `X-Bug-Bounty:<handle>`)
 - [ ] **时间盒**:6h / 单日 / HVV / 月度
 - [ ] **建账**:初始化 `work/<target-slug>/` 四件套(scope / assets / findings / evidence),格式见 `references/methodology/09-target-workspace.md`;scope.md 直接落本 checkpoint 四项
+
+**全自动模式**:用户明示"全自动 / 无人值守 / 直接跑完整站"时,五项落 `scope.md` 顶部 mission 块(格式见 `references/methodology/11-fullauto-pipeline.md` §1),缺项一次问完;此后按该文件连跑 Phase 2–5,除其 §6 硬停条件不向用户提问。
 
 **仅当用户问"哪个最值得先测"** → Read `references/methodology/05-srctimebox-priority.md`。
 
@@ -137,10 +141,12 @@ level: 2
 - 找不到漏洞点 → `references/methodology/04-control-gap-hunting.md`
 - 想对齐 2026 一线打法(选目标哲学 / 攻击面组织 / 链式打点 / AI 分工) → `references/methodology/06-hunter-methodology-2026.md`
 - SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
+- JS 反调试挡路(无限 debugger / 清控制台 / 检测 DevTools 跳转关页)或接口参数密文(sign/aes/encryptData)不会生成 → `references/methodology/07-js-recon.md` §9
 - Vue SPA 后台插件路由表过短 / 直访业务路由 404(动态路由、未加载路由、守卫弹回) → `references/methodology/07-js-recon.md` §8
 - 资产矩阵 ≥15 且用户明确要求并行 / 多 agent → `references/methodology/08-multi-agent.md`(设计稿,默认关)
 - 收工前核对覆盖率 / 跨会话续作同一目标 / 建 findings 台账 → `references/methodology/09-target-workspace.md`
 - 新目标定型(该按什么顺序打) → `references/methodology/10-archetype-routing.md`
+- 全自动无人值守跑完整站(开局授权后不中途提问,仅例外停机) → `references/methodology/11-fullauto-pipeline.md`
 
 ---
 
@@ -165,6 +171,14 @@ level: 2
 jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器动作回退用户协作(用户手测 + 提供响应),**不虚构工具调用结果**。
 
 ## CHANGELOG
+
+- 2026-08-30 用户指令:11 号管线吸收 GitHub 三模式——RefPentester 自反思循环落成新 §5(项级三行反思每个队列项收尾必做:试了什么/看到什么信号(含阴性)/下一步假设;深度反思 R=2 轮上限触发于预算耗尽/连续 8 探针无新信息/同类信号重复,四步:复盘→归因(03 §2 查自己+02 §2.1 查目标)→修正计划 ≤3 条标依据→小批试错,反思产出的猜测探针不豁免证据先行;类级信号跨项复用,结论强制落盘 notes/next 节);HackingBuddyGPT 有限步数落成 §3 第 6 条队列项 budget(15 探针或 20 分钟先到为准,耗尽不许继续磨);CAI 双模式落成 mission 块 mode 字段(full/checkpoint,接力不重问)。硬停/终局/接力顺延为 §6/§7/§8,SKILL Phase 1 引用同步为 §6。
+
+- 2026-08-30 用户指令:新增全自动无人值守整站管线 references/methodology/11-fullauto-pipeline.md——scope.md mission 块一次性授权(缺项才问一次)、hunt 队列按 10 号原型路由自动生成(parked 探针主队列清空后补跑)、异常自愈四级不停机(WAF 限流→卡壳换路→candidate 三段差分自动确认→节流错峰)、复现复核轮交叉执行、仅 4 类硬停(出 scope/授权疑问/时间盒用尽/工具全挂)、终局一次性输出覆盖率矩阵+台账+docx 草稿+人工终审清单(提交永远人工)、跨会话接力靠 state.json;Phase 1 增加全自动模式入口,SKILL/README 触发词同步。
+
+- 2026-08-30 校对轮(对照 AntiDebug_Breaker README 原文逐条核验):9.2 三处判据精确化(Bypass Debugger 的 eval 作用域报错=部分站点、特殊反制另列 / Hook table 特征不仅限三种 / hook close·history 去掉"检测 DevTools"推断改为原文口径),§8 补清守卫作用域(仅全局 beforeEach+beforeResolve)、清跳转仍跳两分支排障、"未检测到 Vue Router ≠ 非 Vue"注记,补 SpiderDemo 靶场。其余断言(key/iv/mode/padding 输出、固定窗口 660/1366/760/1400、Firefox 兜底、刷新生效、更新先移除旧版、Yosan/CC11001100/魔法少女☆ホシノ 署名)核验无误。
+
+- 2026-08-30 用户指令:吸收 [AntiDebug_Breaker](https://github.com/0xsdeo/AntiDebug_Breaker)(0xsdeo,404 星链)——07-js-recon 新增 §9 反调试突破与运行时 Hook(9.1 反调试信号识别表 / 9.2 插件开关映射+手动兜底 / 9.3 CryptoJS·JSEncrypt·国密 SM2/3/4 加密参数重放链 / 9.4 运行时观察 hooks),§8 插件行补 React 路由与 devtools 版本注意并交叉引用 §9;SKILL/README 触发词与 description 同步。
 
 - 2026-08-30 实战会话(第14轮,aiwadongdemumu 续作) +1条:file-upload 00-index camera 协议注记补 handler 文件名权威源层级(swf 逆向=协议/漏洞库=类型/商业闭源=唯一权威源是源码包,拿不到按需运行时转出)。avatar 线终裁转出,无新 confirmed。
 - 2026-08-30 用户指令:Phase 5 报告模板切换为通用 docx 格式——新增 references/templates/report-format.md(源自 jsrc-report 实战格式泛化:纯 Normal 段落/宋体/诚实性矩阵/定级与合并拆分/写作铁律/自检清单;JSRC 红线与 V9.0 条款作平台子节),旧 report-submission.md 降为快稿参考。

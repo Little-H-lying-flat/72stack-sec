@@ -38,7 +38,7 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由
+  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、JS 反调试突破与加密参数 Hook（无限 debugger / CryptoJS / RSA / 国密）、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由、全自动无人值守整站管线
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
@@ -83,6 +83,8 @@ skill 内置触发词包括：
 - 任意账号、任意修改、任意删除
 - 密码重置、找回密码
 - 默认凭据、Actuator、暴露的管理后台
+- 无限 debugger、反调试绕过、加密参数 / sign / aes hook、国密 SM2/3/4
+- 全自动跑完整站、无人值守挖洞、整站自动化漏洞测试
 
 也可以显式调用：
 
@@ -120,6 +122,10 @@ skill 内置触发词包括：
 
 ### 2026-08-30
 
+- 11 号管线吸收 GitHub 三模式：RefPentester 自反思循环 → 新增 §5 反思循环（项级三行反思每个队列项收尾必做：试了什么 / 看到什么信号含阴性 / 下一步假设；深度反思 R=2 轮上限，四步复盘 → 归因 → 修正计划 ≤3 条 → 小批试错，猜测探针不豁免证据先行；类级信号跨项复用，结论强制落盘）；HackingBuddyGPT 有限步数 → 队列项 budget（15 探针或 20 分钟先到为准，防单资产吃光时间盒）；CAI 双模式 → mission 块 `mode` 字段（full / checkpoint，接力不重问）；硬停 / 终局 / 接力顺延 §6–§8
+- 新增 [`methodology/11-fullauto-pipeline.md`](references/methodology/11-fullauto-pipeline.md)：全自动无人值守整站管线——scope.md mission 块一次性授权（缺项才问一次）、hunt 队列按原型路由自动生成（parked 探针主队列清空后补跑）、异常自愈四级不停机（WAF 限流 → 卡壳换路 → candidate 差分自动确认 → 节流错峰）、复现复核轮交叉执行、仅 4 类硬停（出 scope / 授权疑问 / 时间盒用尽 / 工具全挂）、终局一次性输出覆盖率矩阵 + 台账 + docx 草稿 + 人工终审清单（提交永远人工）、跨会话接力靠 state.json；SKILL.md Phase 1 增加全自动模式入口，触发词同步
+- 校对轮：对照 AntiDebug_Breaker README 原文逐条核验 §9 判据，三处措辞精确化（eval 作用域报错适用面 / 时间差检测特征不仅限三种 / hook close·history 口径），§8 补清守卫作用域（仅 beforeEach + beforeResolve）、清跳转仍跳排障、"未检测到 Vue Router ≠ 非 Vue"注记，补 SpiderDemo 靶场
+- 吸收 [AntiDebug_Breaker](https://github.com/0xsdeo/AntiDebug_Breaker)（0xsdeo，404 星链）：`methodology/07-js-recon.md` 新增 §9 反调试突破与运行时 Hook——反调试信号识别表（无限 debugger / console 清除重写 / 关页跳转 / 时间差 / 尺寸检测）、AntiDebug_Breaker 插件开关映射 + 无插件手动兜底、CryptoJS / JSEncrypt / 国密 SM2/3/4 加密参数重放链（前端加密不是鉴权）、运行时观察 hooks；§8 Vue 插件行同步
 - 实战会话 +2条（logic-flaws §3.3 新增"空会话验证码"ASP GetCode 模式，注册+登录双口实测绕过）
 - 实战会话 +2条（02 §2.1 "先画像再选技"过滤器画像法；path-traversal switch 分发签名；compliance 补支付网关 scope 规则；logic-flaws 空会话验证码适用面扩展至全部 verifycode 口）
 
