@@ -39,7 +39,7 @@ SRC 价值：成功 = 直接 RCE，P0；失败 = 受限上传，P2/P3。
 | 业务 | 8% | `/apply/`、`/submit/`、`/import/` |
 | 导入 | 5% | `/import/`、`/excelUpload/` |
 
-> **Comsenz/UC camera.swf 头像协议**（20260830，MLECMS v2.3 实测）：页面 `swfobject.embedSWF('camera.swf?inajax=1&appid=1&input=<token>&agent=<md5>&ucapi=<base>&avatartype=...')`，上传走 `{ucapi}/<x>.php?a=uploadavatar|rectavatar`，POST 字段 `avatar1/2/3`（三尺寸二进制）+`input`+`agent`。定位 handler 先 `strings`/zlib 解压 swf 抓 URL 构造串（CWS 压缩头），别猜 action 参数名（实测 `a=` 而非 `action=`）。
+> **Comsenz/UC camera.swf 头像协议**（20260830，MLECMS v2.3 实测）：页面 `swfobject.embedSWF('camera.swf?inajax=1&appid=1&input=<token>&agent=<md5>&ucapi=<base>&avatartype=...')`，上传走 `{ucapi}/<x>.php?a=uploadavatar|rectavatar`，POST 字段 `avatar1/2/3`（三尺寸二进制）+`input`+`agent`。定位 handler 先 `strings`/zlib 解压 swf 抓 URL 构造串（CWS 压缩头），别猜 action 参数名（实测 `a=` 而非 `action=`）。**handler 文件名的权威源层级**：swf 逆向只给协议不给文件名；CNVD/AVD 公开漏洞库只给漏洞类型不给路径；商业/半闭源 CMS（无公开源码仓）唯一权威源=源码包——三者都拿不到时按"需真实运行时抓包"转出，不要烧枚举预算（实测 7 候选全 404）。
 
 ### 2.2 编辑器路径速查
 

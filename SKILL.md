@@ -166,6 +166,7 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 实战会话(第14轮,aiwadongdemumu 续作) +1条:file-upload 00-index camera 协议注记补 handler 文件名权威源层级(swf 逆向=协议/漏洞库=类型/商业闭源=唯一权威源是源码包,拿不到按需运行时转出)。avatar 线终裁转出,无新 confirmed。
 - 2026-08-30 用户指令:Phase 5 报告模板切换为通用 docx 格式——新增 references/templates/report-format.md(源自 jsrc-report 实战格式泛化:纯 Normal 段落/宋体/诚实性矩阵/定级与合并拆分/写作铁律/自检清单;JSRC 红线与 V9.0 条款作平台子节),旧 report-submission.md 降为快稿参考。
 - 2026-08-30 实战会话(第12轮,aiwadongdemumu 续作) +1条:09 §1 续会话先验账号存活(演示库轮间重置陷阱,mlecms 上轮号消失致 4 请求白烧)。新发现 F-25 getpwd 枚举预言机(low)/F-26 验证码第五口;新面 6 项扫尽,二次收官。
 - 2026-08-30 实战会话(第10轮,aiwadongdemumu 续作) +2条:logic-flaws §3.4 老 ASP 商城隐藏字段整单金额注记(total/allmoney/money1 直提+双单差分+浏览器先行)、03 原则 1 补真浏览器走通句。新增 confirmed F-24 任意改价下单(1399 商品落库 0.01 元,双单对照)。
