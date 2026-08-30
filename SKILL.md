@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户追问"这就跑完了?"+残留清扫(第 2.5 轮):三查门闩自查再次生效——抓出 4 个上轮残留(showTransactions/listAccounts 注入/clickjacking 头/安全头)。**F-11 错误页泄露 JSP 源码 confirmed**(balance.jsp 源码行 71-74 内嵌于异常页,`Account.getAccount(paramName)` 输入流可见——500 判读再升级:**异常页可能内嵌源码行,比栈更值钱**;§3-9 注记同步)+F-12 clickjacking candidate(transfer/login 无 XFO/CSP)+F-13 showTransactions 基线即 500 如实 skip(参数形态未还原不下注入结论);counters=61。战役终态:**F-01/02/03/07/08/11 六 confirmed + F-04/05/06/10/12 五 info/candidate + F-09/13 未复现/跳过**。
+
 - 2026-08-30 用户指令+testfire 第 2 轮补课(三查过闸版):管线 §5.1 标准动作新增 ④**写类探针正对照先行**(跨用户转账第一发表单重渲染差点误判"未执行",自有账户正对照拿到 postResp 成功格式后才识破同构格式里的成功消息)。补课战果:**F-07 search.jsp 反射 XSS confirmed**(双 payload 未编码回显 HTML 体)+**F-08 doTransfer BOLA-write confirmed**(正对照→跨用户 toAccount=800001 服务端回显成功;金额校验在、所有权校验缺失;副作用 +$1 demo 账户如实入账)+F-09 XPath 未复现+F-10 存储型 candidate(cfile 写原语红线 parked)。**三查门闩首跑通过**(预算账平 56 探针/证据覆盖 40+7 链接对账/登记簿对账),第 1 轮"提前收尾"正式纠正。
 
 - 2026-08-30 用户质询+根因调查(testfire 第 1 轮"提前收尾"):11 号管线两处结构性漏洞修复——§3 第 6 条预算记账强制(每个探针批次后扣 budget_left/收尾更新 counters.probes;实测 38 探针全打但 counters=0、预算未动,"skipped-because 预算"与"预算未耗尽"自相矛盾无人拦)+第 7 条队列粒度=端点×playbook 场景(粗粒度项一次扫完就标 done,把类里未打场景一起带走;实测首页采到 40 链接,transfer/queryxpath/search/apply/feedback/stocks/customize 7 页未入队即宣布测完);§2 新增收工完整性三查门闩(预算账平/证据覆盖——已采证据每个未测 URL 要么入队要么 skipped-because/登记簿对账),任一不过不许宣布测完。战役 state 重开+7 补课项入队。教训定性:**这是 LLM 执行层的"宣布完成"捷径,不是目标/工具问题——必须用结构化门闩拦截,不能靠自觉**。
