@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 浏览器类验证能力上线(browser-harness 0.1.10 已装+专用 automation Chrome 实战验证):三战役浏览器类欠账一次清偿——testfire F-07 XSS **执行级确认**(CDP addScriptToEvaluateOnNewDocument 注入 alert 钩子→FIRED:1+截图)/F-12 clickjacking PoC 实证(本地页 iframe 完整嵌银行站+诱饵横幅);aiwadongdemumu **F-24 录屏补强完成**(36 帧全流程+order_list 实证 00.01 元落库,转出解除)。方法论增量:①**验证码空会话 trick 的浏览器化前提=无码 session**(真实浏览器加载 Login.asp/GetCode 图片即存码→空验证码失效;解法=清 cookie 后从不碰登录页+同源 XHR 登录,或 Network.setBlockedURLs 屏蔽 GetCode)——09 §1"先验账号存活"与 F-09 的浏览器侧机制补全;②**自动提交表单链**(pay.asp onload 自动跳网关)——改字段后无需手动 submit,判读以落库端(order_list)为准;③网关中转页出现即 scope 停手(F-15 先例执行)。
+
 - 2026-08-30 用户追问"这就跑完了?"+残留清扫(第 2.5 轮):三查门闩自查再次生效——抓出 4 个上轮残留(showTransactions/listAccounts 注入/clickjacking 头/安全头)。**F-11 错误页泄露 JSP 源码 confirmed**(balance.jsp 源码行 71-74 内嵌于异常页,`Account.getAccount(paramName)` 输入流可见——500 判读再升级:**异常页可能内嵌源码行,比栈更值钱**;§3-9 注记同步)+F-12 clickjacking candidate(transfer/login 无 XFO/CSP)+F-13 showTransactions 基线即 500 如实 skip(参数形态未还原不下注入结论);counters=61。战役终态:**F-01/02/03/07/08/11 六 confirmed + F-04/05/06/10/12 五 info/candidate + F-09/13 未复现/跳过**。
 
 - 2026-08-30 用户指令+testfire 第 2 轮补课(三查过闸版):管线 §5.1 标准动作新增 ④**写类探针正对照先行**(跨用户转账第一发表单重渲染差点误判"未执行",自有账户正对照拿到 postResp 成功格式后才识破同构格式里的成功消息)。补课战果:**F-07 search.jsp 反射 XSS confirmed**(双 payload 未编码回显 HTML 体)+**F-08 doTransfer BOLA-write confirmed**(正对照→跨用户 toAccount=800001 服务端回显成功;金额校验在、所有权校验缺失;副作用 +$1 demo 账户如实入账)+F-09 XPath 未复现+F-10 存储型 candidate(cfile 写原语红线 parked)。**三查门闩首跑通过**(预算账平 56 探针/证据覆盖 40+7 链接对账/登记簿对账),第 1 轮"提前收尾"正式纠正。
