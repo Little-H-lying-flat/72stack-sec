@@ -47,7 +47,7 @@ YYYYMMDD-HHMMSS_<endpoint-slug>_<vuln-class>_<seq>.<txt|png|har|mp4>
 |---|---|---|---|---|---|---|---|
 | F-01 | 20260830 | /api/orders/{id} | IDOR | 改 id 遍历 | confirmed | evidence/2026…01.txt | A 账号读 B 订单 |
 
-**status 状态机**:`candidate → confirmed(差分通过) → submitted → (accepted / dup / rejected)`
+**status 状态机**:`candidate → confirmed(tech,差分通过) → impact-qualified(危害三问+反驳者通过,01 §3.5) → submitted → (accepted / dup / rejected)`。rejected 含两种:平台判 dup / 反驳者危害驳回(反驳理由留痕)。confirmed(tech) 未过定性门前**不准定 High 及以上**,默认 severity=info-pending
 
 **三条规则**:
 
