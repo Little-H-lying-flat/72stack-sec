@@ -82,6 +82,8 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思
 7. **侦察产物的 scope 纪律**:Phase 2 / JS-recon 发现的非 mission in_scope 域(第三方统计/CDN/新子域)只记录不探测,汇入终局"需授权确认清单"——授权以 mission 枚举列表为准(第 16 轮实测:DNS 56 子域穷举零新资产,记录即结论)
 8. **js-recon 端点提取三模式**(Angular 新版 bundle 无 hash 平铺,如 main.js):双引号字符串 + **模板字符串(反引号,含 \${var} 占位)** + 懒加载 chunk 清单——单模式必漏(第 1 轮 juice-shop 实测:42 端点全靠前两模式合取,引号模式单独为 0)
+9. **JSP 传统站 include 参数差分判读**(第 1 轮 testfire 实测):`?content=` 类 include 参数,基线正常 / `../` 穿越 → **500 + 完整 Tomcat 栈(Jasper/JspServlet)** / 不存在值 → 200 站内 404 页——500≠不可利用,栈泄露本身即 finding(CWE-209);文件本体是否可读需看响应体,未回显就按栈泄露定级,不夸大
+10. **重定向型登录判读**(302 无 body 的登录接口):差分看 **RLOC 目的地**——`302→login.jsp`=失败、`302→bank/main.jsp`=成功;再跟会话 GET 主页验 Sign Off 元素收尾。SQLi 认证绕过的证据链=两 payload 各自 jar 均通过(单 payload 可能撞缓存/残留会话)
 
 ### 3.1 同域多站发现(用户指名"另一个站"时的标准流程,第 17 轮实战定型)
 

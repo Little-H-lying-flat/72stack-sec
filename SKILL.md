@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+testfire 首战(T 系列战役第 1 轮)校准:11 号管线 §3 新增第 9/10 条——JSP include 参数差分判读(500+完整 Tomcat 栈=CWE-209 finding,文件本体未回显按栈泄露定级不夸大)+重定向型登录判读(302 无 body 时差分看 RLOC 目的地,SQLi 认证绕过证据链=两 payload 各自 jar 均通过)。首战产出:**F-01 LFI 栈泄露 / F-02 showAccount BOLA 横向越权 / F-03 登录 SQLi 认证绕过 三 confirmed**(官方测试站 by-design 面如实标注)+F-04~06 info;jsmith/demo1234 3/3 纪律次内成功;C 型序列完整首跑。
+
 - 2026-08-30 用户指令+Juice Shop 首战(J 系列战役第 1 轮)校准:11 号管线 §4.4 增公共共享实例纪律(503+托管商错误页签名=实例级故障立即停全部流量,单发记录不复测,恢复签名=特征端点字节数,共享可用性>任务完成度)+§3 第 8 条 js-recon 端点提取三模式(引号字符串+模板字符串+懒加载 chunk,单模式必漏——42 端点全靠双模式合取)。首战产出:F-01 /ftp/ 目录列表暴露(confirmed)/F-02 memories 未认证泄露完整邮箱+Feedbacks 脱敏不一致(confirmed)/F-03 安全题枚举 oracle(candidate)/F-04 错误页栈(by-design);实例 crash-loop 中断,转恢复监控。
 
 - 2026-08-30 用户指令+靶场第 17 轮"另一个站"发现校准:11 号管线新增 §3.1 同域多站发现流程(权威源=业主门户导航页含 RANGE 注释即 scope 锚/端口非常见段补扫/结构路径字典三层,全阴性=资产清单终态)+§4.5 整站级 env-broken 处理(全部动态端点同一错误签名→全队列 skipped-because+恢复监控每 3min ≤3 次+重置窗口=暴露窗口做 install/备份残留一次性扫描)。第 17 轮实测:导航页仅 2 RANGE、73 端口、53 路径全阴性;mlecms 整站 686B 坏签名(version.config.php 被删)转监控;F-30 升级为整站级环境瞬态。
