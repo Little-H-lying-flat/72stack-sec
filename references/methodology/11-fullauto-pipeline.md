@@ -81,6 +81,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 5. 中途命中高价值入口(shell / 凭据 / 内网位)→ 按 10 §2-G 切原型重排队列,不问人
 6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思
 7. **侦察产物的 scope 纪律**:Phase 2 / JS-recon 发现的非 mission in_scope 域(第三方统计/CDN/新子域)只记录不探测,汇入终局"需授权确认清单"——授权以 mission 枚举列表为准(第 16 轮实测:DNS 56 子域穷举零新资产,记录即结论)
+8. **js-recon 端点提取三模式**(Angular 新版 bundle 无 hash 平铺,如 main.js):双引号字符串 + **模板字符串(反引号,含 \${var} 占位)** + 懒加载 chunk 清单——单模式必漏(第 1 轮 juice-shop 实测:42 端点全靠前两模式合取,引号模式单独为 0)
 
 ### 3.1 同域多站发现(用户指名"另一个站"时的标准流程,第 17 轮实战定型)
 
@@ -108,6 +109,8 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 ### 4.4 风控压力
 
 自动节流:探针间隔递增 → 并发降 1 → 该资产剩余项排到队列尾错峰;时间盒内仍压不住 → 该项 `blocked`。
+
+**公共共享实例纪律(第 1 轮 juice-shop 实测)**:503 + 托管商错误页签名(如 herokucdn application-error)= 实例级故障——**立即停对该实例的全部流量**,即使因果时序指向我方载荷也只记录一次、绝不复测(单发验证 ≠ 复测轰炸);恢复签名用特征端点字节数(如 whoami 200 11B),监控复用 §4.5 整站 env-broken 模式(3min×3)。**共享可用性 > 任务完成度**,队列转 skipped-because: instance-down,下会话恢复后续跑。
 
 ### 4.5 复现复核轮
 

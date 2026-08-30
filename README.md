@@ -122,6 +122,7 @@ skill 内置触发词包括：
 
 ### 2026-08-30
 
+- 11 号管线 Juice Shop 首战校准：§4.4 公共共享实例纪律（503+托管商错误页签名 = 实例级故障立即停全部流量，单发记录不复测，恢复签名=特征端点字节数）+ §3 第 8 条 js-recon 端点提取三模式（引号字符串 + 模板字符串 + 懒加载 chunk，单模式必漏）；首战 F-01 /ftp/ 目录列表 / F-02 memories 邮箱泄露 confirmed，实例 crash-loop 转恢复监控
 - 11 号管线第 17 轮"另一个站"发现校准：新增 §3.1 同域多站发现流程（权威源=业主门户导航页 / 端口非常见段补扫 / 结构路径字典，三层全阴性=资产清单终态）+ §4.5 整站级 env-broken 处理（统一错误签名 → 全队列降级 + 恢复监控 3min×3 次 + 重置窗口=暴露窗口做 install/备份残留扫描）；实测 73 端口 / 53 路径 / 导航页 2 RANGE 全阴性，mlecms 整站 686B 坏签名转监控
 - 11 号管线优化轮：§1.1 preflight 固化为可执行脚本 [`scripts/preflight.py`](scripts/preflight.py)（markdown 表直贴 scope.md / `--json` / `--probe-target`；本机 dogfood 3/8 OK 与实测一致）、§2 state 写时机=队列项边界、新增 §4.7 双账号 seed 预置动作、§7 JSRC 目标路由 jsrc-report skill
 - 11 号管线第 16 轮全流程验证校准 5 处：§3 侦察产物 scope 纪律（非 in_scope 域只记录不探测）、§4.5 repro 前置端点活性检查（env-broken 不产生假阴性）+ 0B 窗口三档退避 blocked 不判阴性、§5.1 标准动作 ③证据判读 grep 内建 `-a`（GB2312）、§8 队列 asset 字段=完整可请求 URL（裸路径两实例）、§7 覆盖率矩阵=state.json status 投影；reverify/repro 队列类首跑 9/12 confirmed 存活

@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+Juice Shop 首战(J 系列战役第 1 轮)校准:11 号管线 §4.4 增公共共享实例纪律(503+托管商错误页签名=实例级故障立即停全部流量,单发记录不复测,恢复签名=特征端点字节数,共享可用性>任务完成度)+§3 第 8 条 js-recon 端点提取三模式(引号字符串+模板字符串+懒加载 chunk,单模式必漏——42 端点全靠双模式合取)。首战产出:F-01 /ftp/ 目录列表暴露(confirmed)/F-02 memories 未认证泄露完整邮箱+Feedbacks 脱敏不一致(confirmed)/F-03 安全题枚举 oracle(candidate)/F-04 错误页栈(by-design);实例 crash-loop 中断,转恢复监控。
+
 - 2026-08-30 用户指令+靶场第 17 轮"另一个站"发现校准:11 号管线新增 §3.1 同域多站发现流程(权威源=业主门户导航页含 RANGE 注释即 scope 锚/端口非常见段补扫/结构路径字典三层,全阴性=资产清单终态)+§4.5 整站级 env-broken 处理(全部动态端点同一错误签名→全队列 skipped-because+恢复监控每 3min ≤3 次+重置窗口=暴露窗口做 install/备份残留一次性扫描)。第 17 轮实测:导航页仅 2 RANGE、73 端口、53 路径全阴性;mlecms 整站 686B 坏签名(version.config.php 被删)转监控;F-30 升级为整站级环境瞬态。
 
 - 2026-08-30 优化轮:preflight 固化为可执行脚本 scripts/preflight.py(§1.1 执行方式改为跑脚本,markdown 表直贴 scope.md/--json 供 state 引用/--probe-target 附带存活检查;本机 dogfood 3/8 OK 与实测一致)、§2 state 写时机=队列项边界(崩溃恢复粒度=项)、新增 §4.7 双账号 seed 预置动作(注册双号+建 [TEST] seed+id 清单入 next 节+B 会话限样本遍历,任一失败走 §4.6 降级)、§7 JSRC 目标路由 jsrc-report skill;4e74dca(第 16 轮校准)push 成功。
