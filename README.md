@@ -122,6 +122,7 @@ skill 内置触发词包括：
 
 ### 2026-08-30
 
+- 11 号管线第 16 轮全流程验证校准 5 处：§3 侦察产物 scope 纪律（非 in_scope 域只记录不探测）、§4.5 repro 前置端点活性检查（env-broken 不产生假阴性）+ 0B 窗口三档退避 blocked 不判阴性、§5.1 标准动作 ③证据判读 grep 内建 `-a`（GB2312）、§8 队列 asset 字段=完整可请求 URL（裸路径两实例）、§7 覆盖率矩阵=state.json status 投影；reverify/repro 队列类首跑 9/12 confirmed 存活
 - 11 号管线靶场首跑校准 8 处补丁：产物隔离（报告/work/证据永不入 git 远端）、mission `report_dir` + §1.1 preflight 工具矩阵（实测缺 nuclei/browser-harness 的回退链）、§4.1 节流阶梯量化（8→15→30→60s）、§4.5 reverify 拆 repro/oob（OOB 回调轮询防假阴性）、§4.6 账号缺口降级不提问、§5.1 消费性判别标准动作（id=/pid= 参数名教训 + 区分"未消费/数字归一"）、§7 报告落 report_dir、§8 evidence 同轮前缀核对（中断会话遗留防重复）
 - 11 号管线吸收 GitHub 三模式：RefPentester 自反思循环 → 新增 §5 反思循环（项级三行反思每个队列项收尾必做：试了什么 / 看到什么信号含阴性 / 下一步假设；深度反思 R=2 轮上限，四步复盘 → 归因 → 修正计划 ≤3 条 → 小批试错，猜测探针不豁免证据先行；类级信号跨项复用，结论强制落盘）；HackingBuddyGPT 有限步数 → 队列项 budget（15 探针或 20 分钟先到为准，防单资产吃光时间盒）；CAI 双模式 → mission 块 `mode` 字段（full / checkpoint，接力不重问）；硬停 / 终局 / 接力顺延 §6–§8
 - 新增 [`methodology/11-fullauto-pipeline.md`](references/methodology/11-fullauto-pipeline.md)：全自动无人值守整站管线——scope.md mission 块一次性授权（缺项才问一次）、hunt 队列按原型路由自动生成（parked 探针主队列清空后补跑）、异常自愈四级不停机（WAF 限流 → 卡壳换路 → candidate 差分自动确认 → 节流错峰）、复现复核轮交叉执行、仅 4 类硬停（出 scope / 授权疑问 / 时间盒用尽 / 工具全挂）、终局一次性输出覆盖率矩阵 + 台账 + docx 草稿 + 人工终审清单（提交永远人工）、跨会话接力靠 state.json；SKILL.md Phase 1 增加全自动模式入口，触发词同步
