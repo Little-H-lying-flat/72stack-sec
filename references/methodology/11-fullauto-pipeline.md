@@ -116,7 +116,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 
 03 §4 复现率(P0 3 次 1h+ 间隔 / P1 3–5 次)排入 `reverify` 队列与主线交叉执行,避免干等;时间盒不够 → 诚实性矩阵如实写"复现 n/N 次",不凑数。**reverify 分两类**:
 
-- `repro`(复现复核):按间隔重放差分对,记 n/N。**重放前先做端点活性检查**——环境损坏(如 mlecms `version.config.php` 缺失,第 16 轮实测)→ `skipped-because: env-broken`,**不产生假阴性**;0B 窗口经 §4.1 节流阶梯三档仍 0B → 该项 `blocked(0B)`,**不判阴性**(上轮 fresh repro 仍有效)
+- `repro`(复现复核):按间隔重放差分对,记 n/N。**重放前先做端点活性检查**——环境损坏(如 mlecms `version.config.php` 缺失,第 16 轮实测)→ `skipped-because: env-broken`,**不产生假阴性**;0B 窗口经 §4.1 节流阶梯三档仍 0B → 该项 `blocked(0B)`,**不判阴性**(上轮 fresh repro 仍有效);**0B 若跨会话仅出现在单端点**(其余端点正常,第 18 轮 Pay_cz.asp 实测)= 端点级持续状态,直接端点级 blocked,不再烧预算;带会话的 repro 先验 jar(302→登录页=过期,重登再打)
 - `oob`(带外回调核销):SSRF/RCE/盲打的 OOB 探针发出后,按 5/15/60min 三档轮询回调;**回调未到 ≠ 阴性**,轮询窗口走完才准判阴性——自动模式最容易在这里产生假阴性
 - **整站级 env-broken**(所有动态端点同一错误签名,如配置文件缺失):该资产全队列 `skipped-because: env-broken`,转**恢复监控**——每 3min 活性检查 ≤3 次/会话,恢复即自动续跑该资产全队列(状态签名=响应字节数,如 686B=坏)。**重置窗口=暴露窗口**:env-broken 期间对 install / 备份 / 配置残留做一次性结构扫描是合法增量面(第 17 轮 53 路径实证:无暴露也是结论)
 
