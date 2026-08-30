@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 优化轮:preflight 固化为可执行脚本 scripts/preflight.py(§1.1 执行方式改为跑脚本,markdown 表直贴 scope.md/--json 供 state 引用/--probe-target 附带存活检查;本机 dogfood 3/8 OK 与实测一致)、§2 state 写时机=队列项边界(崩溃恢复粒度=项)、新增 §4.7 双账号 seed 预置动作(注册双号+建 [TEST] seed+id 清单入 next 节+B 会话限样本遍历,任一失败走 §4.6 降级)、§7 JSRC 目标路由 jsrc-report skill;4e74dca(第 16 轮校准)push 成功。
+
 - 2026-08-30 用户指令+靶场第 16 轮全流程验证校准:11 号管线再补 5 处——§3 第 7 条侦察产物 scope 纪律(非 in_scope 域只记录不探测,汇入需授权确认清单;实测 DNS 56 子域穷举零新资产)、§4.5 repro 前置端点活性检查(env-broken 不产生假阴性,实测 mlecms version.config.php 缺失)+0B 窗口三档退避仍 0B → blocked 不判阴性(实测 F-11)、§5.1 标准动作 ③证据判读 grep 内建 -a(GB2312 二进制静默吞匹配二次实例)、§8 队列 asset 字段=完整可请求 URL(裸路径两实例:/Login→/Login.asp、mlecms 丢 :9090)、§7 矩阵=state.json status 投影。第 16 轮全流程验证结果:Phase 2 五源侦察首跑(全阴性,无新资产)、reverify/repro 队列类首跑 9/12 confirmed 存活(F-09 登录+注册双口/F-22/F-26 写入面 fresh、F-05/21/23 差分在位、F-06/15 在位)、新 F-30 环境瞬态表征级。
 
 - 2026-08-30 用户指令+靶场首跑校准:11 号管线 8 处补丁——§0 产物隔离(报告/work/证据永不入 git 远端,commit 前核对 git status)、§1 mission 增 report_dir 字段+§1.1 preflight 工具矩阵(实测 nuclei/httpx/browser-harness 缺失,回退链:python socket 端口扫/CT 日志子域/录屏类转出)、§4.1 节流阶梯量化(8→15→30→60s,并发 2→1,三档)、§4.5 reverify 拆 repro/oob 两类(OOB 回调 5/15/60min 轮询,未到≠阴性,防假阴性)、§4.6 账号缺口降级(注册撞验证码→skipped-because: no-account 继续,需求汇入终局清单,不提问)、§5.1 增消费性判别标准动作(全零差分先查证据真实参数形态,再打不存在值区分"未消费/数字归一")+§5.2 触发条件补全零差分、§7 报告产物落 report_dir、§8 增 evidence 同轮前缀核对(中断会话遗留文件防重复烧限额)。校准来源=靶场第 15 轮全托管首跑(F-28 3389/RDP 新面表征级、F-29 mlecms 数字参数族全族 clean 收口、F-03 默认凭据 3/3 closed)。

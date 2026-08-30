@@ -122,6 +122,7 @@ skill 内置触发词包括：
 
 ### 2026-08-30
 
+- 11 号管线优化轮：§1.1 preflight 固化为可执行脚本 [`scripts/preflight.py`](scripts/preflight.py)（markdown 表直贴 scope.md / `--json` / `--probe-target`；本机 dogfood 3/8 OK 与实测一致）、§2 state 写时机=队列项边界、新增 §4.7 双账号 seed 预置动作、§7 JSRC 目标路由 jsrc-report skill
 - 11 号管线第 16 轮全流程验证校准 5 处：§3 侦察产物 scope 纪律（非 in_scope 域只记录不探测）、§4.5 repro 前置端点活性检查（env-broken 不产生假阴性）+ 0B 窗口三档退避 blocked 不判阴性、§5.1 标准动作 ③证据判读 grep 内建 `-a`（GB2312）、§8 队列 asset 字段=完整可请求 URL（裸路径两实例）、§7 覆盖率矩阵=state.json status 投影；reverify/repro 队列类首跑 9/12 confirmed 存活
 - 11 号管线靶场首跑校准 8 处补丁：产物隔离（报告/work/证据永不入 git 远端）、mission `report_dir` + §1.1 preflight 工具矩阵（实测缺 nuclei/browser-harness 的回退链）、§4.1 节流阶梯量化（8→15→30→60s）、§4.5 reverify 拆 repro/oob（OOB 回调轮询防假阴性）、§4.6 账号缺口降级不提问、§5.1 消费性判别标准动作（id=/pid= 参数名教训 + 区分"未消费/数字归一"）、§7 报告落 report_dir、§8 evidence 同轮前缀核对（中断会话遗留防重复）
 - 11 号管线吸收 GitHub 三模式：RefPentester 自反思循环 → 新增 §5 反思循环（项级三行反思每个队列项收尾必做：试了什么 / 看到什么信号含阴性 / 下一步假设；深度反思 R=2 轮上限，四步复盘 → 归因 → 修正计划 ≤3 条 → 小批试错，猜测探针不豁免证据先行；类级信号跨项复用，结论强制落盘）；HackingBuddyGPT 有限步数 → 队列项 budget（15 探针或 20 分钟先到为准，防单资产吃光时间盒）；CAI 双模式 → mission 块 `mode` 字段（full / checkpoint，接力不重问）；硬停 / 终局 / 接力顺延 §6–§8

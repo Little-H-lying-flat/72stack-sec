@@ -38,7 +38,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 
 ### 1.1 preflight(工具矩阵——mission 校验后、Phase 2 前必做)
 
-管线假设的工具**从不默认存在**(第 15 轮实测:nuclei/httpx/browser-harness 全缺)。逐项检查并落 `scope.md` 工具矩阵:
+管线假设的工具**从不默认存在**(第 15 轮实测:nuclei/httpx/browser-harness 全缺)。**执行方式:跑 `scripts/preflight.py`(markdown 表可直接贴入 scope.md;`--json` 供 state 引用;`--probe-target URL` 附带一次存活检查)**,或按下表手工逐项检查:
 
 | 检查项 | 命令 | 缺失回退 |
 |---|---|---|
@@ -52,7 +52,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 
 ## 2. 管线状态机
 
-`work/<target-slug>/state.json`——**先写状态再动手**,崩溃 / 换会话后从 state 续,已完项不重跑:
+`work/<target-slug>/state.json`——**先写状态再动手**,崩溃 / 换会话后从 state 续,已完项不重跑。**写时机 = 队列项边界**(每项 done / blocked / stale 收尾时写一次,探针中途不写)——崩溃恢复粒度 = 项,不丢已完项也不写穿:
 
 ```json
 {
@@ -113,6 +113,17 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 
 注册撞验证码 / 短信 / 邮箱验证而失败 → **依赖账号的队列项标 `skipped-because: no-account` 继续**,账号需求批量汇入 §7 终局"需账号清单";不重试超过 2 次、不中途问人。双账号角色的项(10 §2 B 型 IDOR)缺任一账号即整项降级。
 
+### 4.7 双账号 seed 预置动作(10 §2 B 型队列项的前置序列)
+
+IDOR/越权类队列项开打前,固定四步 seed(不再每轮临场发挥):
+
+1. 注册 / 登录 A、B 两号,双 jar 落盘(命名见 09 §1.1)
+2. A 号建 seed 数据:订单 / 留言 / 收藏各 ≥1,名称带 `[TEST]` 标记
+3. seed 资源 id 清单记入 scope.md `next:` 节(09 §1)
+4. B 会话遍历 ≤ `pacing.idor_samples`;命中走三段差分
+
+任一账号注册失败 → §4.6 降级,不卡线。
+
 ## 5. 反思循环(测 → 反思 → 修正计划)
 
 > 取自 RefPentester 的 self-reflective loop。反思不是"卡死了才想",是管线内的强制步骤;**反思结论必须落盘**——只反思不落盘 = 下轮白想(接力靠台账不靠记忆,09 §4)。
@@ -162,7 +173,7 @@ R=2 轮仍无新信息 → 该项 stale;深度反思结论落盘 scope.md `next:
 0. **报告产物落 `mission.report_dir` 指定目录**(如 `D:/SRC/reports/<target-slug>/`):终稿 md + gen_report_vN.py + docx。**skill 仓库与一切 git 远端不收报告 / 台账 / 证据**——commit 前核对 `git status`,work/ 与报告目录永不 add
 1. 覆盖率矩阵(09 §3,`skipped` 必须有 because;**矩阵直接由 state.json 各项 status 投影生成**,收尾零手工)
 2. findings.md 全台账(candidate / confirmed / blocked / dup 分栏)
-3. confirmed 逐条 docx 草稿:照 Phase 5 流程(compliance → report-format 模板),诚实性矩阵如实标注
+3. confirmed 逐条 docx 草稿:照 Phase 5 流程(compliance → report-format 模板),诚实性矩阵如实标注;**JSRC 平台目标 → 直接路由 jsrc-report skill**(其脚本骨架 / D:\SRC\京东 落点 / V9.0 条款即 report-format.md 的来源),通用平台按本条流程
 4. **人工终审清单**:每条 confirmed 一行待勾——提交 / 补验证 / 放弃;stale / blocked 项附 §5 反思结论供取舍;含 §4.6 汇总的"需账号清单"
 
 **提交永远人工**:全自动到"报告草稿生成完毕"为止,Submit 前过 03 §10 自检清单。
