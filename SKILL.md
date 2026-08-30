@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、外部思路源路由(国内 5 社区/国外 5 平台/官方漏洞库,含 dork 与 NVD API 模板)、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF",或要"查组件历史漏洞 / CVE / PoC、从先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB / NVD 找渗透思路" 时触发。
+description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、外部思路源路由(国内 5 社区/国外 5 平台/官方漏洞库,含 dork 与 NVD API 模板)、无数据造数管线(空态解锁:服务端种子/响应拦截注入/DOM 直填)、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF",或要"查组件历史漏洞 / CVE / PoC、从先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB / NVD 找渗透思路" 时触发。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -22,6 +22,7 @@ level: 2
 - "如何挖 / 怎么测 / 怎么打 + 某目标 / 某接口 / 某参数"
 - "WAF 绕过 / 任意账号 / 任意修改 / 密码重置 / 未授权访问 / 默认凭据"
 - "全自动跑完整站 / 无人值守挖洞 / 整站自动化测试(不中途提问,例外才停)"
+- "页面没数据 / 造测试数据 / 前端 mock 拦截填充 / 表单自动填充"
 - "查组件历史漏洞 / CVE / PoC / 从先知/奇安信攻防社区/跳跳糖/FreeBuf/看雪/PortSwigger/Exploit-DB 找渗透思路"
 - 用户给一个 URL / API endpoint / APK 让你测
 
@@ -142,6 +143,7 @@ level: 2
 - 被 WAF / EDR 拦 → `references/methodology/02-bypass-toolkit.md`
 - 怀疑自己幻觉 / 想检查证据链 → `references/methodology/03-evidence-discipline.md`
 - 找不到漏洞点 → `references/methodology/04-control-gap-hunting.md`
+- 页面/接口空数据挡路(空列表没法测渲染 / 没资源 id 测详情 / 长表单手填慢) → `references/methodology/12-data-seeding.md`(三层造数阶梯:L1 服务端种子 / L2 响应拦截注入 / L3 DOM 直填;L2/L3 产出不进证据链)
 - playbook 打完无果想换姿势 / 组件带 CVE 要找 PoC / 某类漏洞原理不清 → `references/sources/knowledge-sources.md`(外部思路源路由:先知/奇安信攻防/跳跳糖/FreeBuf/看雪 + PortSwigger/Exploit-DB/HTB/H1 Blog/PATT + NVD/AVD/Seebug/CNVD,含 dork 与 NVD API 模板;引文必须实际打开过并标 URL)
 - 想对齐 2026 一线打法(选目标哲学 / 攻击面组织 / 链式打点 / AI 分工) → `references/methodology/06-hunter-methodology-2026.md`
 - SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
@@ -175,6 +177,8 @@ level: 2
 jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器动作回退用户协作(用户手测 + 提供响应),**不虚构工具调用结果**。
 
 ## CHANGELOG
+
+- 2026-08-31 用户指令(空态造数工具调研吸收):新增 references/methodology/12-data-seeding.md 无数据造数管线——触发场景表(空列表挡渲染类 XSS/无资源挡 IDOR/分页导出/长表单)+ 证据铁律(L2/L3 产出不进证据链,confirmed 一律回服务端真实响应/落库);三层阶梯:①L1 服务端种子工厂(创建接口 curl 回放+字段值生成映射表 CN 姓名/手机/邮箱/金额,衔接 11 号 §4.7 seed 四步与 §4.1 节流,每类 3-10 条 [TEST] 标记)②L2 响应拦截注入(MockJS 思路,三条落地路径:jshook network_intercept / CDP addScriptToEvaluateOnNewDocument hook fetch+XHR / console 过载,含空列表→20 条生成行规则模板;存储型 XSS 必须真落库,拦截显示≠confirmed)③L3 DOM 直填+表单自动填充(browser-harness/jshook page_inject_script 按字段映射填,AI form filler 扩展仅无 MCP 协作 fallback);工具生态索引(faker-js/MockJS/Mock Injector 扩展,本库不内置只标对应用法);红线([TEST] 标记+测完清理/不碰真实用户数据/限速收敛/拦截只作用于自己会话/导出最小范围)。接线:SKILL Phase 4 卡壳路由+触发词+description;README 目录/触发词/更新日志。
 
 - 2026-08-31 用户指令"先去社区学习再嵌入案例":按 sources 路由实读 4 篇(先知 3 篇全文 + 奇安信 1 篇摘要层)落进 5 个 playbook——①ssrf-cache-host:§3.6 腾讯云 169.254.0.23 链接层地址、§3.11 盲打 SSRF 判定(files=1/0 debug 日志 oracle/内网 HTTP 观测点/固定超时错误特征)+代理型vs转发型人工定性、§6.1 修复完整性审计(补丁 diff→同类 sink 盘点,LobeChat 官方修 6 漏 4 实测);②rce/14-ssti Jinja2 案例块:RAGFlow canvas DSL 两步注入(debug 接口固化参数教训/认证坑:凭证在响应头 Authorization+密码 RSA 加密)/cycler 链 root/换行绕过无 DOTALL/Message stream=False 无条件渲染/SandboxedEnvironment 修复+版本窗口两半月;③path-traversal §9:Zip Slip root hint 首条目欺骗+sitecustomize.py 持久化 RCE 闭环+三层解压防护指纹(红线:黑盒不写 sitecustomize);④arbitrary-x-authz §3.3:uuid1 时间戳+MAC 推导 API key(98 万枚举/200 命中验证)+Sign 前端自签名+缓存串会话(奇安信摘要口径,标注全文需登录);⑤unauth-access §2.5:Vitest Browser Mode 开发态 RPC 暴露新面(读/写/删/延迟外带四原语/allowWrite 被内建命令绕过/同类 dev-server 面清单)。方法论:补丁合入≠发布≠覆盖(版本窗口)、策略存在≠生效、签名截断≠安全。sources/knowledge-sources.md 新增 §5 已吸收清单(4 篇登记+落点索引,防重复精读);PortSwigger/跳跳糖/CNVD 当前网络不可达已止损,均标实测口径。playbook 计数不变(嵌案例不加文件)。
 
