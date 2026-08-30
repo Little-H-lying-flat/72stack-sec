@@ -20,6 +20,8 @@ work/<target-slug>/
   evidence/     # HTTP 包 / 截图 / 录屏,命名见 §1.1
 ```
 
+**会话状态持久化（跨会话续作必备）**：测试账号(用户名/密码/注册方式)、cookie jar 文件名、已知资源 id 清单(订单/留言/商品)记在 `scope.md` 的 `next` 节——只存响应不存请求体的证据会导致续会话无法恢复登录态，被迫重新注册污染数据（20260830 第 8 轮实测教训）。
+
 ### 1.1 evidence 命名
 
 ```text
@@ -30,6 +32,8 @@ YYYYMMDD-HHMMSS_<endpoint-slug>_<vuln-class>_<seq>.<txt|png|har|mp4>
 同一 finding 的全部证据共享同一前缀(`日期-时间` 段固定)→ 报告附件一键归集。
 
 **重跑纪律**:同一探针重跑一律用新 `_seq`,禁止覆盖旧文件——首跑数据哪怕疑似脏也保留,台账以重跑结果为准(实测教训:首跑的 URL 变量残留产生过一次假 404)。
+
+**GB2312 站点存盘证据 grep 必带 `-a`**(20260830):老 ASP 站响应含 GB2312 字节,存盘后 grep 默认判二进制吞掉全部匹配(连 `<a href` 都"搜不到"),白烧排查轮——所有对 evidence 文件的 grep 一律 `grep -a`;读中文用 `iconv -f gb2312 -t utf-8`。
 
 **完整性清单**:会话收尾执行 `sha256sum evidence/* > evidence/MANIFEST.sha256`(并记入 scope.md 的 next 节)——平台审核争议时证明证据自采集起未被改动。
 
