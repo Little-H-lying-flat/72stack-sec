@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+testfire 第 2 轮补课(三查过闸版):管线 §5.1 标准动作新增 ④**写类探针正对照先行**(跨用户转账第一发表单重渲染差点误判"未执行",自有账户正对照拿到 postResp 成功格式后才识破同构格式里的成功消息)。补课战果:**F-07 search.jsp 反射 XSS confirmed**(双 payload 未编码回显 HTML 体)+**F-08 doTransfer BOLA-write confirmed**(正对照→跨用户 toAccount=800001 服务端回显成功;金额校验在、所有权校验缺失;副作用 +$1 demo 账户如实入账)+F-09 XPath 未复现+F-10 存储型 candidate(cfile 写原语红线 parked)。**三查门闩首跑通过**(预算账平 56 探针/证据覆盖 40+7 链接对账/登记簿对账),第 1 轮"提前收尾"正式纠正。
+
 - 2026-08-30 用户质询+根因调查(testfire 第 1 轮"提前收尾"):11 号管线两处结构性漏洞修复——§3 第 6 条预算记账强制(每个探针批次后扣 budget_left/收尾更新 counters.probes;实测 38 探针全打但 counters=0、预算未动,"skipped-because 预算"与"预算未耗尽"自相矛盾无人拦)+第 7 条队列粒度=端点×playbook 场景(粗粒度项一次扫完就标 done,把类里未打场景一起带走;实测首页采到 40 链接,transfer/queryxpath/search/apply/feedback/stocks/customize 7 页未入队即宣布测完);§2 新增收工完整性三查门闩(预算账平/证据覆盖——已采证据每个未测 URL 要么入队要么 skipped-because/登记簿对账),任一不过不许宣布测完。战役 state 重开+7 补课项入队。教训定性:**这是 LLM 执行层的"宣布完成"捷径,不是目标/工具问题——必须用结构化门闩拦截,不能靠自觉**。
 
 - 2026-08-30 用户指令+testfire 首战(T 系列战役第 1 轮)校准:11 号管线 §3 新增第 9/10 条——JSP include 参数差分判读(500+完整 Tomcat 栈=CWE-209 finding,文件本体未回显按栈泄露定级不夸大)+重定向型登录判读(302 无 body 时差分看 RLOC 目的地,SQLi 认证绕过证据链=两 payload 各自 jar 均通过)。首战产出:**F-01 LFI 栈泄露 / F-02 showAccount BOLA 横向越权 / F-03 登录 SQLi 认证绕过 三 confirmed**(官方测试站 by-design 面如实标注)+F-04~06 info;jsmith/demo1234 3/3 纪律次内成功;C 型序列完整首跑。
