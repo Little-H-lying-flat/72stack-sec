@@ -70,7 +70,13 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 }
 ```
 
-流程:mission 校验 → Phase 2 recon(被动,全自动:CT 日志 / Wayback / GitHub dorks / FOFA) → Phase 3 enum(主动,OneForAll / httpx / nuclei 初筛) → 队列生成(§3) → 逐项消耗队列(每项收尾走 §5.1 项级反思) → reverify 复核轮(§4.5) → **"测完"判定:队列清空 + parked 补跑一轮 + 覆盖率矩阵(09 §3)无空格** → Phase 5 草稿(§7)。
+流程:mission 校验 → Phase 2 recon(被动,全自动:CT 日志 / Wayback / GitHub dorks / FOFA) → Phase 3 enum(主动,OneForAll / httpx / nuclei 初筛) → 队列生成(§3) → 逐项消耗队列(每项收尾走 §5.1 项级反思) → reverify 复核轮(§4.5) → **"测完"判定(§2 流程末)**:队列清空 + parked 补跑一轮 + 覆盖率矩阵(09 §3)无空格。**收工前必须过完整性三查**,任一不过 = 不许宣布测完:
+
+1. **预算账平**:`counters.probes` 与 evidence 探针数一致,各项 `budget_left` 已扣
+2. **证据覆盖**:**已采证据(首页/main.jsp 链接表、表单清单)中的每个未测 URL/表单,要么有队列项打完,要么在矩阵里有 skipped-because**——采了证据不排队 = 假测完(最常见漏洞)
+3. **登记簿对账**:findings.md 行数 = 矩阵 hit 行数 + clean/closed 行数;confirmed 行均有三段差分证据文件
+
+三查通过才准写"测完"进 state 并进入 §7 终局。
 
 ## 3. hunt 队列自动生成
 
@@ -79,7 +85,8 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 3. 每类打点前照常 Read playbook(反幻觉 §1),payload 行尾出处标注照旧
 4. **parked 探针不丢弃**:证据先行优先级照旧(SKILL Phase 4 步骤 3),主队列清空后 parked 队尾自动补跑一轮,结果照记台账
 5. 中途命中高价值入口(shell / 凭据 / 内网位)→ 按 10 §2-G 切原型重排队列,不问人
-6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思
+6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思。**记账强制**:每个探针批次后扣 `budget_left`、队列项收尾时更新 `counters.probes`——预算不记账 = 门闩失效(testfire 第 1 轮实测:38 探针全打了但 counters.probes=0、budget_left 未动,"skipped-because: 预算"与预算未耗尽自相矛盾,无人拦住)
+7. **队列粒度 = 端点 × playbook 场景**,不是 playbook 类:"T2=info-disclosure 面"这类粗项一次扫完就标 done,会把整类里未打的场景一起带走——**已采证据里的每个未测链接/表单都必须有自己的队列项**(testfire 第 1 轮实测:首页采到 40 链接,transfer/queryxpath/search/apply/feedback/stocks/customize 7 页未入队即宣布 done)
 7. **侦察产物的 scope 纪律**:Phase 2 / JS-recon 发现的非 mission in_scope 域(第三方统计/CDN/新子域)只记录不探测,汇入终局"需授权确认清单"——授权以 mission 枚举列表为准(第 16 轮实测:DNS 56 子域穷举零新资产,记录即结论)
 8. **js-recon 端点提取三模式**(Angular 新版 bundle 无 hash 平铺,如 main.js):双引号字符串 + **模板字符串(反引号,含 \${var} 占位)** + 懒加载 chunk 清单——单模式必漏(第 1 轮 juice-shop 实测:42 端点全靠前两模式合取,引号模式单独为 0)
 9. **JSP 传统站 include 参数差分判读**(第 1 轮 testfire 实测):`?content=` 类 include 参数,基线正常 / `../` 穿越 → **500 + 完整 Tomcat 栈(Jasper/JspServlet)** / 不存在值 → 200 站内 404 页——500≠不可利用,栈泄露本身即 finding(CWE-209);文件本体是否可读需看响应体,未回显就按栈泄露定级,不夸大
