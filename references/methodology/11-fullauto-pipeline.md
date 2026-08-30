@@ -194,6 +194,7 @@ R=2 轮仍无新信息 → 该项 stale;深度反思结论落盘 scope.md `next:
 1. 覆盖率矩阵(09 §3,`skipped` 必须有 because;**矩阵直接由 state.json 各项 status 投影生成**,收尾零手工)
 2. findings.md 全台账(candidate / confirmed / blocked / dup 分栏)
 3. confirmed 逐条 docx 草稿:照 Phase 5 流程(compliance → report-format 模板),诚实性矩阵如实标注;**JSRC 平台目标 → 直接路由 jsrc-report skill**(其脚本骨架 / D:\SRC\京东 落点 / V9.0 条款即 report-format.md 的来源),通用平台按本条流程
+4. **盲复现门闩(终稿前必过,第 1 轮 testfire 实测 6/6 PASS)**:把 confirmed 项写成**零上下文《AI 待复现报告》**——自包含:目标/授权依据/公开测试账号/逐步请求(含完整 body)/每个 payload 的判定标准/**超时与重试策略**/安全约束与副作用声明/已知不可复现项,不依赖任何会话记忆 → 交零上下文执行者复现(**执行等级**:subagent 全盲首选;并发受限时降级为按报告字面的机械脚本执行,结果文件必须标注执行等级)→ FAIL 或执行者提出报告歧义 = **报告缺陷**,修正重测后才准出终稿。报告书写两条铁律随之固化:①每个攻击 payload 后必须跟显式验证步骤(testfire F-03 验证步骤隐含省略致盲测误判 FAIL);②超时 15s 允许重试 1 次再判 FAIL(单次网络抖动不应埋葬真漏洞)
 4. **人工终审清单**:每条 confirmed 一行待勾——提交 / 补验证 / 放弃;stale / blocked 项附 §5 反思结论供取舍;含 §4.6 汇总的"需账号清单"
 
 **提交永远人工**:全自动到"报告草稿生成完毕"为止,Submit 前过 03 §10 自检清单。

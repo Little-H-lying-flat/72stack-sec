@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+盲复现门闩首跑(testfire 第 3 轮"AI 待复现报告"实验):11 号 §7 新增第 4 条**盲复现门闩(终稿前必过)**——confirmed 项写成零上下文《AI 待复现报告》(自包含:授权/账号/逐步请求/payload 判定标准/超时重试策略/副作用声明)→ 零上下文执行者复现(subagent 全盲首选,受限降级机械脚本并标注执行等级)→ FAIL 或歧义=报告缺陷,修正重测才准出终稿。实测:报告 6 项按字面机械复现,首判 5/6——盲测抓出**报告自身两处缺陷**(F-03 验证步骤隐含省略/无超时重试策略,单次网络抖动致误判 FAIL),补验后 6/6 PASS,缺陷回填报告书写铁律。终稿 docx 生成(64 段,自检通过,落 report_dir)。**定性:盲复现门闩拦截的是"报告不可复现"这一 SRC 拒稿头号原因,与三查门闩(拦截"假测完")互补。**
+
 - 2026-08-30 浏览器类验证能力上线(browser-harness 0.1.10 已装+专用 automation Chrome 实战验证):三战役浏览器类欠账一次清偿——testfire F-07 XSS **执行级确认**(CDP addScriptToEvaluateOnNewDocument 注入 alert 钩子→FIRED:1+截图)/F-12 clickjacking PoC 实证(本地页 iframe 完整嵌银行站+诱饵横幅);aiwadongdemumu **F-24 录屏补强完成**(36 帧全流程+order_list 实证 00.01 元落库,转出解除)。方法论增量:①**验证码空会话 trick 的浏览器化前提=无码 session**(真实浏览器加载 Login.asp/GetCode 图片即存码→空验证码失效;解法=清 cookie 后从不碰登录页+同源 XHR 登录,或 Network.setBlockedURLs 屏蔽 GetCode)——09 §1"先验账号存活"与 F-09 的浏览器侧机制补全;②**自动提交表单链**(pay.asp onload 自动跳网关)——改字段后无需手动 submit,判读以落库端(order_list)为准;③网关中转页出现即 scope 停手(F-15 先例执行)。
 
 - 2026-08-30 用户追问"这就跑完了?"+残留清扫(第 2.5 轮):三查门闩自查再次生效——抓出 4 个上轮残留(showTransactions/listAccounts 注入/clickjacking 头/安全头)。**F-11 错误页泄露 JSP 源码 confirmed**(balance.jsp 源码行 71-74 内嵌于异常页,`Account.getAccount(paramName)` 输入流可见——500 判读再升级:**异常页可能内嵌源码行,比栈更值钱**;§3-9 注记同步)+F-12 clickjacking candidate(transfer/login 无 XFO/CSP)+F-13 showTransactions 基线即 500 如实 skip(参数形态未还原不下注入结论);counters=61。战役终态:**F-01/02/03/07/08/11 六 confirmed + F-04/05/06/10/12 五 info/candidate + F-09/13 未复现/跳过**。
