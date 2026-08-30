@@ -151,8 +151,8 @@ level: 2
 **MUST 流程**(顺序执行):
 0. 打开 `work/<target-slug>/findings.md`——`confirmed` 行即本次提交清单,一行一份报告草稿(evidence 列即附件)
 1. Read `references/compliance.md` 核对合规红线(不准跳)
-2. Read `references/templates/report-submission.md` 取模板
-3. 三段式输出:
+2. Read `references/templates/report-format.md` 取模板——**纯 Normal 段落 docx(宋体/无表格)+ 诚实性矩阵**,按其脚本骨架写 `gen_report_vN.py` 生成提交级 docx(JSRC 目标用其第四节红线/第五节 V9.0 条款;旧三段式 `report-submission.md` 仅作快稿参考)
+3. 报告内容三要素(填入 docx 段落 0/4/5-6):
    - **标题**:≤80 字,精确到 endpoint + 漏洞类型
    - **重现步骤**:每步可执行,带 HTTP 包 / curl / 截图
    - **影响 + 修复建议**:CVSS 4.0 vector + 业务影响段
@@ -166,6 +166,7 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令:Phase 5 报告模板切换为通用 docx 格式——新增 references/templates/report-format.md(源自 jsrc-report 实战格式泛化:纯 Normal 段落/宋体/诚实性矩阵/定级与合并拆分/写作铁律/自检清单;JSRC 红线与 V9.0 条款作平台子节),旧 report-submission.md 降为快稿参考。
 - 2026-08-30 实战会话(第12轮,aiwadongdemumu 续作) +1条:09 §1 续会话先验账号存活(演示库轮间重置陷阱,mlecms 上轮号消失致 4 请求白烧)。新发现 F-25 getpwd 枚举预言机(low)/F-26 验证码第五口;新面 6 项扫尽,二次收官。
 - 2026-08-30 实战会话(第10轮,aiwadongdemumu 续作) +2条:logic-flaws §3.4 老 ASP 商城隐藏字段整单金额注记(total/allmoney/money1 直提+双单差分+浏览器先行)、03 原则 1 补真浏览器走通句。新增 confirmed F-24 任意改价下单(1399 商品落库 0.01 元,双单对照)。
 - 2026-08-30 实战会话(第9轮,aiwadongdemumu 续作) +2条:03 原则 1 探针构造流量原貌(getJSON 改写方法/JS 重写字段/image 按钮坐标对)、file-upload 00-index Comsenz camera.swf 头像协议注记(a= 参数名,swf 解压定协议)。本轮无新 confirmed;cart/avatar 两线按预算 parked。
