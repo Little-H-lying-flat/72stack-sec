@@ -166,6 +166,7 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 实战会话(第12轮,aiwadongdemumu 续作) +1条:09 §1 续会话先验账号存活(演示库轮间重置陷阱,mlecms 上轮号消失致 4 请求白烧)。新发现 F-25 getpwd 枚举预言机(low)/F-26 验证码第五口;新面 6 项扫尽,二次收官。
 - 2026-08-30 实战会话(第10轮,aiwadongdemumu 续作) +2条:logic-flaws §3.4 老 ASP 商城隐藏字段整单金额注记(total/allmoney/money1 直提+双单差分+浏览器先行)、03 原则 1 补真浏览器走通句。新增 confirmed F-24 任意改价下单(1399 商品落库 0.01 元,双单对照)。
 - 2026-08-30 实战会话(第9轮,aiwadongdemumu 续作) +2条:03 原则 1 探针构造流量原貌(getJSON 改写方法/JS 重写字段/image 按钮坐标对)、file-upload 00-index Comsenz camera.swf 头像协议注记(a= 参数名,swf 解压定协议)。本轮无新 confirmed;cart/avatar 两线按预算 parked。
 - 2026-08-30 实战会话(第8轮,aiwadongdemumu 续作) +2条:logic-flaws 模式 D 双重假象陷阱(改密表单 username 字段可被服务端忽略,判据=新凭据登录目标)、09 §1 会话状态持久化(账号/jar/id 清单入 scope.md next 节)。本轮无新 confirmed,排除 1 起假 ATO。
