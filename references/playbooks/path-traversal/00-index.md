@@ -390,6 +390,33 @@ spring:
 - **禁**：把读到的源码 / 配置上传到 GitHub / 第三方仓库。本地保存，报告后删除。
 - **报告中**：源码 / 配置必须脱敏。可附 sha256 hash 证明拿到过原文。
 
+## 9. 社区实战案例:Zip Slip → 持久化 RCE(MinerU,CVE-2026-24770)
+
+来源: [xz.aliyun.com/news/92668](https://xz.aliyun.com/news/92668), 2026-08 实测口径。
+
+```
+场景:文档解析服务(MinerU)返回 zip,主服务解压时信任 zip 条目名直接 os.path.join。
+构造要点:
+1. 恶意 zip 第一个条目写 doc.pdf/(空目录)——骗 root hint 约定
+   (解析结果 zip 的首条目是根目录名,后续条目都当它的子路径处理)
+2. 第二个条目 doc.pdf/../../evil.txt 才是真正的穿越载荷;绝对路径条目 /etc/passwd 同类
+3. 升级为 RCE:写入 Python 自动加载位 ——
+   doc.pdf/../../../../.venv/lib/python3.12/site-packages/sitecustomize.py
+   → 之后任何一次 python3 启动都执行(比 cron/systemd 省事,隐蔽性最好)
+4. 触发链:让目标解析一个恶意 PDF 即可写入;等一次 python3 进程启动闭环
+0.24.0 的参考防护(可当"是否已修"指纹,三条都在解压循环内逐条目做):
+   ①拦以 / 或盘符开头的绝对路径条目 ②拦路径 components 里的 ..
+   ③os.path.realpath 解析后确认仍在目标目录内
+   报错签名:RuntimeError: Unsafe zip path (traversal)
+审计细节:
+- ..\ 与 /../ 一样危险(Windows 反斜杠,检查前统一替换成斜杠)
+- 符号链接条目看 external_attr 类型位;链接本身不可怕,可怕的是链接指向位置
+  被后续代码当普通文件读写
+- 解压检查必须在解压循环内逐条目做——"解压完再统一检查"拦不住已发生的穿越
+红线:黑盒验证只写自有 PoC 文件(/tmp/PWNED_*),不写 sitecustomize、不碰系统文件;
+     sitecustomize 链路只作影响推演写入报告,不实际落地。
+```
+
 ## H1 真实案例
 
 _共 163 份 HackerOne 已披露 High/Critical 报告命中本类，按 (赏金 + 投票×100) 排序取 Top 12_

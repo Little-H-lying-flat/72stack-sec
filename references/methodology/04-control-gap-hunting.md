@@ -236,3 +236,13 @@
 | 验证码 / 凭证绑定 | `playbooks/logic-flaws/00-index.md` |
 | 输入验证（SQL / XSS） | `playbooks/sqli.md`、`playbooks/xss/00-index.md` |
 | 金额 / 幂等 / 并发 | `playbooks/logic-flaws/00-index.md`、`playbooks/race-conditions.md` |
+
+---
+
+## 8. 还找不到？查外部思路源
+
+本章探针套餐 + 对应 playbook 全打完仍无果 → 按漏洞类查活体社区找同类控制缺口的公开案例：
+
+- 国产组件 / 代码审计 → 先知社区、奇安信攻防社区、跳跳糖；Web 原理 → PortSwigger Web Security Academy；移动 / 逆向 → 看雪；组件带 CVE → NVD / AVD 查号 + Exploit-DB 找 PoC。
+- 路由与检索模板（dork / NVD API）见 `sources/knowledge-sources.md` §2 §3。
+- 引文纪律：必须实际打开过该 URL 并标 `(来源: <URL>, <日期>)`；文章姿势视为未验证假设，打目标前过差分确认。

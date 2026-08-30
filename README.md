@@ -42,6 +42,7 @@ references/
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
+  sources/        外部思路源路由：国内实战社区（先知/奇安信攻防/跳跳糖/FreeBuf/看雪）、国外平台（PortSwigger/Exploit-DB/HTB/H1 Blog/PayloadsAllTheThings）、官方漏洞库（NVD/AVD/Seebug/CNVD），含 dork 与 NVD API 检索模板
   templates/      CVSS 4.0 报告模板
   h1-reports/     HackerOne High/Critical 披露案例（原始 2887 + 2026-08 增量，分类索引 2836 条/144 类），并按 weakness 分组
   payloader/      310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload、114 个工具命令
@@ -84,6 +85,7 @@ skill 内置触发词包括：
 - 密码重置、找回密码
 - 默认凭据、Actuator、暴露的管理后台
 - 无限 debugger、反调试绕过、加密参数 / sign / aes hook、国密 SM2/3/4
+- 组件历史漏洞 / CVE / PoC 查询，先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB 思路检索
 - 全自动跑完整站、无人值守挖洞、整站自动化漏洞测试
 
 也可以显式调用：
@@ -120,8 +122,13 @@ skill 内置触发词包括：
 
 ## 更新日志
 
+### 2026-08-31
+
+- 社区文章精读吸收（按 sources 路由实读 4 篇，嵌入 5 个 playbook，playbook 计数不变）：[LobeChat SSRF 盲区审计](https://xz.aliyun.com/news/92685) → `ssrf-cache-host` 盲打判定 oracle + 代理型/转发型 + 修复完整性审计（补丁 diff → 同类 sink 盘点）；[RAGFlow 三洞审计](https://xz.aliyun.com/news/92668) → `rce/14-ssti` Jinja2 实战案例（canvas DSL 两步注入 / cycler 链 / 换行绕过 / 版本窗口）、`path-traversal` §9 Zip Slip→sitecustomize 持久化 RCE、`arbitrary-x-authz` §3.3-A uuid1 推导 API key；[Vitest Browser Mode 权限绕过](https://xz.aliyun.com/news/92704) → `unauth-access` §2.5 开发态 / 测试框架服务暴露新面（读 / 写 / 删 / 延迟外带四原语）；[验签缺陷任意登录](https://forum.butian.net/share/4994)（摘要层）→ `arbitrary-x-authz` §3.3-B Sign 自签名 + 缓存串会话。`knowledge-sources.md` 新增 §5 已吸收清单（落点索引，防重复精读）；不可达源（PortSwigger / 跳跳糖 / CNVD）均标实测口径
+
 ### 2026-08-30
 
+- 新增 [references/sources/knowledge-sources.md](references/sources/knowledge-sources.md)：外部思路源路由——国内实战社区（先知 / 奇安信攻防 / 跳跳糖 / FreeBuf / 看雪，配套阿里云漏洞库 AVD）、国外平台（PortSwigger Web Security Academy / PayloadsAllTheThings / Exploit-DB / Hack The Box / HackerOne Blog）、官方漏洞库（NVD API 2.0 无 key 直连 / CVE.org / Seebug / CNVD / CNNVD）；全部 URL 当日实测（JS 渲染搜索与反爬站点标 dork 兜底口径），含场景路由、dork 与 NVD API 检索模板、引文纪律
 - 11 号管线 Juice Shop 首战校准：§4.4 公共共享实例纪律（503+托管商错误页签名 = 实例级故障立即停全部流量，单发记录不复测，恢复签名=特征端点字节数）+ §3 第 8 条 js-recon 端点提取三模式（引号字符串 + 模板字符串 + 懒加载 chunk，单模式必漏）；首战 F-01 /ftp/ 目录列表 / F-02 memories 邮箱泄露 confirmed，实例 crash-loop 转恢复监控
 - 11 号管线第 17 轮"另一个站"发现校准：新增 §3.1 同域多站发现流程（权威源=业主门户导航页 / 端口非常见段补扫 / 结构路径字典，三层全阴性=资产清单终态）+ §4.5 整站级 env-broken 处理（统一错误签名 → 全队列降级 + 恢复监控 3min×3 次 + 重置窗口=暴露窗口做 install/备份残留扫描）；实测 73 端口 / 53 路径 / 导航页 2 RANGE 全阴性，mlecms 整站 686B 坏签名转监控
 - 11 号管线优化轮：§1.1 preflight 固化为可执行脚本 [`scripts/preflight.py`](scripts/preflight.py)（markdown 表直贴 scope.md / `--json` / `--probe-target`；本机 dogfood 3/8 OK 与实测一致）、§2 state 写时机=队列项边界、新增 §4.7 双账号 seed 预置动作、§7 JSRC 目标路由 jsrc-report skill
@@ -150,6 +157,7 @@ skill 内置触发词包括：
 - HackerOne hacktivity feed：HackerOne High/Critical 披露报告（原始 2887 + 2026-08 增量共 2951 份唯一案例），来源为公开 hacktivity 数据。
 - WooYun 历史档案：覆盖 88,636 条案例，仅保留参数频率、案例 ID 和 bypass 模式等统计残余。
 - Payloader：310 条结构化 payload + 176 个原始 WAF / EDR 绕过 payload + 114 条工具命令，原仓库为 `3516634930/Payloader`（云安全 9 条中 5 条为本库编写，见其文件头溯源标注）。
+- 外部思路源（`references/sources/`）：仅收录公开站点的检索路由（搜索 URL 格式 / dork 模板 / NVD API 端点），不抓取、不镜像任何社区内容；各站点直连状态为 2026-08-30 实测。
 
 本项目只整理、翻译和重组公开资料，不包含专有数据，也不抓取需要认证的内容。
 

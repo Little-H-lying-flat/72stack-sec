@@ -126,6 +126,37 @@ X-Original-User: admin
 
 CVSS 9.8（AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H）。
 
+### 3.3 凭证可推导与自签名(社区实战,2026-08)
+
+**A. uuid1 时间戳 + MAC 可推导 API key**(来源: [xz.aliyun.com/news/92668](https://xz.aliyun.com/news/92668),CVE-2025-69286):
+
+```
+前提:API key = URLSafeTimedSerializer(密钥=tenant_id).dumps(uuid.uuid1())
+     分享链接的 beta token 与 API key 同源相邻两次 uuid1() 调用(微秒级间隔)
+链路:
+1. 拿公开分享链接中的 beta(截断 base64,形如 IzZGI3ODMwLTk1MmEtMTFmMS04MTZiLT)
+2. A 填充对齐解码 → uuid 主体恢复:time_mid/version/clock_seq 全暴露,
+   time_low 只缺首 hex 字符,node(MAC)= 同服务器所有 uuid1 一致,
+   可从自己注册账号的 user_id 后 12 位直接取
+3. 枚举 time_low 首字符 16 种 × 相邻时间戳 delta(实测 98 万次内命中,delta=-1380)
+4. 验证:Authorization: Bearer <候选> 调 API,200=命中,401=继续
+指纹与启发:token 出现 uuid.uuid1()/time.time() 拼接 → 密钥可预测面;
+   修复 = secrets.token_urlsafe(一行 diff 断推导链)。签名被截断 ≠ 安全:
+   密钥只参与签名,签名被切掉后密钥是什么根本不重要。
+```
+
+**B. Sign 前端自签名 + 缓存串会话 → 任意登录**(来源: [forum.butian.net/share/4994](https://forum.butian.net/share/4994) 摘要口径, 2026-08-30;**全文需登录未读**,细节以摘要为准):
+
+```
+①Sign 多层编码落在前端 → 动态调试逐层还原算法;服务端只验签名合法性、
+  不绑定内容/时间戳/nonce → 本地 flask 起签名服务 + Burp Python 脚本自动重签,
+  "改包成本"归零(对接 07-js-recon §9 加密参数 Hook 链)
+②对带签名接口高并发重放(数千次) → 缓存键未含完整用户身份时,
+  响应偶发吐出其他在线用户的 session → 换入即免密登录(会话无绑定校验)
+黑盒启发:凡 Sign 前端生成,先问"服务端验的是签名本身,还是签名+内容绑定";
+  缓存类缺陷的重放探测是低成本 oracle,重放节奏注意风控红线。
+```
+
 ---
 
 ## 4. 任意用户注册（75.0%）

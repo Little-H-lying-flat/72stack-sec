@@ -65,6 +65,29 @@ SRC 关注：**入口最浅、影响最重**——单个 IP 扫描 + 一次 curl
 | 路由器 | admin/admin、admin/password |
 | 电信家庭网关 | telecomadmin/nE7jA%5m（固化无法改） |
 
+### 2.5 开发态 / 测试框架服务暴露(2026 新面)
+
+Vitest Browser Mode(CVE-2026-73653,受影响 <3.2.7 / 4.x<4.1.10 / 5.x-beta<5.0.0-beta.6)是这类面的样板——测试框架的 browser→RPC→provider→文件系统链,浏览器侧可控路径直达宿主文件系统(来源: [xz.aliyun.com/news/92704](https://xz.aliyun.com/news/92704), 2026-08):
+
+| 原语 | 命令 | 后果 |
+|------|------|------|
+| 任意读 | `upload` | `setInputFiles` 把宿主文件喂给 `<input>`,页面 `input.files[0].text()` 读回 |
+| 任意写 | `takeScreenshot` / `screenshotMatcher` / `stopChunkTrace` | 路径拼接后 mkdir+落盘 PNG/trace,`allowWrite:false` 被内建命令绕过 |
+| 任意删 | `deleteTracing` | `unlink(...)` |
+| 延迟外带 | `annotateTraces` | 路径进 attachment,借后续 reporter/artifact 流程复制带出——泄露点不在第一跳 |
+
+```
+打点条件:browser.api.host 绑定非本机地址(对外暴露 Browser API)才高危,
+         localhost+可信测试代码默认低危——先看绑定面再定性
+指纹:Vitest/测试框架 dev 端口、/__vitest_ 路径、浏览器测试 RPC endpoint
+同类面扫一遍:Vite dev server / Storybook / webpack-dev-server / HMR 端口 /
+         CI runner 面板——"开发态服务暴露"自成一类
+审计启发:①策略存在 ≠ 生效(allowWrite 配置开着、内建命令照样绕过——
+         "命令实现无视策略层"比"没做权限"更隐蔽)
+         ②隐式 side-effect sink(matcher 的 missing/update/diff 分支)比显式 path 参数更易漏
+         ③metadata/attachment.path 也是文件系统入口,"不是现在读"≠"后面不会读"
+```
+
 ---
 
 ## 3. 探测手法

