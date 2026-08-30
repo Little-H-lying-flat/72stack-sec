@@ -172,6 +172,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 ## CHANGELOG
 
+- 2026-08-30 用户指令+盲复现执行提示词模板化:新增 references/templates/ai-repro-executor-prompt.md(零上下文盲测执行提示词:上下文隔离/环境前提先读/诚实纪律/报告问题清单/执行等级三级标注),§7-4 挂接;aiwadongdemumu《AI 待复现报告》首建(9 confirmed,F-24 标 SKIP-BROWSER 因浏览器流程已另行录屏验证),盲测中断前已完成 F-05/21/23/06 四项全 PASS(与原证据一致),结果文件按执行等级隔离存档。用户自持提示词后续验证的工作流确立:**报告+提示词可完全脱离原作者会话独立复现**。
+
 - 2026-08-30 用户指令+盲复现门闩首跑(testfire 第 3 轮"AI 待复现报告"实验):11 号 §7 新增第 4 条**盲复现门闩(终稿前必过)**——confirmed 项写成零上下文《AI 待复现报告》(自包含:授权/账号/逐步请求/payload 判定标准/超时重试策略/副作用声明)→ 零上下文执行者复现(subagent 全盲首选,受限降级机械脚本并标注执行等级)→ FAIL 或歧义=报告缺陷,修正重测才准出终稿。实测:报告 6 项按字面机械复现,首判 5/6——盲测抓出**报告自身两处缺陷**(F-03 验证步骤隐含省略/无超时重试策略,单次网络抖动致误判 FAIL),补验后 6/6 PASS,缺陷回填报告书写铁律。终稿 docx 生成(64 段,自检通过,落 report_dir)。**定性:盲复现门闩拦截的是"报告不可复现"这一 SRC 拒稿头号原因,与三查门闩(拦截"假测完")互补。**
 
 - 2026-08-30 浏览器类验证能力上线(browser-harness 0.1.10 已装+专用 automation Chrome 实战验证):三战役浏览器类欠账一次清偿——testfire F-07 XSS **执行级确认**(CDP addScriptToEvaluateOnNewDocument 注入 alert 钩子→FIRED:1+截图)/F-12 clickjacking PoC 实证(本地页 iframe 完整嵌银行站+诱饵横幅);aiwadongdemumu **F-24 录屏补强完成**(36 帧全流程+order_list 实证 00.01 元落库,转出解除)。方法论增量:①**验证码空会话 trick 的浏览器化前提=无码 session**(真实浏览器加载 Login.asp/GetCode 图片即存码→空验证码失效;解法=清 cookie 后从不碰登录页+同源 XHR 登录,或 Network.setBlockedURLs 屏蔽 GetCode)——09 §1"先验账号存活"与 F-09 的浏览器侧机制补全;②**自动提交表单链**(pay.asp onload 自动跳网关)——改字段后无需手动 submit,判读以落库端(order_list)为准;③网关中转页出现即 scope 停手(F-15 先例执行)。
