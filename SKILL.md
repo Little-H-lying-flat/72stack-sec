@@ -51,7 +51,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 **条件触发 Read**:国产 OA/中间件指纹→`dictionaries/chinese-srcfingerprints.md`+`default-credentials-cn.md`;银行/电信→`industry/`;云/K8s→`playbooks/cloud/`。
 
 ### Phase 4 · Hunt
-**4.5 语义审计 = 发现主引擎(必做)**:表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`。
+**4.5 语义审计 = 发现主引擎(必做)**:表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`;confirmed 必须 `src: S-xx` 因果链引用(§6)。
 
 **payload 确认(懒加载)**:对 suspects 每条按其映射类**只 Read 对应 playbook 的命中场景节**——入口信号路由表:
 
@@ -82,6 +82,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 
 **懒加载通用方法论**(卡壳才读):01 攻击优先级(含危害定性门 §3.5) / 02 bypass / 04 控制缺失 / 05 时间盒 / 06 2026 打法 / 07 JS 侦察与反调试 / 08 多 agent / 09 台账 / 10 原型路由 / 11 全自动管线 / 12 数据播种 / 13 接口 fuzz / 14 语义审计。
 
+**探针哨兵(热路径)**:连续 3 发同形失败即熔断跳项;响应异常模式暂停复核;疑似越 scope 立即停链路(11 §4.0)。
 **出口检查**:跑 `python scripts/gate_check.py --work work/<slug>` 四查全绿才可宣布测完。
 **门闩分级(11 §2.1)**:`tier: practice`(默认,靶场)只跑 gate_check+语义审计+差分;`tier: formal`(平台提交)才拉满危害定性门+盲测+docx。门闩时间>挖洞时间=档位用错。
 
@@ -100,6 +101,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 ## CHANGELOG
 
 > 完整变更史见 [CHANGELOG.md](CHANGELOG.md)。最近:
+- 2026-08-31 吸收 LuaN1aoAgent:因果链引用(14§6 src: S-xx)+探针哨兵(11§4.0 热路径熔断)
 - 2026-08-31 门闩分级(practice/formal,tier 字段)+14 §5 接口三问(API/SPA 版)
 - 2026-08-31 瘦身版对照验证:召回 100%+新发现 F-42 用户名枚举,流程零卡壳——瘦身版定稿
 - 2026-08-31 SKILL.md 瘦身 25K→4.7K 字符:反幻觉改宽(payload 出处=playbook 或自证构造逻辑)、Phase 4 改懒加载路由、CHANGELOG 迁移

@@ -94,3 +94,22 @@ S-02 | Pay_cz.username | hidden 字段,服务端信? | 表单提取 | 待验证 
 ### 5.3 suspects 映射不变
 
 接口型可疑点同样落 suspects.md(对象=端点+参数),映射 playbook 类(api-rest/arbitrary-x-authz/oauth-saml-jwt 等),确认弹药查表流程不变。
+
+
+## 6. 因果链引用(20260831 吸收 LuaN1aoAgent 因果图思想,轻量实现)
+
+> 它家用运行时图数据库;我们用 **md 互链**达成同一目标:每个 confirmed 可回溯"从哪个疑问来、证据是哪几个、危害谁裁的"。
+
+四级链(全部已存在于工序,只补显式引用):
+
+| 级 | 载体 | 引用字段 |
+|---|---|---|
+| Evidence | evidence/ 原始包 | findings.evidence 列(已有) |
+| Hypothesis | suspects.md S-xx | **findings 新增尾列 `src: S-xx`**(哪个语义疑问来) |
+| Vulnerability | findings.md confirmed 行 | 主键 F-xx |
+| 定性 | ADVERSARY-VERDICT*.md / 危害定性轮表 | **findings notes 尾注 `review: 受理/降级@轮次`** |
+
+规则:
+1. confirmed 行**必须**有 `src: S-xx`(除非来源是交接队列/用户指定——标注 `src: handoff`)
+2. 无 suspects 来源的 confirmed = 语义审计覆盖缺口 → gate_check 查 4 的信号
+3. 散佚证据引用已有豁免分支(gate_check 查 3),不重复建

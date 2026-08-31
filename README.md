@@ -82,7 +82,7 @@ references/
 - HackerOne hacktivity feed（公开披露数据）
 - WooYun 历史档案（仅统计残余）
 - Payloader：原仓库 `3516634930/Payloader`
-- 借鉴致谢：RefPentester 自反思循环 / HackingBuddyGPT 有限步数 / CAI 双模式 / WindFtsy 门禁与分工思想 / CyberStrike 3-gate 术语（均为思路借鉴，代码自研）
+- 借鉴致谢：RefPentester 自反思循环 / HackingBuddyGPT 有限步数 / CAI 双模式 / WindFtsy 门禁与分工思想 / CyberStrike 3-gate 术语 / LuaN1aoAgent 因果图与 Observer 热路径监督（均为思路借鉴，代码自研）
 
 本项目只整理、翻译和重组公开资料，不包含专有数据。
 

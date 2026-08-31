@@ -1,5 +1,7 @@
 # CHANGELOG · 72stack-sec
 
+- 2026-08-31 用户拍板吸收 LuaN1aoAgent 两思路(AGPL 只借思路):**①因果链引用(14 §6,轻量 md 互链版)**——confirmed 必须带 `src: S-xx`(Hypothesis 来源)+`review:` 定性尾注,与 Evidence(已引用)/Vulnerability(主键)构成四级链;无 suspects 来源=gate_check 查4 信号;**②探针哨兵(11 §4.0,热路径监督)**——滑动窗口当场熔断(连续 3 发同形失败/响应异常模式/疑似越 scope 立即停链),区别于阶段边界的门闩;SKILL/README 致谢同步。
+
 - 2026-08-31 用户拍板两项:**①门闩分级(11 §2.1)**——practice(默认,靶场:gate_check+语义审计+差分)/formal(提交:全套反驳者+盲测+docx),mission 块 tier 字段声明,门闩时间>挖洞时间=档位用错(防过度工程);**②14 号补 §5 接口三问(API/SPA 版)**——参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式,鉴权不一致是最肥的面(juice-shop F-02 实证信号),表单三问失效的 SPA 场景由此覆盖;SKILL.md 同步。
 
 - 2026-08-31 瘦身版对照验证(mlecms 全流程重跑):**召回 100%——已知 9 confirmed 从台账/已有 suspects 全部可重现,且新发现 F-42**(member/login POST username 用户名枚举,表征级——"POST username 信客户端"三问触发,F-38 族问句首次在 mlecms 命中)+show.php 补测 clean(id intval)。流程无卡壳:Phase 1-5 全程未回读下沉内容;Phase 4.5 三问分族即产出"show.php 从未单独测过"漏网点——**瘦身版(102 行)合格定稿,字节账平(474 vs 477)**。元数据:Phase 4 路由表够用,未感大 playbook 读取缺失。
