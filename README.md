@@ -38,7 +38,7 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、JS 反调试突破与加密参数 Hook（无限 debugger / CryptoJS / RSA / 国密）、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由、全自动无人值守整站管线、无数据造数管线（空态解锁：服务端种子 / 响应拦截注入 / DOM 直填）
+  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、JS 反调试突破与加密参数 Hook（无限 debugger / CryptoJS / RSA / 国密）、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由、全自动无人值守整站管线、无数据造数管线（空态解锁：服务端种子 / 响应拦截注入 / DOM 直填）、接口 Fuzz 管线（种子驱动变异 / 四类 oracle / LLM 越狱三策略）
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
@@ -87,6 +87,7 @@ skill 内置触发词包括：
 - 无限 debugger、反调试绕过、加密参数 / sign / aes hook、国密 SM2/3/4
 - 组件历史漏洞 / CVE / PoC 查询，先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB 思路检索
 - 页面没数据、造测试数据、前端 mock 拦截填充、表单自动填充
+- 接口 fuzz、参数模糊测试、隐藏参数爆破、LLM 越狱批量测试
 - 全自动跑完整站、无人值守挖洞、整站自动化漏洞测试
 
 也可以显式调用：
@@ -124,6 +125,8 @@ skill 内置触发词包括：
 ## 更新日志
 
 ### 2026-08-31
+
+- 新增 [methodology/13-interface-fuzzing.md](references/methodology/13-interface-fuzzing.md)：接口 Fuzz 管线——吸收 AI-Fuzz 生态思想（EvoMaster 固化回归 / Fuzz4All 生成式变异 / AFL++ 可插拔变异器 / FuzzyAI 变异·生成式·遗传三策略 / LLMFuzzer / PS-Fuzz 系统提示词探针族，本库不内置工具只标对应用法）；四类 fuzz 目标（参数名 / 参数值 / 端点 / LLM 入口）× 种子来源 × 命中 oracle 表，种子驱动变异循环（类型 / 数值 / 编码 / 语义四张规则表），命中探针固化回归脚本入 evidence；fuzz 探针同样要出处标注、照走三段差分，命中 ≠ confirmed；LLM fuzz 红线：只打目标自己的集成接口，不指向第三方模型 API。`llm-prompt-injection/00-index.md` 新增 §6 规模化路由
 
 - 新增 [methodology/12-data-seeding.md](references/methodology/12-data-seeding.md)：无数据造数管线（空态解锁）——空列表挡渲染类 XSS / 无资源挡 IDOR / 长表单三类场景；三层阶梯：L1 服务端种子工厂（创建接口回放 + CN 字段生成映射，衔接 11 号管线 §4.7 seed 与节流）、L2 响应拦截注入（MockJS 思路：jshook network_intercept / CDP 启动注入 / console 过载三条路径，含规则模板）、L3 DOM 直填 + 表单自动填充；证据铁律：L2/L3 产出不进证据链，confirmed 一律回服务端真实响应 / 落库；工具生态索引（faker-js / MockJS / Mock Injector / AI form filler，本库不内置只标对应用法）
 - 社区文章精读吸收（按 sources 路由实读 4 篇，嵌入 5 个 playbook，playbook 计数不变）：[LobeChat SSRF 盲区审计](https://xz.aliyun.com/news/92685) → `ssrf-cache-host` 盲打判定 oracle + 代理型/转发型 + 修复完整性审计（补丁 diff → 同类 sink 盘点）；[RAGFlow 三洞审计](https://xz.aliyun.com/news/92668) → `rce/14-ssti` Jinja2 实战案例（canvas DSL 两步注入 / cycler 链 / 换行绕过 / 版本窗口）、`path-traversal` §9 Zip Slip→sitecustomize 持久化 RCE、`arbitrary-x-authz` §3.3-A uuid1 推导 API key；[Vitest Browser Mode 权限绕过](https://xz.aliyun.com/news/92704) → `unauth-access` §2.5 开发态 / 测试框架服务暴露新面（读 / 写 / 删 / 延迟外带四原语）；[验签缺陷任意登录](https://forum.butian.net/share/4994)（摘要层）→ `arbitrary-x-authz` §3.3-B Sign 自签名 + 缓存串会话。`knowledge-sources.md` 新增 §5 已吸收清单（落点索引，防重复精读）；不可达源（PortSwigger / 跳跳糖 / CNVD）均标实测口径

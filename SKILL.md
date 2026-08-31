@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、外部思路源路由(国内 5 社区/国外 5 平台/官方漏洞库,含 dork 与 NVD API 模板)、无数据造数管线(空态解锁:服务端种子/响应拦截注入/DOM 直填)、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF",或要"查组件历史漏洞 / CVE / PoC、从先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB / NVD 找渗透思路" 时触发。
+description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、外部思路源路由(国内 5 社区/国外 5 平台/官方漏洞库,含 dork 与 NVD API 模板)、无数据造数管线(空态解锁:服务端种子/响应拦截注入/DOM 直填)、接口 Fuzz 管线(种子驱动变异/四类 oracle/LLM 越狱三策略)、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF",或要"查组件历史漏洞 / CVE / PoC、从先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB / NVD 找渗透思路" 时触发。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -23,6 +23,7 @@ level: 2
 - "WAF 绕过 / 任意账号 / 任意修改 / 密码重置 / 未授权访问 / 默认凭据"
 - "全自动跑完整站 / 无人值守挖洞 / 整站自动化测试(不中途提问,例外才停)"
 - "页面没数据 / 造测试数据 / 前端 mock 拦截填充 / 表单自动填充"
+- "接口 fuzz / 参数模糊测试 / 隐藏参数爆破 / LLM 越狱批量测试"
 - "查组件历史漏洞 / CVE / PoC / 从先知/奇安信攻防社区/跳跳糖/FreeBuf/看雪/PortSwigger/Exploit-DB 找渗透思路"
 - 用户给一个 URL / API endpoint / APK 让你测
 
@@ -144,6 +145,7 @@ level: 2
 - 怀疑自己幻觉 / 想检查证据链 → `references/methodology/03-evidence-discipline.md`
 - 找不到漏洞点 → `references/methodology/04-control-gap-hunting.md`
 - 页面/接口空数据挡路(空列表没法测渲染 / 没资源 id 测详情 / 长表单手填慢) → `references/methodology/12-data-seeding.md`(三层造数阶梯:L1 服务端种子 / L2 响应拦截注入 / L3 DOM 直填;L2/L3 产出不进证据链)
+- 来源探针打完 parked 队列仍积压 / 隐藏参数无来源 / 参数值变异无章法 / LLM 接口要批量测 → `references/methodology/13-interface-fuzzing.md`(种子驱动变异循环 + 四类 fuzz oracle + LLM 三策略;fuzz 探针同样要出处,命中 ≠ confirmed)
 - playbook 打完无果想换姿势 / 组件带 CVE 要找 PoC / 某类漏洞原理不清 → `references/sources/knowledge-sources.md`(外部思路源路由:先知/奇安信攻防/跳跳糖/FreeBuf/看雪 + PortSwigger/Exploit-DB/HTB/H1 Blog/PATT + NVD/AVD/Seebug/CNVD,含 dork 与 NVD API 模板;引文必须实际打开过并标 URL)
 - 想对齐 2026 一线打法(选目标哲学 / 攻击面组织 / 链式打点 / AI 分工) → `references/methodology/06-hunter-methodology-2026.md`
 - SPA 资产里的 endpoint / 隐藏路由 / 密钥收集 → `references/methodology/07-js-recon.md`
@@ -177,6 +179,8 @@ level: 2
 jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器动作回退用户协作(用户手测 + 提供响应),**不虚构工具调用结果**。
 
 ## CHANGELOG
+
+- 2026-08-31 用户指令(AI-Fuzz 生态调研吸收):新增 references/methodology/13-interface-fuzzing.md 接口 Fuzz 管线——定位:fuzz=大规模猜测,纳入证据先行/预算/差分同一套纪律而非盲炸。§0 触发与停机(来源探针打完才开/队列项 budget 15 探针/连续 8 无新信号触发深度反思/parked→fuzz→candidate 漏斗记账);§1 四类 fuzz 目标(参数名/参数值/端点/LLM 入口)× 种子来源 × 命中 oracle 表;§2 种子驱动变异循环(AFL++ custom mutator 思想黑盒化:类型/数值/编码/语义四张规则表,命中种子保留衍生,命中探针固化回归脚本入 evidence/——EvoMaster 思想);§3 AI 生成式 fuzz(Fuzz4All 思想:LLM 生成语法语义合法的同构变体,本地生成+审核后入队,标 generated-from 出处);§4 LLM 集成接口三策略(FuzzyAI 分类:变异式/生成式/遗传式 GA 代数上限 3-5 + PS-Fuzz 系统提示词泄露探针族,oracle 必须可机械判定,红线:只打目标自己的 LLM 接口不指向第三方 API);§5 衔接(11 号队列/02-bypass 变异器引用/nuclei 初筛/09 台账三查);§6 生态工具索引(EvoMaster/Fuzz4All/AFL++/FuzzyAI/LLMFuzzer/PS-Fuzz 六项,只标对应用法不内置);§7 红线(三缺一不出报告/并发≤2/样本控制/固化脚本凭据隔离)。接线:SKILL Phase 4 卡壳路由+触发词+description;llm-prompt-injection 00-index 新增 §6 指向 §4;README 同步。
 
 - 2026-08-31 用户指令(空态造数工具调研吸收):新增 references/methodology/12-data-seeding.md 无数据造数管线——触发场景表(空列表挡渲染类 XSS/无资源挡 IDOR/分页导出/长表单)+ 证据铁律(L2/L3 产出不进证据链,confirmed 一律回服务端真实响应/落库);三层阶梯:①L1 服务端种子工厂(创建接口 curl 回放+字段值生成映射表 CN 姓名/手机/邮箱/金额,衔接 11 号 §4.7 seed 四步与 §4.1 节流,每类 3-10 条 [TEST] 标记)②L2 响应拦截注入(MockJS 思路,三条落地路径:jshook network_intercept / CDP addScriptToEvaluateOnNewDocument hook fetch+XHR / console 过载,含空列表→20 条生成行规则模板;存储型 XSS 必须真落库,拦截显示≠confirmed)③L3 DOM 直填+表单自动填充(browser-harness/jshook page_inject_script 按字段映射填,AI form filler 扩展仅无 MCP 协作 fallback);工具生态索引(faker-js/MockJS/Mock Injector 扩展,本库不内置只标对应用法);红线([TEST] 标记+测完清理/不碰真实用户数据/限速收敛/拦截只作用于自己会话/导出最小范围)。接线:SKILL Phase 4 卡壳路由+触发词+description;README 目录/触发词/更新日志。
 
