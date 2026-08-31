@@ -103,6 +103,8 @@ level: 2
 
 **进入条件**:Phase 3 矩阵 ≥1 个候选目标。
 
+**Phase 4.5 语义审计(发现主引擎,必做)**:payload 探测**之前**,先按 `references/methodology/14-semantic-audit.md` 对 Phase 3 采到的全部表单/字段/防线/跳转做语义三问(服务端信吗/防线真在吗/跳转去哪),产出 `suspects.md` 可疑点清单——**payload 探测只对清单上的可疑点按 playbook 查表确认**,不再按类盲扫(实证:~90% findings 来自语义审视,payload 库直接命中≈0)。
+
 **强制流程(每个候选目标走一遍)**:
 1. 看目标信号,先判**目标原型**(A-Java 管理面 / B-SPA+API / C-传统站 / D-小程序 / E-云上 / F-官网 / G-已有入口),按 `references/methodology/10-archetype-routing.md` 的序列定打点顺序;再从下表选当前类的 playbook
 2. **Read 该 playbook 文件**(不准跳过、不准凭记忆替代)

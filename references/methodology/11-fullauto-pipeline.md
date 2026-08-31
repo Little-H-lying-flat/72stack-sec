@@ -70,7 +70,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 }
 ```
 
-流程:mission 校验 → Phase 2 recon(被动,全自动:CT 日志 / Wayback / GitHub dorks / FOFA) → Phase 3 enum(主动,OneForAll / httpx / nuclei 初筛) → 队列生成(§3) → 逐项消耗队列(每项收尾走 §5.1 项级反思) → reverify 复核轮(§4.5) → **"测完"判定(§2 流程末)**:队列清空 + parked 补跑一轮 + 覆盖率矩阵(09 §3)无空格。**收工前必须过完整性三查**,任一不过 = 不许宣布测完:
+流程:mission 校验 → Phase 2 recon(被动,全自动:CT 日志 / Wayback / GitHub dorks / FOFA) → Phase 3 enum(主动,OneForAll / httpx / nuclei 初筛) → 队列生成(§3) → 逐项消耗队列(每项收尾走 §5.1 项级反思) → reverify 复核轮(§4.5) → **"测完"判定(§2 流程末,追加第 4 查=14 号语义审计 suspects 覆盖率:表单×字段 100%/认证后面 100%/防线清单 100%)**:队列清空 + parked 补跑一轮 + 覆盖率矩阵(09 §3)无空格。**收工前必须过完整性三查**,任一不过 = 不许宣布测完:
 
 1. **预算账平**:`counters.probes` 与 evidence 探针数一致,各项 `budget_left` 已扣
 2. **证据覆盖**:**已采证据(首页/main.jsp 链接表、表单清单)中的每个未测 URL/表单,要么有队列项打完,要么在矩阵里有 skipped-because**——采了证据不排队 = 假测完(最常见漏洞)

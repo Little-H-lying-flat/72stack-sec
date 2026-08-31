@@ -38,7 +38,7 @@ git clone https://github.com/Little-H-lying-flat/72stack-sec.git ~/.claude/skill
 
 ```text
 references/
-  methodology/    五阶段流程、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、JS 反调试突破与加密参数 Hook（无限 debugger / CryptoJS / RSA / 国密）、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由、全自动无人值守整站管线、无数据造数管线（空态解锁：服务端种子 / 响应拦截注入 / DOM 直填）、接口 Fuzz 管线（种子驱动变异 / 四类 oracle / LLM 越狱三策略）
+  methodology/    五阶段流程、攻击面语义审计（发现主引擎：表单/防线/跳转三问 → suspects 清单）、攻击优先级、绕过工具集、证据规则、2026 一线方法论汇编、JS 侦察与 Vue SPA 路由最大化、JS 反调试突破与加密参数 Hook（无限 debugger / CryptoJS / RSA / 国密）、多 agent 编排（设计稿）、目标工作区与执行台账、目标原型路由、全自动无人值守整站管线、无数据造数管线（空态解锁：服务端种子 / 响应拦截注入 / DOM 直填）、接口 Fuzz 管线（种子驱动变异 / 四类 oracle / LLM 越狱三策略）
   playbooks/      每类漏洞一个文件，包含真实 H1 案例和 payload；cloud/ 为云安全子 playbook（云授权项目 / IAM / 对象存储 / K8s）
   industry/       银行/金融、电信/ISP 垂直场景 playbook
   dictionaries/   国产组件指纹和默认凭据
