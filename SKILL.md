@@ -99,6 +99,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 ## CHANGELOG
 
 > 完整变更史见 [CHANGELOG.md](CHANGELOG.md)。最近:
+- 2026-08-31 瘦身版对照验证:召回 100%+新发现 F-42 用户名枚举,流程零卡壳——瘦身版定稿
 - 2026-08-31 SKILL.md 瘦身 25K→4.7K 字符:反幻觉改宽(payload 出处=playbook 或自证构造逻辑)、Phase 4 改懒加载路由、CHANGELOG 迁移
 - 2026-08-31 新增 14-semantic-audit(发现主引擎)+gate_check.py 四查硬门
 - 2026-08-31 危害定性门三层(三问/下限表/反驳者)+盲测默认关闭(受理项 only)
