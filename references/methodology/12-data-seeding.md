@@ -52,6 +52,8 @@ done
 | `amount/price/money` | 0.01 / 1.00 / 99.99 小额组合 |
 | `addr/address` | `[TEST]测试地址-<n>号` |
 
+**环境注记(Windows/GitBash 实测摩擦)**:curl `-d` 内联含中文的 JSON 会被 shell 编码破坏(目标报 400 bad json,整批作废)——CN 字段值造数改用 UTF-8 脚本文件发:python seeder(urllib/requests)或 `curl -d @payload.json`(文件以 UTF-8 写),不再用内联 `-d "中文"`。
+
 **与 11 号管线 §4.7 的衔接**:IDOR/越权队列项开打前的 seed 四步(双号注册 → A 号建订单/留言/收藏各 ≥1 带 `[TEST]` 标记 → id 清单入 scope.md `next:` 节 → B 会话限样本遍历)由本节供弹药——seed 造不出来/数量不够时按 §3 批量回放,造数请求同样走 §4.1 节流阶梯。
 
 **数量与占位红线**:每类 3–10 条够用;分页测试 ≤2 页;导出用最小时间范围;新数据会置顶到真实用户可见列表——共享环境选低峰并在报告注明造数行为。
@@ -89,6 +91,8 @@ window.fetch = async (...a) => {
 **适用**:前端模板转义验证(列表页渲染 `content` 是否 encode)、前端逻辑漏洞(前端算价/前端权限判断)、SPA"详情页必须从列表点进去"的 UI 链打通。
 
 **硬警告**:存储型 XSS 必须 payload 真落库。拦截注入后页面上 payload 显示了,只能记 "UI 渲染确认(candidate)",落库验证另走 L1 用真数据提交一次。
+
+**hook 存活矩阵(dogfood 实测)**:CDP `addScriptToEvaluateOnNewDocument` 注入跨 reload 持续;页面 console / 内部浏览器 evaluate 注入**不跨 reload**——无 CDP 环境用 SPA 内路由切换保 hook(reload 前完成观察),或接受"hook 失效后立即转 L1 复验"的节奏。**sink 语义判读**:观察渲染时分 text / HTML sink——实测 `textContent` 渲染的 payload 只显示不执行,**显示 ≠ 可利用**;HTML sink 才进 candidate。
 
 ---
 

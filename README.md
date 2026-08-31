@@ -126,6 +126,7 @@ skill 内置触发词包括：
 
 ### 2026-08-31
 
+- 靶场 dogfood 校准（demo.owasp-juice.shop + 本地 minirange）：13/12 号管线全链验证通过，共享实例纪律自证生效（实例中途 503 → 停流量 + 恢复监控 → 转本地）；5 处实战摩擦回写——13 号新增**批内健康检查强制门闩**（批首 baseline 复检，全同尺寸 = harness 疑点优先，两次拦截 URL 拼接 / 变量错位自伤）、env-broken 批次不入阴性账；12 号补 GitBash 中文 JSON 编码摩擦、hook 存活矩阵（CDP 跨 reload / evaluate 注入不跨）、sink 语义判读（textContent 只显示不执行）
 - 新增 [methodology/13-interface-fuzzing.md](references/methodology/13-interface-fuzzing.md)：接口 Fuzz 管线——吸收 AI-Fuzz 生态思想（EvoMaster 固化回归 / Fuzz4All 生成式变异 / AFL++ 可插拔变异器 / FuzzyAI 变异·生成式·遗传三策略 / LLMFuzzer / PS-Fuzz 系统提示词探针族，本库不内置工具只标对应用法）；四类 fuzz 目标（参数名 / 参数值 / 端点 / LLM 入口）× 种子来源 × 命中 oracle 表，种子驱动变异循环（类型 / 数值 / 编码 / 语义四张规则表），命中探针固化回归脚本入 evidence；fuzz 探针同样要出处标注、照走三段差分，命中 ≠ confirmed；LLM fuzz 红线：只打目标自己的集成接口，不指向第三方模型 API。`llm-prompt-injection/00-index.md` 新增 §6 规模化路由
 
 - 新增 [methodology/12-data-seeding.md](references/methodology/12-data-seeding.md)：无数据造数管线（空态解锁）——空列表挡渲染类 XSS / 无资源挡 IDOR / 长表单三类场景；三层阶梯：L1 服务端种子工厂（创建接口回放 + CN 字段生成映射，衔接 11 号管线 §4.7 seed 与节流）、L2 响应拦截注入（MockJS 思路：jshook network_intercept / CDP 启动注入 / console 过载三条路径，含规则模板）、L3 DOM 直填 + 表单自动填充；证据铁律：L2/L3 产出不进证据链，confirmed 一律回服务端真实响应 / 落库；工具生态索引（faker-js / MockJS / Mock Injector / AI form filler，本库不内置只标对应用法）

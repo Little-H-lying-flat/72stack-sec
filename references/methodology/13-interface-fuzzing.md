@@ -3,6 +3,8 @@
 > 定位:证据先行门闩(Phase 4 流程 3)把纯猜测探针排到 parked 清单尾部——**fuzz 就是大规模猜测**,本文件管"怎么让 fuzz 有种子、有变异器、有 oracle、有预算",而不是盲炸。吸收 AI-Fuzz 生态思想(2026-08 调研):EvoMaster(SBST 智能用例生成)/ Fuzz4All(LLM 做生成与变异)/ AFL++(custom mutator 可插拔)/ FuzzyAI(变异+生成式+遗传三策略打 LLM)/ LLMFuzzer(LLM 集成应用边界)/ PS-Fuzz(系统提示词强化测试)——**只吸收思想,本库不内置工具**,生态索引见 §6。
 >
 > **总纪律**:fuzz 探针与普通探针同一套反幻觉约束——每个探针标注出处(种子来源 / 变异器规则名),标不出出处的探针不进会话输出;命中后照走三段差分确认,fuzz 命中 ≠ confirmed。
+>
+> **批内健康检查(强制门闩,dogfood 两次拦截 harness 自伤)**:每批**首探针 = baseline 复检**(重打一遍基线值);批内出现多条字节级同响应时,**harness 疑点优先于目标结论**——先手动单发一条核对 URL 拼接与参数形态,再判读阴性。实测教训:探针串带 `q=` 前缀与基础 URL 拼成 `?q=q=...`、shell 函数变量错位把全批拼成纯 baseline——两批假结果全靠"全同尺寸"信号回捞。
 
 ---
 
@@ -88,6 +90,7 @@ Fuzz4All 的洞察:LLM 能生成**语法语义合法**的输入,打破手写 gra
 - **02-bypass-toolkit**:变异器库的编码/过滤绕过变体从其 §2 引用,不重复维护。
 - **nuclei-templates**:高频参数值 fuzz 可固化成 nuclei 模板规模化初筛(模板 payload 均出自 playbook,命中后回 playbook 走全流程——Phase 3 既有约定)。
 - **09-target-workspace**:fuzz 批次结果(含未命中)入 findings 台账,`skipped-because: budget` 与"预算未耗尽"不得自相矛盾(三查门闩)。
+- **11 号 §4.4/§4.5 共享实例与 env-broken**:批次开始即遇统一错误签名(全 503 / 全 0B)→ 该批结果记 invalid / skipped-because: env-broken,**不入阴性账**(env-broken 不产生假阴性);立即停流量,恢复监控(特征端点字节签名)后再补跑。
 
 ---
 
