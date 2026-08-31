@@ -19,6 +19,7 @@ Phase 1 checkpoint 五项落成 `scope.md` 顶部结构化 mission 块(与 09 §
 ```yaml
 # scope.md 头部 mission 块
 mode: full           # full=无人值守(默认) / checkpoint=回到逐门确认(CAI 双模式思想)
+tier: practice       # practice=轻量门闩(默认) / formal=正式档全套(提交场景)
 in_scope:            # 逐条:域名/IP 段/app/endpoint
   - example.com
 out_of_scope:        # 逐条禁测项
@@ -77,6 +78,18 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 3. **登记簿对账**:findings.md 行数 = 矩阵 hit 行数 + clean/closed 行数;confirmed 行均有三段差分证据文件
 
 三查通过才准写"测完"进 state 并进入 §7 终局。
+
+## 2.1 门闩分级(20260831:防过度工程)
+
+| 档 | 适用 | 必跑 | 跳过 |
+|---|---|---|---|
+| **轻量档(练习)** | 靶场/练习环境/owner 朋友的站 | gate_check 四查 + 14 号语义审计(suspects) + 三段差分 | 危害定性门子代理、盲测、反驳者、报告 docx(台账留档即可) |
+| **正式档(提交)** | 平台 SRC/赏金提交/客户交付 | 全套:轻量档 + 危害定性门(L1 三问+L2 反驳者) + 盲复现(受理项) + 终稿 docx(诚实性矩阵) | — |
+
+- 档位由 mission 块 `tier: practice | formal` 声明(默认 practice);升级随时可做(练习档产出补跑正式档门闩即转正,已验证:危害定性轮就是练习转正的实例)
+- **门闩时间 > 挖洞时间 = 档位用错**(练习靶场跑全套反驳者+盲测属杀鸡用牛刀,20260831 复盘)
+
+---
 
 ## 3. hunt 队列自动生成
 

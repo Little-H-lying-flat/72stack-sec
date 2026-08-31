@@ -65,3 +65,32 @@ S-02 | Pay_cz.username | hidden 字段,服务端信? | 表单提取 | 待验证 
 | 10 原型路由 | 仍决定"先打哪类";4.5 决定"有没有靶子" |
 | playbook payload 库 | 降级为确认弹药库(反幻觉条款不变:用哪个 payload 仍须标出处) |
 | 被动侦察(Phase 2) | 维持原样(用户指令:不降级) |
+
+
+## 5. 接口三问(API/SPA 型目标,20260831 增补)
+
+> 表单三问依赖"页面表单可见"——SPA/API 型目标(JS bundle + REST 端点,无表单)需换用本节。Juice Shop 首战已实证的信号标注。
+
+### 5.0 前置:结构来源不同
+
+表单型:页面 HTML 表单。**接口型:js-recon 三模式**(11 §3-8:引号字符串+模板字符串+懒加载 chunk)从 bundle 抽端点(juice-shop 实测 42 端点),再 enum 分型(未认证 GET 探活:200 公开/401 认证/500 异常)。
+
+### 5.1 三问(API 版)
+
+| 问 | 信号(参数/响应语义) | 验证方向 | juice-shop 实证 |
+|---|---|---|---|
+| **①参数:服务端信吗?** | 客户端可控的 id/email/userId/quantity/price;响应回显的内部字段 | 改他人 id(BOLA)、改数量金额为负/0、 mass assignment(多塞字段) | /rest/basket(id)/ PUT /api/Quantitys |
+| **②声明:鉴权真在吗?** | 响应体含本不该返回的字段(email/password hash/token);401 与 403 的区分度;同资源不同端点鉴权不一致 | 无 token 访问"认证"端点;对比同数据两个端点的脱敏差异 | /rest/memories 泄邮箱 vs /api/Feedbacks 脱敏(F-02 防护不一致) |
+| **③流向:数据去哪?** | 搜索/评论/昵称→哪些渲染点(DOM/API/邮件);上传→存储路径可猜? | 反射点标记、存储后跨用户可见性、文件名可控 | /search?q 反射;上传文件名遍历 |
+
+### 5.2 信号补充(API 特有)
+
+- **错误分型**:500 带栈(Express/Sequelize)=信息泄露+注入候选;统一 error JSON=设计内
+- **枚举响应差**:存在 vs 不存在的资源返回结构/文案差异(oracle)
+- **鉴权不一致是最肥的面**:同数据多端点(Angular 常见 /api/X 与 /rest/X 并存)逐个比脱敏——juice-shop F-02 即此模式
+- **PUT/PATCH/DELETE 语义**:改他人资源 id、删他人记录(BOLA-write);字段级 mass assignment
+- **GraphQL**(如有):introspection 开关+resolver 越权
+
+### 5.3 suspects 映射不变
+
+接口型可疑点同样落 suspects.md(对象=端点+参数),映射 playbook 类(api-rest/arbitrary-x-authz/oauth-saml-jwt 等),确认弹药查表流程不变。
