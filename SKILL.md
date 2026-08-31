@@ -51,7 +51,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 **条件触发 Read**:国产 OA/中间件指纹→`dictionaries/chinese-srcfingerprints.md`+`default-credentials-cn.md`;银行/电信→`industry/`;云/K8s→`playbooks/cloud/`。
 
 ### Phase 4 · Hunt
-**4.5 语义审计 = 发现主引擎(必做)**:表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`;confirmed 必须 `src: S-xx` 因果链引用(§6)。
+**4.5 语义审计 = 发现主引擎(必做)**:先**威胁建模**(业务/技术栈/攻击面三认知,SPA/无权限页→JS 优先,见 14 §0),再表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`;confirmed 必须 `src: S-xx` 因果链引用(§6)。
 
 **payload 确认(懒加载)**:对 suspects 每条按其映射类**只 Read 对应 playbook 的命中场景节**——入口信号路由表:
 
