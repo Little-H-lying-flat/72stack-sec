@@ -192,6 +192,8 @@ jshook 不可用时的回退:HTTP 探测回退 curl / nuclei / httpx,浏览器�
 
 - 2026-08-30 多前线收尾轮(子代理受限,转浏览器+参数形态修复流程):testfire **F-14 showTransactions error-based SQLi confirmed**——"参数形态未还原"(F-13)的解法=合法形态藏在表单旁注(`<span class="credit">yyyy-mm-dd</span>`),还原后基线 200/100 行 vs 注入 500+`SQLSyntaxErrorException: Encountered "OR"`,异常页再带 line 47 源码数据流;**教训:日期/格式类参数的合法形态先找表单旁注/placeholder/JS 提示再打**(证据先行在格式维度的延伸)。aiwadongdemumu F-11 盲复现 PASS(0B 窗口解除,302→pay/index 非存在用户建单成功——0B 是端点级瞬态不是永久)。恢复监控:Juice Shop 超时/mlecms 686B 仍未恢复。
 
+- 2026-08-30 盲测单项分发模式首跑(aiwadongdemumu 全 9 项):**一个 finding 一次子代理 spawn,每轮检查报告问题即回填**——11 PASS/1 PARTIAL(反例升级为双向对照实证:GetCode.asp 写码 180B 拦截 vs 无码 jar 成功,机制从描述变实验)/1 SKIP-BROWSER/0 FAIL;**报告问题 9 条全部实时回填**(账号硬编码×2/账号失效分支缺失/匿名可访问未标注/反例步骤空白/字节数浮动/字面形态不符等)。环境瞬态:sectest008 盲测期间失效(owner 重置库)→"账号失效即注册新号"入报告。模式定性:**单项分发 vs 整批分发的取舍**——spawn 次数多但每次额度小、报告问题按项实时产出、单点失败不拖全批;两战役终稿已按修正等级+全盲矩阵交付。
+
 - 2026-08-30 危害定性门首跑(两战役 20 项批量反驳者):**受理 7 / 降级 10 / 驳回 3(65% 定级通胀被抓)**。典型战果:testfire-F-07 hunter 自注 HttpOnly 却维持 CVSS C:H(自相矛盾被抓→Low/P3);aiwadongdemumu 布尔盲注三端点 oracle 零提取标 High→Low×3(精确命中下限表);F-15 被驳回因"唯一攻击路径已被 hunter 自己实测的验签拦截"(补偿控制覆盖);F-05/06 by-design 运营页驳回。反驳者总观察:**"取证诚实、定级不诚实"**——证据缺口没有被反映到等级里;同根因按端点数重复计分是系统性模式(3 SQLi+5 验证码=实际 2 漏洞)。修正方向已固化:未完成数据提取的注入/未验证到账的资金链/同根因族,按下限表封顶并强制合并。主链路判断(F-02/03/08/14/24)全部受理——反驳者没有误伤。
 
 - 2026-08-30 用户指令+危害定性门三层架构落地:01 号新增 §3.5(危害三问内联/反通胀下限表/零上下文反驳者三层 L1内联-L2批量子代理-L3报告双门,confirmed≠有危害,by-design 不进 confirmed 统计)+09 号状态机扩展(confirmed(tech)→impact-qualified→submitted,未过定性门不准定 High 以上,默认 info-pending,rejected 含危害驳回留痕)+11 号 §4.3 三问内联/§7-4 危害双门+新模板 references/templates/adversary-reviewer-prompt.md(一个子代理吃整批,裁决受理/降级/驳回,零来回原值留痕)。针对的核心问题:AI 把"技术可复现"当"有危害"的定级通胀。
