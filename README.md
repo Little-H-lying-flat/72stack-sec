@@ -70,7 +70,7 @@ references/
 
 ## 数据规模
 
-- 310 结构化 payload + 176 WAF/EDR 绕过 + 114 工具命令
+- 结构化 payload 总数 310(含 176 WAF/EDR 绕过)+ 114 工具命令
 - HackerOne High/Critical 案例 2951 份（分类索引 2836 条/144 类）
 - WooYun 88,636 案例统计残余（参数频率/绕过模式）
 - 国产 OA/中间件指纹 + 默认凭据库
