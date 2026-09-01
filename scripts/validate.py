@@ -54,15 +54,7 @@ for f, pattern in [
     if pattern not in text:
         errors.append(f"count mismatch in {f}: expected '{pattern}'")
 
-payloader_index = (ROOT / "references/payloader/index.md").read_text(encoding="utf-8")
-for m in re.finditer(r"\*\*(\d+)\*\* 条", payloader_index):
-    pass  # 分类明细;总数 = web + intranet,由下行核对
-web = re.search(r"Web 攻击 payload: \*\*(\d+)\*\*", payloader_index)
-intranet = re.search(r"内网渗透 payload: \*\*(\d+)\*\*", payloader_index)
-total = str(int(web.group(1)) + int(intranet.group(1)))
-for f in ("SKILL.md", "README.md"):
-    if f"{total} 个结构化 payload" not in (ROOT / f).read_text(encoding="utf-8"):
-        errors.append(f"payload total mismatch in {f}: expected {total}")
+# payloader/h1-reports 已移除(20260831 瘦身:零产出数据支撑);payload 出处=playbook 或自证构造逻辑
 
 # ---------- 结果 ----------
 if warnings:
@@ -72,4 +64,4 @@ if errors:
     for e in errors:
         print("  -", e)
     sys.exit(1)
-print(f"OK: links valid, {n_playbooks} playbooks, payload total {total}, nuclei templates pass")
+print(f"OK: links valid, {n_playbooks} playbooks, nuclei templates pass")

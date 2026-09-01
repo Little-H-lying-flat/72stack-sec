@@ -73,23 +73,15 @@ references/
 
 对 agent 说：**"全自动跑完整站 + 目标 URL"**——它按 11 号管线执行：mission 块一次性授权（缺项才问一次）→ preflight 工具矩阵 → 被动侦察 → 结构提取 → 语义审计出 suspects → 按需查 playbook 验证 → 收工跑 gate_check 四查 → 台账交付。报告/台账/证据永不入 git。
 
-## 数据规模
+## 知识库取舍（20260831 瘦身）
 
-- 310 个结构化 payload + 176 个 WAF/EDR 绕过 payload + 114 条工具命令
-- HackerOne High/Critical 案例 2951 份（分类索引 2836 条/144 类）
-- WooYun 88,636 案例统计残余（参数频率/绕过模式）
-- 国产 OA/中间件指纹 + 默认凭据库
-- 银行/电信垂直 playbook
-- JS 反调试突破 + 加密参数 Hook（CryptoJS/RSA/国密 SM2/3/4）
+- **留**：方法论骨架（14 文件）、playbook 实战注记（错误归因表/协议还原/编码纪律——非模型原生的实战伤疤）、国产指纹+默认凭据库（模型不知道的本地知识）、模板
+- **删**：h1-reports 原始案例库（48M，四战役零引用）、payloader 字典（3.1M，payload 命中≈0——模型原生构造+自证逻辑已取代字典式出处）
+- 依据：产出溯源显示 findings 来源是语义审视而非弹药堆；git 历史保留全部被删内容
 
-## 数据来源
+## 借鉴致谢
 
-- HackerOne hacktivity feed（公开披露数据）
-- WooYun 历史档案（仅统计残余）
-- Payloader：原仓库 `3516634930/Payloader`
-- 借鉴致谢：RefPentester 自反思循环 / HackingBuddyGPT 有限步数 / CAI 双模式 / WindFtsy 门禁与分工思想 / CyberStrike 3-gate 术语 / LuaN1aoAgent 因果图与 Observer 热路径监督（均为思路借鉴，代码自研）
-
-本项目只整理、翻译和重组公开资料，不包含专有数据。
+RefPentester 自反思循环 / HackingBuddyGPT 有限步数 / CAI 双模式 / WindFtsy 门禁与分工思想 / CyberStrike 3-gate 术语 / LuaN1aoAgent 因果图与 Observer 热路径监督（均为思路借鉴，代码自研）。WooYun/H1 公开案例的方法论残余已蒸馏进 playbook 注记。本项目不包含专有数据。
 
 ## 红线
 
