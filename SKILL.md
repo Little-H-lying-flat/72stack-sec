@@ -51,7 +51,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 **条件触发 Read**:国产 OA/中间件指纹→`dictionaries/chinese-srcfingerprints.md`+`default-credentials-cn.md`;银行/电信→`industry/`;云/K8s→`playbooks/cloud/`。
 
 ### Phase 4 · Hunt
-**4.5 语义审计 = 发现主引擎(必做)**:先**威胁建模**(业务/技术栈/攻击面三认知,SPA/无权限页→JS 优先,见 14 §0),再表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`;confirmed 必须 `src: S-xx` 因果链引用(§6)。
+**4.5 语义审计 = 发现主引擎(必做)**:**理论发现不计入**(CORS/SourceMap/安全头/内网IP/孤立Stack Trace——现象不是漏洞,14 §7 铁律);先**威胁建模**(业务/技术栈/攻击面三认知,SPA/无权限页→JS 优先,见 14 §0),再表单型目标按 `references/methodology/14-semantic-audit.md` 三问(字段:服务端信吗/功能:防线真在吗/跳转:去哪);**SPA/API 型目标用其 §5 接口三问**(参数:服务端信吗/声明:鉴权真在吗/流向:数据去哪,结构来源=js-recon 三模式)→ 产出 `suspects.md`;confirmed 必须 `src: S-xx` 因果链引用(§6)。
 
 **payload 确认(懒加载)**:对 suspects 每条按其映射类**只 Read 对应 playbook 的命中场景节**——入口信号路由表:
 
@@ -79,6 +79,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 | 云资产/对象存储 | `playbooks/cloud/00-index.md` |
 
 目录式 playbook 先读 00-index(子路由),再读命中子文件。命中→三段差分(`methodology/03-evidence-discipline.md` §3)→confirmed;去重与同根因合并(09 §2)。
+**confirmed 后必问:这一步能链到什么?**(01 §3.6 链式升级,危害按链终点定级);formal 档 Critical 目标导向(01 §3.7)。
 
 **懒加载通用方法论**(卡壳才读):01 攻击优先级(含危害定性门 §3.5) / 02 bypass / 04 控制缺失 / 05 时间盒 / 06 2026 打法 / 07 JS 侦察与反调试 / 08 多 agent / 09 台账 / 10 原型路由 / 11 全自动管线 / 12 数据播种 / 13 接口 fuzz / 14 语义审计。
 
@@ -101,6 +102,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 ## CHANGELOG
 
 > 完整变更史见 [CHANGELOG.md](CHANGELOG.md)。最近:
+- 2026-08-31 赏金猎人心法三刀:理论发现排除清单(14§7)/元认知两问(11§5)/链式升级+Critical 目标导向(01§3.6-7)
 - 2026-08-31 吸收 LuaN1aoAgent:因果链引用(14§6 src: S-xx)+探针哨兵(11§4.0 热路径熔断)
 - 2026-08-31 门闩分级(practice/formal,tier 字段)+14 §5 接口三问(API/SPA 版)
 - 2026-08-31 瘦身版对照验证:召回 100%+新发现 F-42 用户名枚举,流程零卡壳——瘦身版定稿
