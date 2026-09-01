@@ -101,7 +101,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思。**记账强制**:每个探针批次后扣 `budget_left`、队列项收尾时更新 `counters.probes`——预算不记账 = 门闩失效(testfire 第 1 轮实测:38 探针全打了但 counters.probes=0、budget_left 未动,"skipped-because: 预算"与预算未耗尽自相矛盾,无人拦住)
 7. **队列粒度 = 端点 × playbook 场景**,不是 playbook 类:"T2=info-disclosure 面"这类粗项一次扫完就标 done,会把整类里未打的场景一起带走——**已采证据里的每个未测链接/表单都必须有自己的队列项**(testfire 第 1 轮实测:首页采到 40 链接,transfer/queryxpath/search/apply/feedback/stocks/customize 7 页未入队即宣布 done)
 7. **侦察产物的 scope 纪律**:Phase 2 / JS-recon 发现的非 mission in_scope 域(第三方统计/CDN/新子域)只记录不探测,汇入终局"需授权确认清单"——授权以 mission 枚举列表为准(第 16 轮实测:DNS 56 子域穷举零新资产,记录即结论)
-9. **禁偏科(20260831 吸收 clown)**:队列消耗中同一 vuln-class 连续完成 ≥5 项而其他 applicable 类零探针 → 强制插队其他类(反单一漏洞类型堆砌);gate_check 查 2 附带检查类分布
+9. **禁偏科(20260831)**:队列消耗中同一 vuln-class 连续完成 ≥5 项而其他 applicable 类零探针 → 强制插队其他类(反单一漏洞类型堆砌);gate_check 查 2 附带检查类分布
 8. **js-recon 端点提取三模式**(Angular 新版 bundle 无 hash 平铺,如 main.js):双引号字符串 + **模板字符串(反引号,含 \${var} 占位)** + 懒加载 chunk 清单——单模式必漏(第 1 轮 juice-shop 实测:42 端点全靠前两模式合取,引号模式单独为 0)
 9. **JSP 传统站 include 参数差分判读**(第 1 轮 testfire 实测):`?content=` 类 include 参数,基线正常 / `../` 穿越 → **500 + 完整 Tomcat 栈(Jasper/JspServlet)** / 不存在值 → 200 站内 404 页——500≠不可利用,栈泄露本身即 finding(CWE-209);文件本体是否可读需看响应体,未回显就按栈泄露定级,不夸大
 10. **重定向型登录判读**(302 无 body 的登录接口):差分看 **RLOC 目的地**——`302→login.jsp`=失败、`302→bank/main.jsp`=成功;再跟会话 GET 主页验 Sign Off 元素收尾。SQLi 认证绕过的证据链=两 payload 各自 jar 均通过(单 payload 可能撞缓存/残留会话)
@@ -129,7 +129,7 @@ mission in_scope 为集团/域名通配/资产清单 >5 时自动启用;资产�
 按序降级,前一级失败才进下一级,**任何一级都不向用户提问**:
 
 
-### 4.0 探针哨兵(热路径监督,20260831 吸收 LuaN1aoAgent Observer 思想)
+### 4.0 探针哨兵(热路径监督,20260831)
 
 门闩是阶段边界的;哨兵是**探针级**的——边打边看,不等收尾:
 
@@ -262,6 +262,5 @@ R=2 轮仍无新信息 → 该项 stale;深度反思结论落盘 scope.md `next:
 | 10-archetype-routing | 管打点顺序——本文件用它自动生成队列 |
 | 01 / 02 / 04 / 07 | 反思循环的修正弹药(重排 / 换技 / 换视角 / 路由差集) |
 
-**借鉴来源(2026-08-30)**:§5 反思循环 ← RefPentester self-reflective loop(LLM4Pentest);§3 队列项预算 ← HackingBuddyGPT 有限步数迭代;mission `mode` 字段 ← CAI 双模式(human-in-the-loop / fully autonomous)。多 agent 编排仍归 08(设计稿,默认关)。
 
 **实战校准(20260830 靶场首跑)**:§1.1 preflight 工具矩阵(nuclei/browser-harness 实缺,回退链生效)、§5.1 消费性判别标准动作(id=/pid= 教训)、§4.1 节流阶梯量化、§4.5 oob 核销防假阴性、§4.6 账号缺口降级、§7 报告产物隔离(不入 git)、§8 evidence 前缀核对(中断会话遗留文件)。全部来自第 15 轮全托管实测。
