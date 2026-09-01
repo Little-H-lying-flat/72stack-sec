@@ -134,6 +134,7 @@ def main():
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--no-findings", action="store_true", help="本轮合法无发现时跳过查 3 的空台账失败")
     ap.add_argument("--legacy", action="store_true", help="14 号语义审计之前的战役:查 4 降级为警告")
+    ap.add_argument("--dry-run", action="store_true", help="流程试车/演练目录:只输出报告不作为门闩,exit 恒 0")
     args = ap.parse_args()
     work = args.work
 
@@ -157,6 +158,10 @@ def main():
             mark = "✓" if r["pass"] else "✗"
             print(f"[{mark}] {r['check']}: {r['detail']}")
         print(f"\n== 门闩{'通过,可宣布测完' if passed else '未通过——不许宣布测完'} ==")
+    if args.dry_run:
+        print("
+[dry-run] 试车目录:门闩仅演示,不计入战役判定。")
+        sys.exit(0)
     sys.exit(0 if passed else 1)
 
 
