@@ -103,3 +103,19 @@
 | 本文件 | 管目标**顺序**(原型 → playbook 序列 → 时间分配) |
 | 04-control-gap-hunting | 管卡壳时的"控制缺失"视角,序列内的深挖工具 |
 | 09-target-workspace | 序列每步的产出落账;出口检查收口 |
+
+
+## 5. 技术栈速查(按栈分配第一轮探针,20260831)
+
+判栈后直接对表——每个栈自己的"第一枪":
+
+| 栈 | 高频攻击点(第一轮优先) |
+|---|---|
+| **Java**(Spring/Tomcat) | Actuator 暴露 / Shiro rememberMe 反序列化 /druid / Struts2 OGNL / Jenkins-CLI |
+| **Node/Express** | 原型污染(merge/assign) / SSRF(内置 http) / JWT(node-jsonwebtoken alg 混淆) / 路径穿越(express.static) |
+| **PHP**(含 thinkphp) | 文件包含(伪协议) / 反序列化(phar/unserialize) / ThinkPHP RCE 族 / 上传绕过(.php 变体族) / 弱类型 == 碰撞 |
+| **Python**(Django/Flask) | SSTI(Jinja2 {{}}) / pickle 反序列化 / debug 页(Werkzeug PIN) / 路径遍历(send_file) |
+| **Go** | 路径穿越(stdlib 历史洞) / SSRF(net/http 跟随) / 整数截断(int32)——面窄但别漏 pprof 端点 |
+| **前端栈信号** | Angular(白页+bundle)→14 §5;Vue(路由差集)→07 §8;React→源码 map/API 常量 |
+
+> 与 §2 原型的关系:原型决定**打点顺序**,本表决定**每栈的第一枪**;判栈信号来自 Phase 3 指纹。

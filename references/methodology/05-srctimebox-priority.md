@@ -160,3 +160,19 @@ P2 焦点（60–100%）：
 | 14（信息泄露） | `playbooks/info-disclosure.md` + `dictionaries/chinese-srcfingerprints.md` |
 | 15（IDOR） | `playbooks/logic-flaws/00-index.md` §3.2 + `playbooks/api-rest/00-index.md` |
 | 16（弱口令） | `playbooks/unauth-access.md` + `dictionaries/default-credentials-cn.md` |
+
+---
+
+
+### 4.1 四维换向(卡壳 20 分钟必做,20260831)
+
+单个方向 20 分钟无差分 → **换维度而不是换目标**,四个维度按序切换:
+
+| 维 | 换什么 | 例 |
+|---|---|---|
+| 换身份 | 换账号角色/权限层重放同一探针 | 匿名→普通→VIP;A 用户→B 用户 |
+| 换版本 | 换端点版本/参数名世代 | /api/v1→v2;userId→user_id→uid |
+| 换端 | 换入口面 | web→API→移动端接口;GET→POST→Header 注入 |
+| 换方法 | 换漏洞类 | SQLi 探不动→换逻辑/越权/XSS 同端点重看 |
+
+20 分钟×4 维 = 一个端点最多 80 分钟;四维全空 → parked(45 分钟兔子洞预算照旧先行触发,本节是 parked 前的有序挣扎)。**换方向≠乱撞**:每换一维先过 11§5 元认知两问。
