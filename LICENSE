@@ -19,3 +19,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+---
+
+## 免责声明 / Disclaimer
+
+本工具仅面向**已获得书面授权**的安全测试、教学与研究场景。使用者必须遵守所在地区全部适用法律法规（包括但不限于《中华人民共和国网络安全法》《数据安全法》《个人信息保护法》），仅对已明确授权的目标使用。
+
+因违规使用、泄露、滥用本工具或其产出（包括但不限于漏洞报告、扫描结果、测试数据）所导致的任何法律责任、行政处罚及后果，均由使用者自行承担，作者不承担任何直接或间接责任。
+
+禁止将本工具用于任何未授权测试、非法入侵、数据窃取或其他违法违规活动。
+
+---
+
+**Disclaimer (EN)**: This tool is intended solely for authorized security testing, education, and research. Users are solely responsible for complying with all applicable laws and regulations in their jurisdiction. The author assumes no liability whatsoever for any misuse, leakage, or illegal use of this tool or its output.
