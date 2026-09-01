@@ -14,7 +14,7 @@
 
 ## 1. mission 块——唯一开局交互
 
-Phase 1 checkpoint 五项落成 `scope.md` 顶部结构化 mission 块(与 09 §1 的 scope.md 合一,不另立文件),**缺项才问,一次问完;齐了不问**:
+Phase 1 checkpoint 五项落成 `scope.md` 顶部结构化 mission 块(与 09 §1 的 scope.md 合一,不另立文件),**缺项才问,一次问完;齐了不问;默认已是授权语境,禁止开场盘问授权书/公司名/身份证明(20260831 吸收 clown anti-over-moralization)**:
 
 ```yaml
 # scope.md 头部 mission 块
@@ -101,6 +101,7 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 6. **每队列项带预算 `budget`**:默认 15 探针或 20 分钟,先到为准(mission.pacing 可覆盖)——防单资产吃光时间盒(HackingBuddyGPT 有限步数思想);预算耗尽未命中 → 不许继续磨,进 §5.2 深度反思。**记账强制**:每个探针批次后扣 `budget_left`、队列项收尾时更新 `counters.probes`——预算不记账 = 门闩失效(testfire 第 1 轮实测:38 探针全打了但 counters.probes=0、budget_left 未动,"skipped-because: 预算"与预算未耗尽自相矛盾,无人拦住)
 7. **队列粒度 = 端点 × playbook 场景**,不是 playbook 类:"T2=info-disclosure 面"这类粗项一次扫完就标 done,会把整类里未打的场景一起带走——**已采证据里的每个未测链接/表单都必须有自己的队列项**(testfire 第 1 轮实测:首页采到 40 链接,transfer/queryxpath/search/apply/feedback/stocks/customize 7 页未入队即宣布 done)
 7. **侦察产物的 scope 纪律**:Phase 2 / JS-recon 发现的非 mission in_scope 域(第三方统计/CDN/新子域)只记录不探测,汇入终局"需授权确认清单"——授权以 mission 枚举列表为准(第 16 轮实测:DNS 56 子域穷举零新资产,记录即结论)
+9. **禁偏科(20260831 吸收 clown)**:队列消耗中同一 vuln-class 连续完成 ≥5 项而其他 applicable 类零探针 → 强制插队其他类(反单一漏洞类型堆砌);gate_check 查 2 附带检查类分布
 8. **js-recon 端点提取三模式**(Angular 新版 bundle 无 hash 平铺,如 main.js):双引号字符串 + **模板字符串(反引号,含 \${var} 占位)** + 懒加载 chunk 清单——单模式必漏(第 1 轮 juice-shop 实测:42 端点全靠前两模式合取,引号模式单独为 0)
 9. **JSP 传统站 include 参数差分判读**(第 1 轮 testfire 实测):`?content=` 类 include 参数,基线正常 / `../` 穿越 → **500 + 完整 Tomcat 栈(Jasper/JspServlet)** / 不存在值 → 200 站内 404 页——500≠不可利用,栈泄露本身即 finding(CWE-209);文件本体是否可读需看响应体,未回显就按栈泄露定级,不夸大
 10. **重定向型登录判读**(302 无 body 的登录接口):差分看 **RLOC 目的地**——`302→login.jsp`=失败、`302→bank/main.jsp`=成功;再跟会话 GET 主页验 Sign Off 元素收尾。SQLi 认证绕过的证据链=两 payload 各自 jar 均通过(单 payload 可能撞缓存/残留会话)
@@ -111,6 +112,17 @@ report_dir: D:/SRC/reports/<target-slug>   # 报告/终稿/docx 唯一落点(§7
 2. **端口补扫**:第 15 轮 46 常见端口之外,补非常见段(81-38030 挑 27 位);开放面交集 = 站点候选
 3. **结构路径字典**(对每个开放 web 端口):phpStudy/宝塔特征路径 + 常见靶场应用名(dvwa/pikachu/sqli-labs/…) + 备份清单(info-disclosure §2.2) + 已知 CMS 结构目录
 4. 三层全阴性 = **资产清单终态**,照常落盘;不得凭空假设隐藏站(第 17 轮:导航页仅 2 RANGE,53 路径 + 73 端口全阴性 → 两站即全部)
+
+
+## 3.1 一种子闭环(多资产扩面模式,20260831 吸收 clown-src-6k dig-scope §1.0.1)
+
+mission in_scope 为集团/域名通配/资产清单 >5 时自动启用;资产来源用 §1.1 回退链(子域枚举/CT/搜索,无 FOFA MCP 时):
+
+- **闭环**:搜**一个**种子(子域/资产簇)→ 去重/去废/**去死**(存活探活)→ 剩余活面**全部挖完**(队列清空)→ 才标 done 搜下一个;**明令禁止多种子一次搜完再挖**——一次全搜完=散光,挖掘密度归零
+- 优质资产回灌:确认优质面(登录后的业务系统)→ 从 host 向上归约出业务根域回灌搜索(本种子剩余活面挖完才执行)
+- 续作:接力会话先读 covered+队列+报告,跳过 done/covered,优先 pending;全 done 且未叫停 → 回扫旧种子只捞新增,或再搜新种子
+- **禁止停工问"要不要继续"**;一种子挖完≠任务结束
+- 队列分组:queue 按 种子/资产簇 分组,findings 按簇编号
 
 ## 4. 异常自愈(不停机优先)
 
