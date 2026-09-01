@@ -159,8 +159,7 @@ def main():
             print(f"[{mark}] {r['check']}: {r['detail']}")
         print(f"\n== 门闩{'通过,可宣布测完' if passed else '未通过——不许宣布测完'} ==")
     if args.dry_run:
-        print("
-[dry-run] 试车目录:门闩仅演示,不计入战役判定。")
+        print("\n[dry-run] 试车目录:门闩仅演示,不计入战役判定。")
         sys.exit(0)
     sys.exit(0 if passed else 1)
 
