@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 国内 SRC 黑盒挖掘主流程 skill。WHAT：一句话开工五步（取 scope → FOFA 一种子闭环收资产 → 种子队列落盘 → 打穿短表开场 + 全量 JS 解析/拼接口 → 全类型高危矩阵 → 报告两张表收口）；≤9 后台线程并行模板；短信(ADB)+邮箱双通道自动注册（主控串行）；闸门 hook 断点续跑；长战役 dig-scope 细则；弹药 = 打穿短表 + 知识库（撞型对照见 知识库/同型对照.md）+ playbook 独占（SSTI/框架 RCE/云/SAML）+ 国产 OA 指纹与银行/电信行业库。WHEN：用户说「挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖」时使用。分流：全自动完整站走 11 号管线(tier=practice)；靶场(juice/testfire/mlecms)才读 references/methodology/phase-pipeline.md + gate_check formal；JSRC 交 docx 才读 report-format；纯白盒源码审计用 src-audit-chain；小程序用 miniprogram-hunt；不接渗透问答 / CVE 查询 / 任意 X 闲聊。
+description: 国内 SRC 黑盒挖掘主流程 skill。WHAT：一句话开工五步（取 scope → FOFA 一种子闭环收资产 → 种子队列落盘 → 打穿短表开场 + 全量 JS 解析/拼接口 → 全类型高危矩阵 → 报告两张表收口）；≤9 后台线程并行模板；短信(ADB)+邮箱双通道自动注册（主控串行）；闸门 hook 断点续跑；长战役 dig-scope 细则；弹药 = 打穿短表 + 知识库（撞型对照见 知识库/同型对照.md）+ playbook 独占（SSTI/框架 RCE/云/SAML）+ 国产 OA 指纹与银行/电信行业库。WHEN：用户说「挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖 / 挖小程序 / AppID / wxapkg」时使用。分流：全自动完整站走 11 号管线(tier=practice)；靶场(juice/testfire/mlecms)才读 references/methodology/phase-pipeline.md + gate_check formal；JSRC 交 docx 才读 report-format；纯白盒源码审计用 src-audit-chain；小程序走本 skill + MCP `http://127.0.0.1:4554/sse`（不整段踢给 miniprogram-hunt）；不接渗透问答 / CVE 查询 / 任意 X 闲聊。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -13,9 +13,9 @@ level: 2
 
 ## 触发条件
 
-WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖`。命中即走下方分流。不因「如何挖 / 怎么测 / 丢一个 URL / WAF 绕过 / 任意账号」自动进本 skill。
+WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖 / 挖小程序 / AppID / wxapkg`。命中即走下方分流。不因「如何挖 / 怎么测 / 丢一个 URL / WAF 绕过 / 任意账号」自动进本 skill。
 
-**不应触发**：纯白盒 → `src-audit-chain`；小程序 → `miniprogram-hunt`；渗透问答 / CVE 查询 / 任意 X 闲聊 / 漏洞修复 / CTF → 通用对话。
+**不应触发**：纯白盒 → `src-audit-chain`；渗透问答 / CVE 查询 / 任意 X 闲聊 / 漏洞修复 / CTF → 通用对话。小程序**不踢出本 skill**，走 MCP 4554。
 
 **与 enterprise-src-hunt 的分工**：它 = 按需 v2 编排（点名才用）；国内 SRC 默认 = 本 skill 一句话开工。
 
@@ -24,6 +24,7 @@ WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / �
 | 用户说 | 走哪条 | 排除 |
 |---|---|---|
 | 挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖（**默认**） | **一句话开工五步（下节）** | `phase-pipeline.md`、gate_check 四查、suspects 字段级、docx、语义审计必做 **全部不适用** |
+| 挖小程序 / AppID / wxapkg / 进站撞到小程序网关 | **本 skill + MCP 4554**（下节「小程序面」）；解包后仍短表→JS→矩阵→format | 不把整段交给 miniprogram-hunt；动态要 `get_info` |
 | 全自动跑完整站 + URL | 11 号 fullauto，默认 tier=practice，`gate_check --tier practice --host <当前host>`；Phase 细节才读 `phase-pipeline.md` | docx 除非点名 |
 | 靶场 / juice-shop / testfire / mlecms | **才 Read** `references/methodology/phase-pipeline.md` + `gate_check --tier formal` | 允许字段级 S-xx |
 | JSRC 交 docx | 才读 `references/templates/report-format.md` | — |
@@ -44,8 +45,17 @@ WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / �
 - **三文件映射**:种子队列.md = 计划与恢复点;线程交付/\<host\>/endpoints.md·matrix.md = 发现;DONE.md + 队列补记 = 进度日志。思想同 planning-with-files:上下文=内存,文件=硬盘。
 - **2-Action Rule**:每 2 次只读操作(FOFA 发查/探活/拉页/读 JS/读回包)必须把增量落盘再继续;任何时刻白干上限 = 2 次操作。
 - **恢复约定**:新会话/续挖先读种子队列(含补记),跳过 done/covered,优先 pending——不重查、不重建清单。
-- **并行模式**:主控可开后台线程分站深挖——每线程用 `references/templates/thread-prompt.md` 全文作 prompt(general-purpose + run_in_background);**并发 ≤9**;测绘禁下线程;**注册收归主控串行**(防多线程同时发码);线程交付落 线程交付/,状态同步回种子队列。
+- **并行模式**:主控开后台线程分站深挖——每线程一个 Agent:`subagent_type: src-thread-digger` + `run_in_background`,prompt 只需一段话给 `host + 任务根(±备注/cookie 路径)`(子代理自读 thread-prompt 模板,单一事实源);**并发 ≤9**;测绘禁下线程;**注册收归主控串行**(防多线程同时发码);线程交付落 线程交付/,状态同步回种子队列。备用:子代理不在场时,退回「thread-prompt.md 全文作 general-purpose prompt」老用法。
 - **长战役细则(懒加载)**:扩面卡壳/优质根域回灌/反空转/覆盖率审计/禁偏科 → Read `~/.grok/rules/dig-scope-workflow.md`（立法唯一正文；短平快不需要,跑几天的大战役必读 §1.1.1/§2.1/§4.3）
+
+### 小程序面（MCP `http://127.0.0.1:4554/sse`，本 skill 自挖，不踢走）
+
+看见小程序 / AppID / `.wxapkg` / H5 墙后的 `appId` 网关 → **当本站面**，用 4554，不要另开 miniprogram-hunt 主流程。
+
+1. **静态（4554 活着就够）**：`list_packages` → `decompile(appid)` → `scan_sensitive` / `cloud_scan` / `search_code`。产物进 `js/{appid}/` 与 `线程交付/{appid}/endpoints.md`。抽出的 `wx.request` / 云函数 / 盐 / 演示号当本站钥匙，回短表+矩阵。
+2. **动态**：先 `get_info`。成功才 `get_storage` / `http_request` / `call_cloud` / `navigate`。失败或微信 4.x 注入废 → **只打静态**，不磨 engine。MCP 活着 ≠ engine 能用。
+3. 解包后的业务 API 仍走本 skill 打法（短表 → 清单 → 有差分面四件套 / 换 id）。云开发 / `web-view` 细节才 Read `miniprogram-hunt` 的 `references/playbooks/cloud-dev.md` / `webview-url.md`（点名细节，不是换 skill）。
+4. 报告仍只认 `~/.grok/rules/vuln-report-format.md`。认钥闸照旧。
 
 ### 有号面:自动注册 + 短信验证码(**主控串行**;线程遇缺号只标 DONE 回单)(`scripts/sms_code.py`,ADB 只读通道)
 
@@ -104,6 +114,7 @@ python "{skill_dir}\scripts\sms_code.py" --wait 90 --sender <发送方前缀?>  
 | 云 IDE / Codex RPC | `知识库/cloud-ide-codex-rce-chain.md` |
 | 返回 401/403 | 登录页→抽业务 API；**勿开** `401-403-bypass.md` 磨登录 HTML |
 | JS 逆向 / 盐 / 密文 id | `知识库/js-reverse-guide.md` |
+| 小程序 / AppID / wxapkg / wx.cloud / web-view | MCP 4554 解包扫接口（上节）；短表 openId/云开发/写死 token；云开发/`web-view` 细节才 `miniprogram-hunt/references/playbooks/cloud-dev.md` / `webview-url.md` |
 
 **playbook 独占**（知识库无同型，对得上才开）：
 
@@ -134,6 +145,6 @@ python "{skill_dir}\scripts\sms_code.py" --wait 90 --sender <发送方前缀?>  
 
 ## MCP 工具集成
 
-本环境在册 MCP：`fofa`(测绘,仅主控)。HTTP 一律 curl/python 脚本(本流程禁浏览器);Nuclei 模板在 `references/tools/nuclei-templates/`;GitHub 资源走代理 `127.0.0.1:7897`。**不虚构工具结果**。
+本环境在册 MCP：`fofa`(测绘,仅主控)；`first-miniapp`（SSE `http://127.0.0.1:4554/sse`，小程序拉包/解包/扫密钥）。HTTP 一律 curl/python 脚本(Web 线禁浏览器);Nuclei 模板在 `references/tools/nuclei-templates/`;GitHub 资源走代理 `127.0.0.1:7897`。**不虚构工具结果**。4554 未进本会话 MCP 表 → 报障，不假装解包成功。
 
 > 变更史见 [CHANGELOG.md](CHANGELOG.md)。
