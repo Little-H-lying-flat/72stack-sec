@@ -90,6 +90,8 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 
 **payload 确认(懒加载)**:对 suspects 每条按其映射类**只 Read 对应 playbook 的命中场景节**——入口信号路由表:
 
+**弹药去重规则**:playbook 与知识库撞型的,**知识库为准**(实战迭代更细,含假点过滤),playbook 作系统化展开;对照关系见 `知识库/同型对照.md`(撞型区/playbook 独占区/知识库独占区)。下表路由的 playbook 若有同型知识库文件,**先开知识库,不够再开 playbook**。
+
 | 入口信号 | Read |
 |---|---|
 | Actuator/Swagger/弱密码 | `playbooks/unauth-access.md` |
