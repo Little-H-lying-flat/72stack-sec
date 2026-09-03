@@ -1,5 +1,7 @@
 # CHANGELOG · 72stack-sec
 
+- 2026-09-03 小程序面收归本 skill：MCP SSE `http://127.0.0.1:4554/sse`（list_packages/decompile/静态扫）；不再把小程序整段踢给 miniprogram-hunt。动态要 get_info；微信 4.x 动态常废只打静态。Grok `config.toml` 增 `[mcp_servers.first-miniapp]`。
+
 - 2026-09-03 收权：知识库单家（72stack 为正，grok `知识库` 改联结）；立法只认 `~/.grok/rules`（dig-scope/format stub 改指针，禁 `\\rules` 拆行）；rival skill 停 SRC 泛词自动触发；撞型 playbook 禁卡壳直读；`gate_check --tier practice --host` 按当前 host 收工；`register_profile.json` 禁 Read 进对话，仓库只留 example。
 
 - 2026-08-31 用户令"全部扩写"(赏金猎人心法总结残余四条全部落地):**①13 §2.5 命名规律参数 fuzz**——接口无参数时按 id 族/对象族/通用族/管理员族有序构造(命中即停,oracle=响应差分);**②13 §2.6 规模化纪律**——JS 数量级决定产出(117 白干 vs 11897 出 16 真洞,真洞率 ~0.1% 是常态,为覆盖率不足 alarm 而非低命中率沮丧),大目标=08 多 agent 天然场景;**③05 §4.1 四维换向**——卡壳 20 分钟按 换身份→换版本→换端→换方法 有序切换(×4 维=80 分钟上限),先过元认知两问,与 45 分钟兔子洞预算衔接;**④10 §5 技术栈速查**——Java/Node/PHP/Python/Go 各栈第一枪对表(Actuator/原型污染/伪协议/SSTI/pprof)+前端栈信号→14§5/07§8 路由;原型管打点顺序,本表管每栈第一枪。

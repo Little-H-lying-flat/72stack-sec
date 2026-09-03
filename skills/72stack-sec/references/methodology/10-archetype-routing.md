@@ -46,9 +46,9 @@
 
 **识别**:业务以小程序为主、App 抓包见 wx 接口、目标提供小程序码。
 
-**序列**:`mobile.md`(反编译拿接口/密钥/appid) → `api-rest/`(小程序后端常漏鉴权) → `logic-flaws/`(验证码/支付/兑换) → `arbitrary-x-authz`
+**序列**:MCP `http://127.0.0.1:4554/sse`（`list_packages` → `decompile` → 静态扫）拿接口/密钥/appid → 72stack 短表+知识库打后端（常漏鉴权）→ 支付/兑换/IDOR。`web-view`/云开发细节才读 miniprogram-hunt 对应 playbook。
 
-**理由**:小程序前端的反编译产物 = 完整 API 文档;后端常按"小程序调的都可信"假设开发,未授权接口密度高。code-secret/第三方 AK 常在配置里,顺手接 cloud/30。
+**理由**:小程序前端的反编译产物 = 完整 API 文档;后端常按"小程序调的都可信"假设开发,未授权接口密度高。code-secret/第三方 AK 常在配置里。动态要 `get_info`；微信 4.x 动态常废，静态照打。
 
 ### E. 云上资产为主
 

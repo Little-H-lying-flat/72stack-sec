@@ -1,6 +1,6 @@
 ---
 name: wxmini-security-audit
-description: 微信小程序全自动安全审计 skill（v2 · first-miniapp-debugger MCP 整合版）。优先经 MCP（127.0.0.1:4554/sse）list_packages/decompile 直接拉包反编译，回退 unveilr.exe；"Python 正则预扫 × LLM 精读"双层架构跑四维分析（敏感信息/API 接口/加解密/七维漏洞）；可选 MCP 动态验证档（路由遍历/存储导出/云函数直调/接口差分）。当用户说"分析/审计这个小程序""小程序静态审计""wxapkg 反编译""小程序接口/敏感信息提取"或给出小程序目录路径时触发。全流程黑盒挖掘主流程归 miniprogram-hunt，本 skill 是单包审计管线，产出可作其输入。
+description: 微信小程序单包静态审计管线（按需）。国内默认「挖小程序 / AppID / wxapkg」走 72stack-sec + MCP http://127.0.0.1:4554/sse，不要自动触发本 skill。仅当用户点名 wxmini-security-audit，或明确要四维静态审计报告（secrets/endpoints/crypto/vuln JSON）时使用。
 version: 2.0.0
 tags: [security, wechat, miniprogram, audit, static-analysis, mcp]
 platform: windows

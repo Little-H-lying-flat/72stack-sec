@@ -14,14 +14,14 @@
 1. `curl -sk --noproxy '*' https://{host}/` 拉首页；提取全部 `<script src>`；SPA 跟 manifest/chunk 索引递归拉到无新业务 JS，存 `js/{host}/`
 2. 提取接口：**静态硬编码完整 path** + **变量拼接隐藏 API**（baseURL+path / 模板串 / `"/rest/"+module+"/"+action` 还原）；**区分请求方式**（axios.get/post、method 参数、fetch options），判断不了标 `?`
 3. 重点分类：**统计**（report/stat/summary）、**详情**（detail/info/get）、**用户名单**（list/user/account/customer）、**后台管理**（admin/manage/audit/config）
-4. **[EXT] 同源拓展**：按命名规则猜同族接口（report/day → hour|total|export；list → detail|add|update|delete），单独标 `[EXT]`，测试时验证存在性
+4. **[EXT] 同源拓展（口子命中即穷举同族，与危害定级解耦）**：按命名规则猜同族接口（report/day → hour|total|export；list → detail|add|update|delete），单独标 `[EXT]`，测试时验证存在性；**任一接口命中——哪怕判低危/公开设计面——同前缀族至少穷举 list/query/queryXxx/get/describe/info/count 一轮，全部记 matrix（含「鉴权在位」行），穷举完才许该族收工**；命中云资源网关（/adb 等前缀）按打穿短表「云资源网关钥匙」行派生面板目标二次探测。另加 **IP+Host 组合探针**：已探明共存业务 IP 补扫 443/8443/10443/9443 备端口，命中服务后用 Host 头指向已知业务域名再打一次（S3 `list-type=2`/虚拟主机路由）
 5. 钥匙单记：签名盐、appKey/secret、硬编码 token、演示号、hidden 路由、加密公钥
 
 ### 第二步 · 清单落盘
 `线程交付/{host}/endpoints.md`：接口|方法|来源(静态/拼接/[EXT])|分类|参数|测试方向；末尾「钥匙」节
 
 ### 第三步 · 全量高危测试（清单完成后统一做）
-每类有入口真打、无入口记 N/A+原因，**禁止每 path 瞄一眼算测过**：未授权（业务接口裸调，回业务 JSON=打穿；只回"请登录"=同闸整段收）/ 越权 IDOR（一切能圈对象的参数换 id 邻号）/ 注入（差分面按栈选探针）/ SSRF（URL/回调/proxy/import 类参数）/ RCE 执行链 / 任意文件读写 / 支付逻辑（金额 0/负/并发，只做可回退验证）/ 敏感信息泄露 / 认证跳步。复杂类按 SKILL.md「弹药路由」先开知识库；独占类(SSTI/框架 RCE/云/SAML)才开 playbook。
+每类有入口真打、无入口记 N/A+原因，**禁止每 path 瞄一眼算测过**；**判定低危/公开 = 只决定「不写报告」，不决定「停止穷举」——同前缀族穷举完才许止损（见第一步第 4 条）**：未授权（业务接口裸调，回业务 JSON=打穿；只回"请登录"=同闸整段收）/ 越权 IDOR（一切能圈对象的参数换 id 邻号）/ 注入（差分面按栈选探针）/ SSRF（URL/回调/proxy/import 类参数）/ RCE 执行链 / 任意文件读写 / 支付逻辑（金额 0/负/并发，只做可回退验证）/ 敏感信息泄露 / 认证跳步。复杂类按 SKILL.md「弹药路由」先开知识库；独占类(SSTI/框架 RCE/云/SAML)才开 playbook。
 **判打穿硬标准（一字不减）**：回包出了本来拿不到的业务数据 / 状态变化 / 稳定差分 = 打穿；401/403/WAF 拦/空回包 = 没打穿，如实记。**禁止误报**：每条结论必须带请求+响应证据。
 
 ### 登录墙 / 缺号

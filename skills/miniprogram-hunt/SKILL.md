@@ -1,14 +1,9 @@
 ---
 name: miniprogram-hunt
 description: >-
-  微信小程序黑盒漏洞挖掘工作流 skill。覆盖：反编译解包（MCP first-miniapp-debugger
-  优先 + First.exe 回退 + DevTools 调试）→ 攻击面建图（7 类：API 越权/未授权、
-  WebView/URL 白名单、敏感信息泄露、支付/业务逻辑、云开发、加密方案、第三方SDK/插件）
-  → JS 审计流水线（脚本预扫 × LLM 精读双层，source→sink 全链路跟踪）→ 逐类深挖
-  → 二次验证（动态链自动化 + 杜绝虚假漏洞）→ 标准化输出。当用户提到"小程序漏洞挖掘 /
-  小程序渗透 / wxapkg 反编译 / 小程序越权 / 小程序 RCE / 小程序支付逻辑 /
-  小程序信息泄露 / 小程序云开发 / 云函数越权 / 小程序 JS 审计 / 小程序加密逆向"
-  或给出一个小程序让你测时使用。
+  微信小程序细节 playbook 册（按需）。国内默认「挖小程序 / AppID / wxapkg」走 72stack-sec + MCP
+  http://127.0.0.1:4554/sse，不要自动触发本 skill。仅当用户点名 miniprogram-hunt，
+  或 72stack 已解包后要读 web-view / 云开发专篇时使用。
 argument-hint: "<wxapkg-or-appid-or-phase>"
 level: 2
 ---
@@ -19,13 +14,9 @@ level: 2
 
 ## 触发条件
 
-命中任一即进入：
-- "小程序漏洞挖掘 / 小程序渗透 / 小程序测试"
-- "wxapkg 反编译 / 小程序解包 / 小程序源码"
-- "小程序越权 / 小程序未授权 / 小程序 RCE / 小程序信息泄露 / 小程序支付"
-- 用户给一个 `.wxapkg` 文件 / AppID / 小程序名让你测
+仅当用户**点名 miniprogram-hunt**，或 72stack 解包后要读本目录 playbook 时进入。
 
-**不应触发**：纯 Web 站点测试 → `src-hunter`；源码白盒审计 → `src-audit-chain`。
+**不应触发**：「挖小程序 / AppID / wxapkg」泛词 → `72stack-sec`（MCP 4554）；纯 Web → `72stack-sec`；源码白盒 → `src-audit-chain`。
 
 ---
 
