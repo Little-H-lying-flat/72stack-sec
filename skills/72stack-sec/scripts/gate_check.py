@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-"""gate_check.py — 11-fullauto-pipeline 收工完整性四查(可执行版)
+"""gate_check.py — 收工完整性门闩(可执行版,双档)
 
 用法:
-    python gate_check.py --work work/<target-slug>
-    python gate_check.py --work work/<target-slug> --json   # 机器可读(state.json 引用)
+    python gate_check.py --work <目录>                # practice 档(默认):国内 SRC 线
+    python gate_check.py --work <目录> --tier formal # formal 档:靶场/平台提交,四查全查
+    python gate_check.py --work <目录> --json
 
-四查(对照 11 §2 / 09 §3 / 14 §3):
-  1 预算账平    : state.counters.probes 与 evidence 探针文件数对账(±20% 容差)
-  2 证据覆盖    : findings 台账行数 vs 矩阵/suspects 覆盖声明(结构性检查)
-  3 登记簿对账  : confirmed 行均有 evidence 文件引用且文件存在
-  4 suspects 覆盖: suspects.md 存在且含映射类列(14 号语义审计产出)
+--work 接任意目录:Desktop\\{任务}_SRC挖洞\\、{名}_dig\\、work/<slug> 均可(递归找证据文件)。
 
-退出码: 0=四查全过; 1=任一查 FAIL(不许宣布测完)
+practice 档(国内默认):端点清单 endpoints.md + 类型矩阵 matrix.md 在盘即合法收工;
+  同闸/瘦壳/无洞**不算失败**——findings/suspects/state.json 均不强制。
+formal 档:原四查(预算账平/证据覆盖/登记簿对账/suspects 覆盖),无洞需 --no-findings 豁免。
+
+退出码: 0=门闩通过; 1=未通过(不许宣布测完)
 """
 import argparse
 import json
@@ -128,32 +129,55 @@ def check4_suspects(work):
     return ok("4 suspects 覆盖", f"可疑点 {n_sus} 条,含映射列")
 
 
+def check_practice(work):
+    """practice 档(国内默认):递归找 endpoints.md + matrix.md;同闸/瘦壳/无洞合法。"""
+    eps = mtx = None
+    for dp, _, files in os.walk(work):
+        for f in files:
+            if f == "endpoints.md" and eps is None:
+                eps = os.path.join(dp, f)
+            if f == "matrix.md" and mtx is None:
+                mtx = os.path.join(dp, f)
+    if not eps:
+        return fail("practice 收工查", "全树未找到 endpoints.md——接口清单未落盘,不许收工")
+    if not mtx:
+        return fail("practice 收工查", "endpoints.md 在但 matrix.md 缺失——类型矩阵未落盘")
+    n_eps = sum(1 for _ in open(eps, encoding="utf-8", errors="replace"))
+    return ok("practice 收工查", f"endpoints.md({n_eps} 行)+matrix.md 在盘;同闸/瘦壳/无洞=合法收工")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--work", required=True, help="work/<target-slug> 目录")
+    ap.add_argument("--work", required=True, help="任务目录:Desktop 任务根/{名}_dig/work/<slug> 均可(递归找)")
     ap.add_argument("--json", action="store_true")
-    ap.add_argument("--no-findings", action="store_true", help="本轮合法无发现时跳过查 3 的空台账失败")
-    ap.add_argument("--legacy", action="store_true", help="14 号语义审计之前的战役:查 4 降级为警告")
+    ap.add_argument("--tier", choices=["practice", "formal"], default="practice",
+                    help="practice=国内默认(端点+矩阵在盘即合法);formal=靶场/平台提交(四查全查)")
+    ap.add_argument("--no-findings", action="store_true", help="formal 档:本轮合法无发现时跳过查 3 的空台账失败")
+    ap.add_argument("--legacy", action="store_true", help="formal 档:14 号之前的战役:查 4 降级为警告")
     ap.add_argument("--dry-run", action="store_true", help="流程试车/演练目录:只输出报告不作为门闩,exit 恒 0")
     args = ap.parse_args()
     work = args.work
 
-    results = [
-        check1_budget(work),
-        check2_coverage(work),
-        check3_ledger(work),
-        check4_suspects(work),
-    ]
-    if args.no_findings and not results[2]["pass"] and "无 confirmed 行" in results[2]["detail"]:
-        results[2] = ok("3 登记簿对账", "本轮合法无发现(--no-findings)")
-    if args.legacy and not results[3]["pass"] and "不存在" in results[3]["detail"]:
-        results[3] = ok("4 suspects 覆盖(legacy 豁免)", "14 号发布前的战役:语义审计未产出属历史状态,新战役不豁免")
+    if args.tier == "practice":
+        results = [check_practice(work)]
+    else:
+        results = [
+            check1_budget(work),
+            check2_coverage(work),
+            check3_ledger(work),
+            check4_suspects(work),
+        ]
+        if args.no_findings and not results[2]["pass"] and "无 confirmed 行" in results[2]["detail"]:
+            results[2] = ok("3 登记簿对账", "本轮合法无发现(--no-findings)")
+        if args.legacy and not results[3]["pass"] and "不存在" in results[3]["detail"]:
+            results[3] = ok("4 suspects 覆盖(legacy 豁免)", "14 号发布前的战役:语义审计未产出属历史状态,新战役不豁免")
 
     passed = all(r["pass"] for r in results)
     if args.json:
-        print(json.dumps({"gate": passed, "results": results}, ensure_ascii=False, indent=2))
+        print(json.dumps({"gate": passed, "tier": args.tier, "results": results}, ensure_ascii=False, indent=2))
     else:
-        print("### 收工完整性四查(11 §2 / 09 §3 / 14 §3)")
+        title = "### 收工完整性四查(11 §2 / 09 §3 / 14 §3)" if args.tier == "formal" else "### 收工门闩(practice 档·国内默认)"
+        print(title)
         for r in results:
             mark = "✓" if r["pass"] else "✗"
             print(f"[{mark}] {r['check']}: {r['detail']}")

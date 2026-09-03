@@ -1,6 +1,6 @@
 ---
 name: 72stack-sec
-description: 实战 SRC / 众测 / Bug bounty 漏洞挖掘工作流 skill。触发语包括「挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖」。包含：5 阶段方法论（intake → recon → enum → hunt → report）、20 个攻击类 playbook（SQLi/XSS/RCE/SSRF/IDOR/CSRF/Path Traversal/File Upload/SSTI/XXE/Race/HTTP Smuggling/OAuth/JWT/SAML/GraphQL/Mobile/LLM/DoS/云安全/K8s/对象存储）、310 个结构化 payload、176 个原始 WAF/EDR 绕过 payload（含绕过变体集）、2900+ 份 HackerOne 真实 High/Critical 已披露案例（含 2026-08 增量，分类索引 2836 条/144 类）、88,636 份 WooYun 案例统计、外部思路源路由(国内 5 社区/国外 5 平台/官方漏洞库,含 dork 与 NVD API 模板)、无数据造数管线(空态解锁:服务端种子/响应拦截注入/DOM 直填)、接口 Fuzz 管线(种子驱动变异/四类 oracle/LLM 越狱三策略)、国产 OA / 中间件指纹库、银行 / 电信行业垂直 playbook、Vue SPA 路由最大化（动态路由 / 未加载路由）、JS 反调试突破与加密参数 Hook（无限 debugger / console 清除 / DevTools 检测跳转 / CryptoJS / JSEncrypt RSA / 国密 SM2/3/4）。当用户提到 "src 挖洞 / src 漏洞挖掘 / bug bounty / 众测 / hackerone / 漏洞赏金 / SRC / 任意 X 漏洞 / 渗透测试 / SPA 隐藏路由 / 云授权 / 云安全 / K8s / OSS 越权 / 无限 debugger / 反调试 / 加密参数 hook" 或问"如何挖某个目标 / 怎么测某个 API / 如何绕过 WAF",或要"查组件历史漏洞 / CVE / PoC、从先知 / 奇安信攻防社区 / 跳跳糖 / FreeBuf / 看雪 / PortSwigger / Exploit-DB / NVD 找渗透思路" 时触发。
+description: 国内 SRC 黑盒挖掘主流程 skill。WHAT：一句话开工五步（取 scope → FOFA 一种子闭环收资产 → 种子队列落盘 → 打穿短表开场 + 全量 JS 解析/拼接口 → 全类型高危矩阵 → 报告两张表收口）；≤9 后台线程并行模板；短信(ADB)+邮箱双通道自动注册（主控串行）；闸门 hook 断点续跑；长战役 dig-scope 细则；弹药 = 打穿短表 92 行 + 知识库 49 文件 + playbook 体系（撞型对照见 知识库/同型对照.md）+ 国产 OA 指纹与银行/电信行业库。WHEN：用户说「挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖」时使用。分流：全自动完整站走 11 号管线(tier=practice)；靶场(juice/testfire/mlecms)走 Phase 1–5+gate_check 四查；JSRC 交 docx 才读 report-format；纯白盒源码审计用 src-audit-chain；小程序用 miniprogram-hunt；不接渗透问答 / CVE 查询 / 任意 X 闲聊。
 argument-hint: "<target-or-program-or-phase>"
 level: 2
 ---
@@ -25,7 +25,16 @@ level: 2
 
 **不应触发**:纯白盒源码审计 → `src-audit-chain` skill;漏洞修复问答 → 通用对话;CTF → 通用对话。
 
-**与 enterprise-src-hunt 的分工**:它管流程与账本,本 skill 管弹药库与方法论;两者可独立使用。
+**与 enterprise-src-hunt 的分工**:它 = 按需 v2 编排模块(点名才用);国内 SRC 默认 = 本 skill 一句话开工。
+
+## 入口分流（写死，选错线=返工，不靠模型猜）
+
+| 用户说 | 走哪条 | 排除 |
+|---|---|---|
+| 挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 继续挖（**默认**） | **一句话开工五步（下节）** | Phase 1–5 管线、gate_check 四查、suspects 字段级、docx **全部不适用** |
+| 全自动跑完整站 + URL | 11 号 fullauto 管线,默认 tier=practice,gate_check --tier practice | docx 除非点名 |
+| 靶场 / juice-shop / testfire / mlecms | Phase 1–5 + gate_check 四查(formal) | 允许字段级 S-xx |
+| JSRC 交 docx | 才读 `references/templates/report-format.md` | — |
 
 ---
 
@@ -33,11 +42,11 @@ level: 2
 
 按以下五步自走,**不反问、不等指令、不磨登录**:
 
-1. **取 scope**:搜该 SRC 公告/官网规则页圈范围(全资域名清单、规则、时间盒);拿不到公告就以**备案根域 + 主品牌域**为 scope,参股/蹭域名默认不挖;出 scope 立即停(硬约束 4)。**开工同时写标记文件 `C:\Users\H\.agents\.dig_active`(内容 = 任务根绝对路径)——Stop hook 的闸门,删它才允许停工**。
+1. **取 scope**:搜该 SRC 公告/官网规则页圈范围(全资域名清单、规则、时间盒);拿不到公告就以**备案根域 + 主品牌域**为 scope,参股/蹭域名默认不挖;出 scope 立即停(硬约束 4)。**开工同时写标记文件 `%USERPROFILE%\.agents\.dig_active`(内容 = 任务根绝对路径)——Stop hook 的闸门,删它才允许停工(hook 仅 Claude/ZCode 环境,Grok 无 hooks)**。
 2. **FOFA 收资产**(MCP `fofa`,单发查询器):根域 `domain=` + 品牌词(`body=`/`cert=`/`icon_hash=`/`icp=`)多发拼图;**每发之间留间隔省配额**;结果去重、去废(停放页/蹭名/非存活)、探活,只留活面。
 3. **落盘种子队列**:`Desktop\{任务}_SRC挖洞\资产\种子队列.md`,表列 `host | 探活 | 业务判读 | 状态(pending/doing/done/dead)`——会话断了能续挖。
-4. **一种子闭环**:一次只挖一个种子的活面,**剩余活面挖完才换下一个**;进站先扫 `知识库/打穿短表.md` 开场几枪(对得上再开对应知识库文件看细节),打完立刻回 JS 抽接口;未授权 + 有差分面四件套,有号打对象图/换 id(不限字段名);打开是登录页→抽 JS 业务 API 打未授权,不磨表单;中危同一对象先升链;高价值苗头先打穿;**缺号面→按下方「有号面:自动注册」自动注册**。
-5. **报告收口**:confirmed 漏洞按 `references/templates/vuln-report-format.md`(两张表,唯一报告格式)写报告落 `报告/`;**没打穿也要收口短报**(做到哪/落了什么/下一步),不带问句停工。**收口后、或用户明确叫停时,删除 `.dig_active` 标记再停**。
+4. **一种子闭环**:一次只挖一个种子的活面,**剩余活面挖完才换下一个**;进站先扫 `知识库/打穿短表.md` 开场几枪(对得上再开对应知识库文件看细节),打完立刻回 JS 抽接口;未授权 + 有差分面四件套,有号打对象图/换 id(不限字段名);打开是登录页→抽 JS 业务 API 打未授权,不磨表单;中危同一对象先升链;高价值苗头先打穿;**缺号面→标记回单,按下方「有号面:自动注册」由主控串行注册**(线程内不自注册,防多线程同时发码)。
+5. **报告收口**:confirmed 漏洞按 `references/templates/vuln-report-format.md`(两张表,唯一报告格式)写报告落 `报告/`;**没打穿也要收口短报**(做到哪/落了什么/下一步),不带问句停工。**收口后、或用户明确叫停时,删除 `.dig_active` 标记再停**。高危已落盘 → DONE 末尾写 `拟进:认<形态>打<打法>` / `拟补:<哪行>+<新差分>` / `不进:<原因>`(中危不拟进)。
 
 **落盘纪律(全程适用,无 hook 纯约定)**:
 - **三文件映射**:种子队列.md = 计划与恢复点;线程交付/\<host\>/endpoints.md·matrix.md = 发现;DONE.md + 队列补记 = 进度日志。思想同 planning-with-files:上下文=内存,文件=硬盘。
@@ -46,7 +55,7 @@ level: 2
 - **并行模式**:主控可开后台线程分站深挖——每线程用 `references/templates/thread-prompt.md` 全文作 prompt(general-purpose + run_in_background);**并发 ≤9**;测绘禁下线程;**注册收归主控串行**(防多线程同时发码);线程交付落 线程交付/,状态同步回种子队列。
 - **长战役细则(懒加载)**:扩面卡壳/优质根域回灌/反空转/覆盖率审计/禁偏科 → Read `references/methodology/dig-scope-workflow.md`(64KB 全文,五步的深度版;短平快不需要,跑几天的大战役必读 §1.1.1/§2.1/§4.3)
 
-### 有号面:自动注册 + 短信验证码(`scripts/sms_code.py`,ADB 只读通道)
+### 有号面:自动注册 + 短信验证码(**主控串行**;线程遇缺号只标 DONE 回单)(`scripts/sms_code.py`,ADB 只读通道)
 
 注册需要短信验证码时(control-browser 或裸 API 走到发码步后):
 ```
@@ -112,7 +121,7 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 | ReDoS/不限速 | `playbooks/dos.md` |
 | APK/IPA | `playbooks/mobile.md` |
 | LLM/prompt 入口 | `playbooks/llm-prompt-injection/00-index.md` |
-| 已有 shell/内网 | `playbooks/intranet-postexp/00-index.md` |
+| 已有 shell/内网 | `playbooks/intranet-postexp/00-index.md`（⚠️ SRC 授权通常不含内网横移——仅用户明说内网/已有 shell 授权时才开） |
 | 云资产/对象存储 | `playbooks/cloud/00-index.md` |
 
 目录式 playbook 先读 00-index(子路由),再读命中子文件。命中→三段差分(`methodology/03-evidence-discipline.md` §3)→confirmed;去重与同根因合并(09 §2)。
@@ -136,16 +145,4 @@ MUST 输出活资产矩阵(域→端口→服务→指纹→JS endpoint)。工�
 
 默认 `mcp__jshook__search_tools` + `activate_tools` 按需激活。jshook 不可用回退:HTTP→curl/nuclei,浏览器→内部浏览器 MCP,**不虚构工具结果**。
 
-## CHANGELOG
-
-> 完整变更史见 [CHANGELOG.md](CHANGELOG.md)。最近:
-- 2026-08-31 吸收 clown-src-6k 七条:一种子闭环(11§3.1)/登录页规则(14§1.4)/写越权最小伤害序列(03§3.1,修正只读不写)/禁偏科(11§3)/演示号钥匙(14§1.1)/反说教(mission)/CORS 互证
-- 2026-08-31 心法总结全部扩写:命名规律 fuzz+规模化纪律(13§2.5-6)/四维换向(05§4.1)/技术栈速查(10§5)
-- 2026-08-31 赏金猎人心法三刀:理论发现排除清单(14§7)/元认知两问(11§5)/链式升级+Critical 目标导向(01§3.6-7)
-- 2026-08-31 吸收 LuaN1aoAgent:因果链引用(14§6 src: S-xx)+探针哨兵(11§4.0 热路径熔断)
-- 2026-08-31 门闩分级(practice/formal,tier 字段)+14 §5 接口三问(API/SPA 版)
-- 2026-08-31 瘦身版对照验证:召回 100%+新发现 F-42 用户名枚举,流程零卡壳——瘦身版定稿
-- 2026-08-31 SKILL.md 瘦身 25K→4.7K 字符:反幻觉改宽(payload 出处=playbook 或自证构造逻辑)、Phase 4 改懒加载路由、CHANGELOG 迁移
-- 2026-08-31 新增 14-semantic-audit(发现主引擎)+gate_check.py 四查硬门
-- 2026-08-31 危害定性门三层(三问/下限表/反驳者)+盲测默认关闭(受理项 only)
-
+> 变更史见 [CHANGELOG.md](CHANGELOG.md)。
