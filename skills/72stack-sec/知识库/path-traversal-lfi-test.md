@@ -786,6 +786,16 @@ Apps mixing `url.parse()` and `path.join()` may allow traversal that `new URL()`
 
 假点：path 要登录；只读到 README；真假钥同一句 Permission denied。认证枚举名不是 None 不算假点。单站没中不删短表这行。密钥实值不进库。
 
+### 编译沙箱共享作业盘（短表有指针）
+
+认：在线编译/评测沙箱把多人作业或提交目录挂进学生进程可读盘；未登录就能 POST run。
+
+打：不登录交读文件代码。seccomp 拦住 `system`/出网别停，改 `listdir` 作业根（`/data/user` 一类）再读他份源码。配置/钥抄到了仍要过认钥闸。
+
+算成：他人作业/提交源码正文。
+
+假点：只能读自己刚交的；读盘也被拦；必须登录；只跑公开示例。单站没中不删短表这行。
+
 ---
 
 ## 24. IIS SHORT FILENAME ENUMERATION (~1 TILDE TRICK)

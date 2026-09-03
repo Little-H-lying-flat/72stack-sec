@@ -1,0 +1,21 @@
+{
+  "phone": "13800000000",
+  "phone_masked": "138****0000",
+  "name_alias": "示例假名",
+  "email_alias": "",
+  "notes": [
+    "复制为本目录 register_profile.json 后填真号/授权码；该文件已 gitignore",
+    "register_profile.json 禁止 Read 进对话；脚本自己 load",
+    "报告/台账手机号一律用 phone_masked"
+  ],
+  "email": {
+    "enabled": false,
+    "address": "",
+    "imap_host": "imap.example.com",
+    "imap_port": 993,
+    "user": "",
+    "auth_code": "",
+    "proxy": "",
+    "_设置说明": "auth_code=邮箱授权码(非登录密码);proxy留空=直连"
+  }
+}

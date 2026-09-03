@@ -5,7 +5,7 @@
 > 入口：`SKILL.md` 分流表。国内报告只认 `~/.grok/rules/vuln-report-format.md`。
 
 靶场（juice-shop / testfire / mlecms）：Phase 1–5 + `python scripts/gate_check.py --work <dir> --tier formal`。
-全自动完整站 + URL：先 `11-fullauto-pipeline.md`（默认 `tier=practice`），本文件作 Phase 细节补页。
+全自动完整站 + URL：先 `11-fullauto-pipeline.md`（默认 `tier=practice --host <当前host>`），本文件作 Phase 细节补页。
 
 ---
 
@@ -60,7 +60,7 @@ MUST 输出活资产矩阵（域→端口→服务→指纹→JS endpoint）。�
 **懒加载通用方法论**（卡壳才读）：01 / 02 / 04 / 05 / 06 / 07 / 08 / 09 / 10 / 11 / 12 / 13 / 14。
 
 **探针哨兵**：连续 3 发同形失败即熔断跳项；响应异常模式暂停复核；疑似越 scope 立即停链路（11 §4.0）。
-**出口检查（靶场/formal）**：`python scripts/gate_check.py --work <dir> --tier formal` 四查全绿才可宣布测完。国内默认不跑四查；全自动用 `--tier practice`。
+**出口检查（靶场/formal）**：`python scripts/gate_check.py --work <dir> --tier formal` 四查全绿才可宣布测完。国内默认不跑四查；全自动用 `--tier practice --host <当前host>`。
 **门闩分级（11 §2.1）**：`tier: practice` 只跑 gate_check practice + 差分；`tier: formal` 才拉满危害定性门+盲测+docx。门闩时间>挖洞时间=档位用错。
 
 出 scope → 立即停，回 Phase 1 重核。

@@ -24,7 +24,7 @@ WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / �
 | 用户说 | 走哪条 | 排除 |
 |---|---|---|
 | 挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / 继续挖（**默认**） | **一句话开工五步（下节）** | `phase-pipeline.md`、gate_check 四查、suspects 字段级、docx、语义审计必做 **全部不适用** |
-| 全自动跑完整站 + URL | 11 号 fullauto，默认 tier=practice，`gate_check --tier practice`；Phase 细节才读 `phase-pipeline.md` | docx 除非点名 |
+| 全自动跑完整站 + URL | 11 号 fullauto，默认 tier=practice，`gate_check --tier practice --host <当前host>`；Phase 细节才读 `phase-pipeline.md` | docx 除非点名 |
 | 靶场 / juice-shop / testfire / mlecms | **才 Read** `references/methodology/phase-pipeline.md` + `gate_check --tier formal` | 允许字段级 S-xx |
 | JSRC 交 docx | 才读 `references/templates/report-format.md` | — |
 
@@ -45,7 +45,7 @@ WHEN 只认 YAML：`挖 XXX SRC / 某品牌 / 挖域名:*.xx.com / 开线程 / �
 - **2-Action Rule**:每 2 次只读操作(FOFA 发查/探活/拉页/读 JS/读回包)必须把增量落盘再继续;任何时刻白干上限 = 2 次操作。
 - **恢复约定**:新会话/续挖先读种子队列(含补记),跳过 done/covered,优先 pending——不重查、不重建清单。
 - **并行模式**:主控可开后台线程分站深挖——每线程用 `references/templates/thread-prompt.md` 全文作 prompt(general-purpose + run_in_background);**并发 ≤9**;测绘禁下线程;**注册收归主控串行**(防多线程同时发码);线程交付落 线程交付/,状态同步回种子队列。
-- **长战役细则(懒加载)**:扩面卡壳/优质根域回灌/反空转/覆盖率审计/禁偏科 → Read `%USERPROFILE%\.grokules\dig-scope-workflow.md`(64KB 全文,五步的深度版;短平快不需要,跑几天的大战役必读 §1.1.1/§2.1/§4.3)
+- **长战役细则(懒加载)**:扩面卡壳/优质根域回灌/反空转/覆盖率审计/禁偏科 → Read `~/.grok/rules/dig-scope-workflow.md`（立法唯一正文；短平快不需要,跑几天的大战役必读 §1.1.1/§2.1/§4.3）
 
 ### 有号面:自动注册 + 短信验证码(**主控串行**;线程遇缺号只标 DONE 回单)(`scripts/sms_code.py`,ADB 只读通道)
 
@@ -61,6 +61,7 @@ python "{skill_dir}\scripts\sms_code.py" --wait 90 --sender <发送方前缀?>  
 - **自动放弃**:要实名/身份证/人脸/绑定支付的注册,记录放弃原因,不硬闯
 - **号码保护**:同目标发码失败 2 次即停;发码间隔强制等待;短信**只读**,永不删改,全量短信不落盘
 - **注册信息**:资料在 `scripts/register_profile.json`(手机号/固定假名模板)——表单手机号填真号,报告/台账一律用其中的 `phone_masked`
+- **禁 Read 进对话**:`scripts/register_profile.json` 与 `email_gmail_backup.json` 由 sms_code/email_code 自己 load。**禁止 Read 这两个文件进上下文**（含 phone/auth_code）。空模板见 `scripts/register_profile.json.example`
 
 ---
 
@@ -124,6 +125,8 @@ python "{skill_dir}\scripts\sms_code.py" --wait 90 --sender <发送方前缀?>  
 | 反调试 / 国密 Hook | `references/methodology/07-js-recon.md` |
 
 卡壳才读（不要预加载）：`01-attack-priority.md` / `02-bypass-toolkit.md` / `03-evidence-discipline.md` / `04-control-gap-hunting.md`。
+**卡壳禁撞型 playbook**：国内默认卡壳仍先开知识库对应文件（见 `知识库/同型对照.md`）。禁止卡壳直读 `references/playbooks/` 里与知识库撞型的篇（sqli/xss/ssrf/idor 等同型）。独占类（SSTI/框架 RCE/云/SAML/APK）或用户点名 / 靶场 Phase 确认除外。
+**practice 收工**：`python scripts/gate_check.py --work <任务根> --tier practice --host <当前host>`。必须带当前 host，禁止整树第一份 endpoints.md 冒充本站。
 
 命中→有差分再打穿；去重与同根因合并。高危落盘后写拟进（见收口第 5 步）。
 
@@ -131,6 +134,6 @@ python "{skill_dir}\scripts\sms_code.py" --wait 90 --sender <发送方前缀?>  
 
 ## MCP 工具集成
 
-默认 `mcp__jshook__search_tools` + `activate_tools` 按需激活。jshook 不可用回退:HTTP→curl/nuclei,浏览器→内部浏览器 MCP,**不虚构工具结果**。
+本环境在册 MCP：`fofa`(测绘,仅主控)。HTTP 一律 curl/python 脚本(本流程禁浏览器);Nuclei 模板在 `references/tools/nuclei-templates/`;GitHub 资源走代理 `127.0.0.1:7897`。**不虚构工具结果**。
 
 > 变更史见 [CHANGELOG.md](CHANGELOG.md)。

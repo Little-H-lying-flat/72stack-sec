@@ -1,5 +1,7 @@
 # 知识库索引
 
+本目录是国内 SRC 知识库**唯一正文**（72stack-sec）。`~/.grok/skills/skill/知识库` 是联结，不要再改那份副本。
+
 实战方法论 / 测试清单 / 场景矩阵。与 `SKILL.md` 流程配合使用。
 
 ## 使用约定
@@ -10,15 +12,16 @@
 - 方便和能力优先；省 token 是顺带，不挡开模块
 - 短表点名的手法用标题搜。有指针的肥篇只留实战中文 + 指针段；禁开/几乎不交的篇已收成一行。手法行不删、算成不改矮。
 - 篇内跳转已改成本目录真实文件（`idor-test.md` 一类）；不要再跟 `../xxx/SKILL.md`
-- 与 `C:\Users\H\.agents\skills\zsec\rules` 冲突时 **以 rules 为准**（挖什么 `src-value`；CORS 不挖 `cors-vuln-report-priority`；写不写 `vuln-report-format`）
+- 与 `~/.grok/rules` 冲突时 **以 rules 为准**（挖什么 `src-value`；CORS 不挖 `cors-vuln-report-priority`；写不写 `vuln-report-format`）
 - **`cors-test.md` / `llm-security-test.md`：不挖/禁开越狱。** `401-403-bypass.md` 不磨登录 HTML。
-- 正式 SRC 报告：`rules/vuln-report-format.md`
+- 正式 SRC 报告：`~/.grok/rules/vuln-report-format.md`
 
 ## 文件清单
 
 | 文件 | 说明 |
 |------|------|
 | `打穿短表.md` | 挖洞手法索引（一行/指针；正文仍在各模块） |
+| `同型对照.md` | playbook ↔ 知识库撞型对照（国内默认以知识库为准） |
 | `401-403-bypass.md` | **禁开磨登录 HTML**（已收成一行）；业务 API 401 现场自己打 |
 | `api-gateway-test.md` | API 网关 |
 | `agent-tool-exec-test.md` | 对话口工具真执行（不是越狱、不是云 IDE RPC） |
@@ -67,4 +70,4 @@
 | `xss-test.md` | XSS（中文开场 + 冷门事件 + XSS→RCE / 自定义协议） |
 | `xxe-test.md` | 专题知识（hack-skills 导入或融合） |
 
-**合计：48 个知识文件**（不含本 README）。SRC 报告版式不在本库：见 `rules/vuln-report-format.md`。定级只认 format，本库不定级。
+**合计：49 个知识文件**（不含本 README，含 `同型对照.md`）。SRC 报告版式不在本库：见 `~/.grok/rules/vuln-report-format.md`。定级只认 format，本库不定级。

@@ -2,14 +2,14 @@
 """gate_check.py — 收工完整性门闩(可执行版,双档)
 
 用法:
-    python gate_check.py --work <目录>                # practice 档(默认):国内 SRC 线
-    python gate_check.py --work <目录> --tier formal # formal 档:靶场/平台提交,四查全查
-    python gate_check.py --work <目录> --json
+    python gate_check.py --work <目录> --host <当前host>              # practice 档(默认):国内 SRC 线
+    python gate_check.py --work <目录> --tier formal                 # formal 档:靶场/平台提交,四查全查
+    python gate_check.py --work <目录> --host <当前host> --json
 
---work 接任意目录:Desktop\\{任务}_SRC挖洞\\、{名}_dig\\、work/<slug> 均可(递归找证据文件)。
+--work 接任意目录:Desktop\\{任务}_SRC挖洞\\、{名}_dig\\、work/<slug> 均可。
 
-practice 档(国内默认):端点清单 endpoints.md + 类型矩阵 matrix.md 在盘即合法收工;
-  同闸/瘦壳/无洞**不算失败**——findings/suspects/state.json 均不强制。
+practice 档(国内默认):必须 --host <当前host>,只认该 host 目录下的 endpoints.md + matrix.md;
+  禁止整树第一份 endpoints.md 冒充当前站。同闸/瘦壳/无洞**不算失败**——findings/suspects/state.json 均不强制。
 formal 档:原四查(预算账平/证据覆盖/登记簿对账/suspects 覆盖),无洞需 --no-findings 豁免。
 
 退出码: 0=门闩通过; 1=未通过(不许宣布测完)
@@ -129,29 +129,95 @@ def check4_suspects(work):
     return ok("4 suspects 覆盖", f"可疑点 {n_sus} 条,含映射列")
 
 
-def check_practice(work):
-    """practice 档(国内默认):递归找 endpoints.md + matrix.md;同闸/瘦壳/无洞合法。"""
-    eps = mtx = None
+def _norm_host(host):
+    h = (host or "").strip().lower()
+    if h.startswith("https://"):
+        h = h[8:]
+    elif h.startswith("http://"):
+        h = h[7:]
+    h = h.split("/")[0]
+    return h
+
+
+def _host_dir_match(dirname, host_n):
+    d = (dirname or "").lower()
+    if not d or not host_n:
+        return False
+    if d == host_n:
+        return True
+    # www.foo.com vs foo.com
+    if d.startswith("www.") and d[4:] == host_n:
+        return True
+    if host_n.startswith("www.") and host_n[4:] == d:
+        return True
+    return False
+
+
+def _rank_host_dir(dp):
+    s = dp.replace("\\", "/").lower()
+    if "/线程交付/" in s or s.endswith("/线程交付") or "\\线程交付\\" in dp.lower():
+        return 0
+    if "_dig" in os.path.basename(os.path.dirname(dp)).lower() or "/_dig/" in s or s.endswith("_dig"):
+        return 1
+    return 2
+
+
+def check_practice(work, host=None):
+    """practice 档:只查当前 host 的 endpoints.md + matrix.md,禁止整树第一份冒充。"""
+    if not host:
+        return fail(
+            "practice 收工查",
+            "practice 必须 --host <当前host>,禁止整树第一份 endpoints.md 冒充当前站",
+        )
+    host_n = _norm_host(host)
+    if not host_n:
+        return fail("practice 收工查", "--host 为空")
+    hits = []
+    if os.path.isfile(os.path.join(work, "endpoints.md")):
+        bn = os.path.basename(os.path.normpath(work))
+        if _host_dir_match(bn, host_n):
+            hits.append(os.path.normpath(work))
     for dp, _, files in os.walk(work):
-        for f in files:
-            if f == "endpoints.md" and eps is None:
-                eps = os.path.join(dp, f)
-            if f == "matrix.md" and mtx is None:
-                mtx = os.path.join(dp, f)
-    if not eps:
-        return fail("practice 收工查", "全树未找到 endpoints.md——接口清单未落盘,不许收工")
-    if not mtx:
-        return fail("practice 收工查", "endpoints.md 在但 matrix.md 缺失——类型矩阵未落盘")
+        if "endpoints.md" not in files:
+            continue
+        bn = os.path.basename(dp)
+        if _host_dir_match(bn, host_n):
+            hits.append(os.path.normpath(dp))
+    # unique preserve order
+    seen = set()
+    uniq = []
+    for h in hits:
+        k = h.lower()
+        if k not in seen:
+            seen.add(k)
+            uniq.append(h)
+    if not uniq:
+        return fail(
+            "practice 收工查",
+            f"未找到 host={host_n} 的 endpoints.md（期望 线程交付/{host_n}/ 或同名目录）",
+        )
+    uniq.sort(key=_rank_host_dir)
+    chosen = uniq[0]
+    eps = os.path.join(chosen, "endpoints.md")
+    mtx = os.path.join(chosen, "matrix.md")
+    if not os.path.isfile(mtx):
+        return fail("practice 收工查", f"{chosen} 有 endpoints.md 但缺 matrix.md——类型矩阵未落盘")
     n_eps = sum(1 for _ in open(eps, encoding="utf-8", errors="replace"))
-    return ok("practice 收工查", f"endpoints.md({n_eps} 行)+matrix.md 在盘;同闸/瘦壳/无洞=合法收工")
+    extra = f";另有 {len(uniq)-1} 处同 host 目录未采用" if len(uniq) > 1 else ""
+    return ok(
+        "practice 收工查",
+        f"{chosen} endpoints.md({n_eps} 行)+matrix.md 在盘;同闸/瘦壳/无洞=合法收工{extra}",
+    )
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--work", required=True, help="任务目录:Desktop 任务根/{名}_dig/work/<slug> 均可(递归找)")
+    ap.add_argument("--work", required=True, help="任务目录:Desktop 任务根/{名}_dig/work/<slug> 均可")
+    ap.add_argument("--host", default=None,
+                    help="practice 必填:当前站 host(目录名).禁止省略后拿整树第一份 endpoints.md")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--tier", choices=["practice", "formal"], default="practice",
-                    help="practice=国内默认(端点+矩阵在盘即合法);formal=靶场/平台提交(四查全查)")
+                    help="practice=国内默认(当前 host 端点+矩阵在盘即合法);formal=靶场/平台提交(四查全查)")
     ap.add_argument("--no-findings", action="store_true", help="formal 档:本轮合法无发现时跳过查 3 的空台账失败")
     ap.add_argument("--legacy", action="store_true", help="formal 档:14 号之前的战役:查 4 降级为警告")
     ap.add_argument("--dry-run", action="store_true", help="流程试车/演练目录:只输出报告不作为门闩,exit 恒 0")
@@ -159,7 +225,7 @@ def main():
     work = args.work
 
     if args.tier == "practice":
-        results = [check_practice(work)]
+        results = [check_practice(work, args.host)]
     else:
         results = [
             check1_budget(work),

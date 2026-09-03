@@ -96,6 +96,20 @@ done
 
 假点：不是 GOPROXY / 模块路径不会 `go-get`；元数据域名也被拦（不只 Forbidden RFC1918）；hg 也不跟且出不了钥；钥调不通。单站没中不删短表这行。
 
+### 下载代理 url= 打内网桶（短表有指针）
+
+认：创作台/视频工作台前端把内网对象存储 host（`*.internal`、`*.corp` 一类）写死在 JS；下载失败不走带签 CDN，改走本站 `/download?url=`（或同类）由服务端 fetch。**Next.js `/_next/image?url=` 图片优化器也是服务端拉**，download 白了别停。**不是**上一节 GOPROXY，也不是 `sign?key=/` 那条。
+
+打（不登录）：
+
+1. 对照：`url=http://example.com/` 应失败（`fetch failed` / 超时 / `_next/image` 常见 500 Internal Server Error）。  
+2. `url` 填 JS 里的内网桶根，`http://bs3-*.internal/桶名/`，可带 `max-keys`。回 ListBucket XML 再抄 `<Key>`。image 口通常不 List，内网非图对象常 400「The requested resource isn't a valid image」——换 png/jpg key 再打。  
+3. 同一口 `url` 换成桶名+key，看是不是真下到对象（容器头 + 体积）。邻桶/邻 key 仍打。
+
+算成：列出并真下到**他人**未公开对象原文。只打到内网欢迎页/登录页、没下列表也没下到对象 → 半条。
+
+假点：只出公开 CDN；url 白名单；桶根 403 且邻 key 也下不到；只能下自己刚传的；image 口只出本站已引用的公开图。单站没中不删短表这行。
+
 ## 绕过技巧
 
 ```bash

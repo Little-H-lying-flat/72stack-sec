@@ -1,4 +1,4 @@
-> 写不写只认 `rules/vuln-report-format.md`。本篇是测法：别停在能传能下，跟可执行/路径/SSRF/跨用户业务对象。
+> 写不写只认 `~/.grok/rules/vuln-report-format.md`。本篇是测法：别停在能传能下，跟可执行/路径/SSRF/跨用户业务对象。
 > 短表指针用标题搜。PHP 马 / GIFAR / ImageTragick / 英文附件已砍；没对象存储不要空打跨桶。
 
 # 文件上传漏洞测试手册
@@ -63,7 +63,7 @@
 
 ### webpack 明文对象存储永久钥（短表有指针）
 
-认：管理台 / 运营后台 webpack 把生产 `accessKeyId`+`secretAccessKey`（MSS / S3 一类永久钥）打进 JS。或 Weblogic `/console/login/LoginForm.jsp` 内联 `_reportCfg` 一类的 `SRV_` 钥。上传签 `getUploadSign` 是前端 HMAC-SHA1 算 policy，不是走登录后的 STS 口。policy 里 `starts-with $key` 经常是空串。
+认：管理台 / 运营后台 webpack 把生产 `accessKeyId`+`secretAccessKey`（MSS / S3 一类永久钥）打进 JS。或 Flutter/`main.dart.js` 明文 `OSSAccessKeyId`+`AccessKeySecret`（阿里云永久钥）。或 Weblogic `/console/login/LoginForm.jsp` 内联 `_reportCfg` 一类的 `SRV_` 钥。上传签 `getUploadSign` 是前端 HMAC-SHA1 算 policy，不是走登录后的 STS 口。policy 里 `starts-with $key` 经常是空串。
 
 打（不登录）：
 
@@ -71,7 +71,7 @@
 2. 自己算 POST policy，expiration 拉长，`starts-with $key` 按 JS 原样（空就空）  
 3. POST 桶：对照假签 `SignatureDoesNotMatch`、无签 `conditions has no signature`  
 4. 任意 key PUT 后 CDN GET；DELETE 自己刚传的证明钥能写。官方页面已经引用的对象试覆盖  
-5. List/PUT 403 别停：先 `GetBucketLocation`。对照假 AK `InvalidAccessKeyId`。页面桶名拼错（staic/static）试邻近  
+5. List/PUT 403 别停：先 STS `GetCallerIdentity` 再 `GetBucketLocation`/`ListBuckets`。对照假 AK `InvalidAccessKeyId`。页面桶名拼错（staic/static）试邻近  
 
 算成：完整永久云钥能签（真签 PUT 200 或 GetBucketLocation 出地域）。能盖官方已有对象更稳。
 
