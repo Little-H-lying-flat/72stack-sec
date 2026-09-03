@@ -10,7 +10,7 @@
 ## 流程（严格按序）
 
 ### 第一步 · JS 全量解析 → 接口清单
-0. **开场几枪**:先 Read `{skill_dir}\知识库\打穿短表.md`,对得上号的形态按表打(打完开场枪立刻回 JS 解析,不停留)
+0. **开场几枪(强制,不读不得进站)**:Read `{skill_dir}\知识库\打穿短表.md`,逐形态对号,命中即打;打完立刻回 JS 解析。**DONE.md 必须含 `短表核对:对号 N 条 / 命中 M 条`,缺行=未打,主控驳回**
 1. `curl -sk --noproxy '*' https://{host}/` 拉首页；提取全部 `<script src>`；SPA 跟 manifest/chunk 索引递归拉到无新业务 JS，存 `js/{host}/`
 2. 提取接口：**静态硬编码完整 path** + **变量拼接隐藏 API**（baseURL+path / 模板串 / `"/rest/"+module+"/"+action` 还原）；**区分请求方式**（axios.get/post、method 参数、fetch options），判断不了标 `?`
 3. 重点分类：**统计**（report/stat/summary）、**详情**（detail/info/get）、**用户名单**（list/user/account/customer）、**后台管理**（admin/manage/audit/config）
