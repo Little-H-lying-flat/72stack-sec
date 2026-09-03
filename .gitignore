@@ -1,0 +1,11 @@
+# 机密:永不入库
+**/register_profile.json
+**/email_gmail_backup.json
+**/.env
+**/.token
+.sms/
+**/*cookie*
+# 运行产物
+__pycache__/
+.venv/
+*.pyc
