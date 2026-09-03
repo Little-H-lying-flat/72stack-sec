@@ -1,0 +1,25 @@
+id: aws-s3-anonymous-listing
+
+info:
+  name: AWS S3 Bucket Anonymous Listing
+  author: 72stack-sec
+  severity: medium
+  description: "S3 bucket allows anonymous ListObjects. Target the bucket host ({BUCKET}.s3.{region}.amazonaws.com / {BUCKET}.s3.amazonaws.com). Source: playbooks/cloud/30-object-storage.md (oss-perm-matrix)."
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: s3,aws,misconfig,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?max-keys=20"
+    matchers:
+      - type: word
+        words:
+          - "<ListBucketResult"
+          - "<Key>"
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and

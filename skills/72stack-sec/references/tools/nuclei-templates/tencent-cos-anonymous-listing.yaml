@@ -1,0 +1,25 @@
+id: tencent-cos-anonymous-listing
+
+info:
+  name: Tencent COS Bucket Anonymous Listing
+  author: 72stack-sec
+  severity: medium
+  description: "COS bucket allows anonymous ListObjects (S3-compatible XML response). Target the bucket host ({BUCKET}.cos.ap-{region}.myqcloud.com). Source: playbooks/cloud/30-object-storage.md (oss-perm-matrix)."
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: cos,tencent,misconfig,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?max-keys=20"
+    matchers:
+      - type: word
+        words:
+          - "<ListBucketResult"
+          - "<Key>"
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and

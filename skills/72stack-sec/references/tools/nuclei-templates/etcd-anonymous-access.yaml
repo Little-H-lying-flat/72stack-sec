@@ -1,0 +1,25 @@
+id: etcd-anonymous-access
+
+info:
+  name: etcd v2 Anonymous Keyspace Read (2379)
+  author: 72stack-sec
+  severity: critical
+  description: "etcd client port allows anonymous read of the root keyspace (v2 HTTP semantics). Root listing only - recursive dump is prohibited by playbook discipline. Target http://{NODE}:2379. etcd v3 gRPC is not covered by this template (use etcdctl per playbook). Source: playbooks/cloud/40-k8s.md (k8s-api-unauth)."
+  reference:
+    - https://github.com/Little-H-lying-flat/72stack-sec
+  tags: etcd,k8s,unauth,cloud
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/v2/keys/"
+    matchers:
+      - type: word
+        words:
+          - "\"action\":\"get\""
+          - "\"node\""
+        condition: and
+      - type: status
+        status:
+          - 200
+    matchers-condition: and
