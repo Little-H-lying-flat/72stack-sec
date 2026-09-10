@@ -12,10 +12,10 @@
 |------|--------|----------|
 | **72stack-sec** | GitHub 仓库 / 对外产品名 | 本机 Grok 运行时目录名 |
 | **`skills/72stack-sec/`** | 本仓库内的主 skill 源码树 | `~/.grok/skills/` 下的安装名 |
-| **`~/.grok/skills/skill`** | Grok 本机**当前实战安装目录**（文件夹名就叫 `skill`） | 去翻 `/hack`、`src-hunter`、另一套 72stack 路径 |
+| **`~/.grok/skills/skill`** | Grok 本机**当前实战安装目录**（文件夹名就叫 `skill`） | 与仓库内 `skills/72stack-sec/` 同源 |
 | **主控调度.md** | 双轨 / 进号 / spawn / covered 细则 | 写在 `SKILL.md` 里的长文（已抽离） |
 
-线程必读里的「禁 72stack / /hack / src-hunter」含义是：**运行时不要改走旁路 skill 路径**；对外产品名仍叫 72stack-sec。
+线程必读：以本 skill 为主，可叠用其它已安装 skill；对外产品名仍叫 72stack-sec。
 
 ## 核心能力（与本机 P0/P1 对齐）
 

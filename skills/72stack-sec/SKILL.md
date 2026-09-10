@@ -1,14 +1,14 @@
 ---
-name: 72stack-sec
+name: skill
 description: |
   SRC 漏洞挖掘 + 白盒 0day。Grok-only（start-grok.cmd）国内 SRC 主流程：短表→JS→矩阵→format；默认挖X=流水线双轨（未登录先铺、进号成功再插登录轨）；有号面短信(ADB)+邮箱 IMAP 取码（主控串行）。
   WHEN：挖 XXX SRC / 某品牌 / 挖域名 / 开线程 / 继续挖 / 有号挖 / 只未登录 / 自动注册 / 账号测试 / 用户点名本 skill / 白盒源码审计（Linux Kernel / Chromium / Laravel / Spring / Django）。
-  立法只认 ~/.grok/rules。知识库为本目录 知识库/；短表 `../references/` 走本目录 references/。禁 /hack、src-hunter。开场提示词见同目录 开场提示词.md。
+  立法只认 ~/.grok/rules。知识库为本目录 知识库/；短表 `../references/` 走本目录 references/。可叠用其它已安装 skill。开场提示词见同目录 开场提示词.md。
 ---
 
 # SRC 挖掘 + 白盒 0day
 
-> Grok-only（`start-grok.cmd`）：国内 SRC **只走**本 skill + `~/.grok/rules`。禁 `/hack`、`src-hunter`。
+> Grok-only（`start-grok.cmd`）：国内 SRC 以本 skill + `~/.grok/rules` 为主；可叠用其它已安装 skill。
 > 打法：短表开场 → JS 清单 → 类型矩阵 → format 落盘。知识库走本目录。
 > 主控调度（双轨/进号/spawn）：同目录 `主控调度.md`（勿在本文件找细则）。
 > 开场整段提示词：同目录 `开场提示词.md`（深挖线程 10；默认 `挖X` = 流水线双轨；`有号挖` = 登录轨优先；402 只挖池；不问继续）。

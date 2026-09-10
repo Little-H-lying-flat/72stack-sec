@@ -13,7 +13,7 @@
 | GitHub 仓库 | `Little-H-lying-flat/72stack-sec` | 把仓库名当成 `~/.grok/skills/` 下文件夹 |
 | 仓库内主 skill | `skills/72stack-sec/` | 与本机目录强制同名（当前本机仍为 `skill`） |
 | Grok 运行时 | `~/.grok/skills/skill` | `~/.grok/skills/72stack-sec`（除非你已改安装名） |
-| 线程/开场禁旁路 | 不要走 `/hack`、`src-hunter`、另一套未安装路径 | 把「禁 72stack」理解成禁止对外品牌名 |
+| 线程/开场 | 主 skill 为本机 `skill` 目录；可叠用其它已安装 skill | 不要把仓库名当成必须独占 |
 | 调度正文 | `主控调度.md` | 在薄 `SKILL.md` 里找双轨长文 |
 
 ## 同步建议
@@ -24,8 +24,7 @@
 
 ## 与线程必读的关系
 
-`线程必读.md` 中「禁 72stack」= **禁止 Agent 改用未安装的旁路 skill 名/路径**，避免和 `/hack`、`src-hunter` 混用。  
-对外文档、简历、仓库星标页继续使用 **72stack-sec**。
+线程必读已改为允许叠用其它已安装 skill；对外文档、简历、仓库星标页继续使用 **72stack-sec**。
 
 
 ## 同步方向（2026-09-10）
