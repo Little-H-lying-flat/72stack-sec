@@ -93,8 +93,10 @@ description: |
 1. **有结构提取的站**必须落 `suspects.md`（威胁模型头 + S-xx 行）。瘦壳一眼证伪可写 `suspects: N/A 瘦壳` 一行原因。  
 2. **covered 前自检**（主控写 covered_hosts 之前）：表单字段三问 / 接口三问 /（有会话则）认证后面 / 平凡分页参 —— 未勾满且无 N/A+原因 → **禁止**写 covered。  
 3. **确认只打清单**：禁止按知识库模块对整站盲扫；无 S-xx 映射则先补语义疑问再测。  
-4. **回灌**：中危+ 确认或明确漏报 → 追加一行 `知识库/semantic-blindspots.md`（禁止写利用步骤/敏感实值）。  
-5. **假测完判定**：无 suspects（或未声明 N/A）却写本站矩阵「已测完」= 违规，退回补清单。
+4. **回灌闭环（P3）**：中危+ 确认或明确漏报 → **同回合**追加 `知识库/semantic-blindspots.md` 一行；操典见 `知识库/回灌闭环.md`。有中危+/漏报却无盲区行 → **禁止 covered**。禁止写利用步骤/敏感实值。  
+5. **开站引用**：新建 `suspects.md` 时威胁模型头须引用盲区库相关问句（或 N/A+原因）；模板已含该勾选。  
+6. **假测完判定**：无 suspects（或未声明 N/A）却写本站矩阵「已测完」= 违规，退回补清单。  
+7. **短表进阶**：同一根因盲区 ≥2 次 → 走 `hunt-iter`，不在本文件改打穿短表。
 
 ---
 
@@ -158,6 +160,8 @@ python "{skill_dir}\scripts\done_iter_scan.py" --only-real
 ```
 python "{skill_dir}\scripts\suspects_coverage_check.py" --host-dir "{dig}\{host}"
 python "{skill_dir}\scripts\suspects_coverage_check.py" --dig-root "{dig}" --only-fail
+python "{skill_dir}\scripts\blindspot_remind.py" --host-dir "{dig}\{host}"
+python "{skill_dir}\scripts\blindspot_remind.py" --dig-root "{dig}" --strict-suspects-header
 ```
 
 covered 前建议跑；exit 1 = 未过 suspects 硬闸。
