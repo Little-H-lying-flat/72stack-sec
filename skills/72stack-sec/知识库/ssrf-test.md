@@ -132,6 +132,26 @@ http://internal-host/ → file:///etc/passwd
 搭建重定向服务: http://attacker.com/redirect → 302 → http://169.254.169.254/
 ```
 
+
+### 白名单后缀 urlparse vs urllib3（短表有指针）
+
+场景：服务端要拉用户填的 URL（音视频/图片加工、回源、转码），先做**后缀/域名白名单**（如必须 `*.myqcloud.com`），再发 HTTP 拉取。
+
+易漏认法：
+- 报错栈露出 `urllib3` / `HTTPSConnectionPool` → 请求侧多半是 urllib3/requests。
+- 校验侧常见 `urllib.parse.urlparse(...).hostname.endswith(白名单)`。
+- 两个解析器对 `@`（userinfo）一致，但对 authority 里的 **`\`** 不一致：urlparse 把 `\` 当普通字符；urllib3 的 authority 匹配会在 `\` 处截断（偏 WHATWG）。
+
+开场几枪（有差分面才打，不是每个 URL 参乱喷）：
+1. 合法白名单对象能否拉取加工（基线）。
+2. `https://回显@白名单.host/x`：若校验过但请求仍打白名单 → 单 `@` 不够。
+3. `https://回显\@白名单.host/x`：校验仍过、请求落到回显 → 记差分；再换内网形态升链。
+4. 不存在的白名单 host 看错误面（解析失败信息也是情报，勿当噪声丢掉）。
+
+假点：校验与请求同一库；网关规范化掉 `\`；只允许固定 bucket 路径；无回显且错误面不带 host。
+
+禁止把「任意 SSRF polyglot 字典」整表贴进短表；本行只认**双解析器 + 白名单后缀**这一种形态。
+
 ### COS 回源竞态（见了回源再打）
 
 认：业务从 COS/OSS **取对象**，桶上配了「对象不存在则回源」到你能控的源；你还能对**同一 key** PUT 和 DELETE。没回源配置不要空打。
