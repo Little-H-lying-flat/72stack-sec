@@ -1,4 +1,4 @@
-# 72stack-sec Nuclei 验证模板
+# Nuclei 验证模板（本 skill references 辅助）
 
 > payload **全部出自本仓库 playbook**(出处见各模板 description/reference)——反幻觉纪律同样适用于模板。
 > 用法:`nuclei -t references/tools/nuclei-templates/ -l targets.txt -o result.txt`

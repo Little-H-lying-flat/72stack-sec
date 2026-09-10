@@ -1,6 +1,7 @@
 # authbypass-authentication-flaws
 
 打开是登录页 / SSO → 表单壳听 `dig-scope` §4.1.1：找业务面；别按本文件从头跑字典 / 验证码 / 无限试密。  
+干净发码/提交 API 回单给主控，进号走 `scripts/auth_flow.py`（线程禁止自己发码）。  
 发会话、重置、改绑、换票、2FA 按本文件 + `dig-scope` §4.2.2 探针打，不要因为 §4.1.1 整摊跳过。表是每站下限，不是只准打这几枪。  
 中间件裸默认口可一眼。滑块 / 发码 / 没进号的试密 → 转认证链，别停半截。写不写只认 `vuln-report-format.md`。
 英文字典/验证码 20 法/重置矩阵已砍；短表指针用标题搜。Host 毒重置见 `http-host-header-test.md`。扫码登录 CSRF 见 `csrf-test.md` §18。
@@ -155,6 +156,7 @@
 13. 登录页 JS 把钉钉 ISV `suiteKey`+`suiteSecret` 写成 `clientId`/`clientSecret`（值 `suited` 开头）：别当 OAuth 占位。不登录 POST `https://oapi.dingtalk.com/service/get_suite_token`，`suite_ticket` 填假值。对照假 secret 回「不合法的套件key或secret」。真钥出 `suite_access_token`。实值只进报告
 14. 控制台 webpack/Vuex 默认地图 key 别当占位。假钥对照后不要只打逆地理：打地点云/图层 `table/list`，有表再 `data/list`。只逆地理通、表是空的 → 假点。实值只进报告
 15. 官方文档/接入 HTML 示例 curl 写死 Gamekey：别当占位。不登录抄 AppID+Gamekey，`sign=md5(mod,func,appid,time,postdata,key)` 现签生产排队网关 `getZoneListCount`。对照假钥 `req sign error`。真签 `ret=0` 出区服在线。只查排队/在线，禁止往队列插人、禁止把人退出排队。实值只进报告
+16. SPA 开放文档中心：首页没有正文、同皮 SPA 哈希相同，都别当 catalog 相同。全球 `menu_code` 打区域站 `document/detail` 可能空 `result`。按标题 search（Request Example / Python / Signature）拿**这一站自己的** menu_code 再拉 Python 示例。Sandbox 文案别当生产拒。对照假签失败、真签出店铺 mallId / 收货人手机。实值只进报告
 
 算成：钥是活的，能换成该应用的用户票，或业务查询出该应用下的供给名单，或给该应用绑上 WASM 分包版本，或 booking 下出该应用订单号，或解开**他商户**未公开支付订单持卡人；或假签验签失败、真签过生产闸转到下游身份供应商业务错（证明生产仍认这把完整钥）；或生产 `open_order` 出未支付 `token_id`；或钉钉 `get_suite_token` 出 `suite_access_token`；或生产排队 `getZoneListCount` `ret=0` 出区服在线。
 

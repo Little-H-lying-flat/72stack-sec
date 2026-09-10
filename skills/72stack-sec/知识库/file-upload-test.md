@@ -95,6 +95,22 @@
 
 和 STS `*`（要先申请凭证、key 打成通配）、和 filename `../` 穿越租户目录、和 Azure 容器级 SAS 都不是一条：本条是 **桶策略对匿名放开，不用凭证**。
 
+### ListBucket 403 改打 versions（短表有指针）
+
+认：CDN / 自定义域证书挂在对象存储上，实际说 COS / S3 REST。`GET /` 或 `/?list-type=2` 匿名 403。桶策略 Deny 的 Resource 是 `bucket/*`（对象），不是桶本身。
+
+打（不登录）：
+
+1. `GET /?versions`（可带 `prefix=` + `max-keys=5`）  
+2. `GET /?uploads`  
+3. 列表里非公开前缀再 GET 对象。公开 fe-platform / 静态图不当洞  
+
+算成：列出并读到他人未公开对象原文（问卷/内部指标/证据）。
+
+假点：Ali 边 `400 no origin host`（没绑自定义域）；ListVersions 也 403；只有公开静态。单站没中不删短表这行。
+
+和「桶策略对匿名全开」（策略 Allow、还能写）、「存储代理 sign key=/」（业务网关代理）、「签名没绑 Host」的 `?uploads`（带签换桶）不是一条：本条是 **GetBucket 403 别停，匿名 ListVersions / ListMultipartUploads 仍开**。
+
 ### 存储代理 sign key=/（短表有指针）
 
 认：业务网关把对象存储代理成 `/api/storage/sign`（或同类 sign），query 只吃 `key`。`key=/` 或 `key=.` 回 S3 `ListBucketResult` XML，不是申请 STS。
@@ -144,8 +160,10 @@
 4. COS 无 Referer 的 403 **不是终点**：带分享页 Referer 再 GET。  
 5. `permission/get-cfg` 看会不会吐同会其它 record。  
 6. 只拿到 url 没 GET 到 MP4 算半条，继续跟。  
+7. **直链 mp4 / 源站 `MirrorFailed` / 424 别停。** 改打下发的 m3u8，跟 TS 切片；文档/OpenAPI 示例里的 CDN 域（livecourse / aliallrecord 一类）比 mediavod 源站更常匿名可读。  
+8. **商城 H5 未登录 `videourl` / 同类签发口吃课节号（`planId` 一类）别停在播放器页。** 课号可遍历；签发的 HLS 跟到整课切片才算。
 
-算成：鉴权写 false 仍拉到真 MP4（ftypisom+体积）；或只要 record_id 出纪要全文（不是标题）。
+算成：鉴权写 false 仍拉到真 MP4（ftypisom+体积）；或只要 record_id 出纪要全文（不是标题）；或 HLS/TS 整课切片真下到。
 
 假点：鉴权真拦了、下不到文件；只有公开说明书；纪要只要标题没有正文。单站没中不删短表这行。
 

@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""suspects_coverage_check.py — 硬闸覆盖率粗检（不定级、不探测）。"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+REQUIRED_HINTS = [
+    (r"威胁模型", "缺威胁模型头"),
+    (r"覆盖率自检|硬闸", "缺覆盖率自检表"),
+    (r"S-\d+|suspects:\s*N/A", "无 S-xx 行且未声明 N/A"),
+]
+DONE_NAMES = ("DONE_anon.md", "DONE.md", "DONE_auth.md")
+
+
+def check_host(host_dir: Path) -> tuple[str, list[str]]:
+    suspects = host_dir / "suspects.md"
+    notes: list[str] = []
+    if not suspects.is_file():
+        return "FAIL", ["无 suspects.md"]
+    text = suspects.read_text(encoding="utf-8", errors="replace")
+    if re.search(r"suspects:\s*N/A\s*瘦壳|N/A\s*瘦壳", text, re.I):
+        return "N/A_LEAN", ["显式瘦壳 N/A"]
+    for pat, msg in REQUIRED_HINTS:
+        if not re.search(pat, text, re.I):
+            notes.append(msg)
+    if re.search(r"覆盖率自检", text):
+        unchecked = len(re.findall(r"\|\s*☐\s*\|", text))
+        if unchecked >= 3:
+            notes.append("覆盖率表未勾项偏多(☐×%d)" % unchecked)
+    done_hit = False
+    for name in DONE_NAMES:
+        fp = host_dir / name
+        if fp.is_file() and re.search(
+            r"suspects\s*=", fp.read_text(encoding="utf-8", errors="replace"), re.I
+        ):
+            done_hit = True
+            break
+    if not done_hit:
+        notes.append("DONE* 未写 suspects= 字段（建议补）")
+    if notes:
+        return "FAIL", notes
+    return "PASS", ["ok"]
+
+
+def iter_hosts(dig_root: Path) -> list[Path]:
+    return sorted(
+        [
+            d
+            for d in dig_root.iterdir()
+            if d.is_dir() and not d.name.startswith((".", "_"))
+        ],
+        key=lambda d: d.name.lower(),
+    )
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="suspects 硬闸覆盖率粗检")
+    g = ap.add_mutually_exclusive_group(required=True)
+    g.add_argument("--host-dir", type=Path)
+    g.add_argument("--dig-root", type=Path)
+    ap.add_argument("--only-fail", action="store_true")
+    args = ap.parse_args()
+    if args.host_dir:
+        hosts = [args.host_dir]
+    else:
+        if not args.dig_root.is_dir():
+            print("ERROR dig-root 不存在: %s" % args.dig_root, file=sys.stderr)
+            return 2
+        hosts = iter_hosts(args.dig_root)
+    fail = 0
+    for h in hosts:
+        if not h.is_dir():
+            print("ERROR 非目录: %s" % h, file=sys.stderr)
+            return 2
+        status, notes = check_host(h)
+        if status == "FAIL":
+            fail += 1
+        if args.only_fail and status != "FAIL":
+            continue
+        print("%s\t%s\t%s" % (status, h.name, "; ".join(notes)))
+    if fail:
+        print("# FAIL hosts=%d/%d — 禁止写 covered，先补 suspects.md" % (fail, len(hosts)))
+        return 1
+    print("# OK hosts=%d" % len(hosts))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

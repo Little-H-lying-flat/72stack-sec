@@ -1,5 +1,9 @@
-> 写不写只认 `rules/vuln-report-format.md`。进站有会话时最低探针见 `dig-scope` §4.2.3（对象图、换 id、哨兵值）；单号用列表/回包里的他人 id，不为第二号磨注册。默认先用读/列表差分证明跨用户·跨租户。写越权仍要测，但**不是**对着别人已有数据改/删。顺序见下「写越权怎么打」。禁止批量改删、禁止真资损。
+> 写不写只认 `rules/vuln-report-format.md`。进站有会话时最低探针见 `dig-scope` §4.2.3（对象图、换 id、哨兵值）；会话 cookie 来自 skill 有号闭环 `{dig}/{host}/session.cookie`（`curl -b`），不为第二号再发码。单号用列表/回包里的他人 id。默认先用读/列表差分证明跨用户·跨租户。写越权仍要测，但**不是**对着别人已有数据改/删。顺序见下「写越权怎么打」。禁止批量改删、禁止真资损。
 > 短表指针用标题搜。英文 BOLA 百科已砍；写越权怎么打仍在上半。
+
+## 篇内索引（短表指针段）
+
+密文 ID · 哨兵租户 · 制品库 catalog · 登录前缀双胞胎 · 客户端加密身份头 · SSO 地址 by id · 公开店 viewpm · 数字 RPC · 身份域 CRUD · **列表过滤详情不闸** · 过网关无需鉴权头 · CDN 备用网关 · 匿名会话报名表 · 云开发匿名用户表 · 详情抄 openid · 资料库 nodeId · 匿名 CSRF 头 · 自定义身份头 · 客户详情吃 phone · 助手历史 · 客服 robot · 写死 appKey · 填表标准答案 · 未授权内部话术 · 文档站语义搜索 · **详情吐内容访问票** · 开放支付假签 · 短链 302 · 隐私号失败 · 入驻空参/写死 token · 公司名抬头 · Mass Assignment
 
 ## 一、原有知识库
 
@@ -200,17 +204,63 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 
 ### 登录前缀双胞胎（短表有指针）
 
-认：业务 H5 把登录 RPC 写在 `/fapi/d/`（或同类需登录前缀）；同网关另有 `/fapi/n/`（或 n / unlogin / guest）未登录前缀。只打 JS 里的 d 口会看起来整段请登录。
+认：业务 H5 把登录 RPC 写在 `/fapi/d/`（或同类需登录前缀）；同网关另有 `/fapi/n/`（或 n / unlogin / guest）未登录前缀。或同一 path 前缀下函数名双胞胎：`getXxx` / `Check` 要登录，旁边 `getUnCheckXxx` / `UnCheck` / `WithoutAuth` 不要。文档中心常见 `/api/document` `/api/search` 要登录，同网关 `/api/doc/document|node|search|apiInfo` 不要。或同一对象 list/detail 一套 `platform` 要登录、一套 `front/page` 不要 Cookie。只打 JS 里的登录口会看起来整段请登录。
 
 打（不登录）：
 
-1. 对照 d 口应请登录 / 要票  
+1. 对照登录前缀 / Check 口应请登录 / 要票  
 2. 把 path 里的 `d` 改成 `n`，同一 RPC、同一对象 id 再打  
-3. 换邻号；回包证件照 URL 跟着打开  
+3. path 前缀没差时，把函数名改成 UnCheck / uncheck / WithoutAuth / Guest 再打同一对象 id  
+4. 文档中心：`/api/document/{id}` 对照 not login，改 `/api/doc/document/{id}`；目录/搜索/apiInfo 同样加 `doc`  
+5. `platform/list` 109 别停，改打 `front/page/list`，抄 id 再 `front/page/detail`  
+6. 换邻号；回包证件照 / 媒体 URL 跟着打开  
 
-算成：不登录出他人身份证 / 证件照 / 手机。
+算成：不登录出他人身份证 / 证件照 / 手机，或他人未公开作业/探究/内部 API 文档/机构通知正文。
 
-假点：n 仍请登录；n 只有公开配置；只有自己刚交的补件。单站没中不删短表这行。
+假点：n / UnCheck / front 仍请登录；只有公开配置；只有自己刚交的补件。单站没中不删短表这行。
+
+### 客户端加密身份头切内部文档（短表有指针）
+
+认：文档中心 / 开放平台前端把 `internal`/`external`（或内外网身份字）用写死 AES/口令加密，塞进请求头 `source` / `env` / `tenant`。不带头只有公开目录或详情空 data；带头切到未外发稿。不是登录前缀双胞胎（那条改 path），也不是列表过滤详情不闸（那条改可见性参）。
+
+打（不登录）：
+
+1. JS 抄口令（CryptoJS `Salted__` / EVP_BytesToKey 一类），自己加密 `internal`  
+2. 对照不带头：目录只有公开几篇，或详情 `{"code":200}` 没有 data  
+3. 带头打 catalog，抄公开目录没有的 docId 再打 detail  
+4. 看 `externalPageStatus=0` / 未外发 / 内部协同 正文，不要只看标题  
+
+算成：未外发的内部知识库、SDK、接入流程正文。
+
+假点：头过了仍是公开 FAQ；口令只能本地解密、服务端不认；只有标题没有正文。密钥实值不进库。单站没中不删短表这行。
+
+### SSO 壳后面的地址 by id（短表有指针）
+
+认：印刷店 / Infigo Catfish 人打开全跳 SSO；JS 仍有 `AddressService.getById` / `/v/api/address/GetAddressById/{id}`。订单/购物车页 302 登录不是没口。
+
+打（不登录）：
+
+1. 从 frontend JS 抄该 path  
+2. GET（或 POST `{"id":N}`）换数字 id。对照不存在的小号应找不到  
+3. 订单/PM/附件仍登录闸别停，地址口单独打  
+
+算成：出他人姓名+手机+住址。
+
+假点：口 401/302 登录闸；只出自己的；公开门店地址。单站没中不删短表这行。
+
+### 公开店 robots 的 viewpm（短表有指针）
+
+认：Infigo Catfish 公开店首页 200 不跳 SSO；`robots.txt` 有 `Disallow: /viewpm`、`/sendpm`。同皮 SSO 店这些口 302 登录闸，不要拿 SSO 店证伪公开店。
+
+打（不登录）：
+
+1. 对照首页应 200 店面，不是 302 SSO  
+2. `GET /viewpm/{id}` 换数字。对照不存在的大号应 302 回收件箱  
+3. `GET /sendpm/{customerId}` 看 To 栏邮箱（邮箱单独不够高危门槛，私信正文才算）
+
+算成：出他人站内私信正文（发件人/收件邮箱/标题/留言）。
+
+假点：SSO 壳 302 登录闸；不存在的 id 302 回收件箱；只出 Guest 空箱。单站没中不删短表这行。
 
 ### 数字 RPC 邻 cmd（短表有指针）
 
@@ -268,6 +318,10 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 19. **文档站公开 itemList / 目录只出对外产品别停。** 未登录把 `item`（或同类项目号）改成纯数字自增打详情/page。正文可能是压缩 markdown，按前端同一套解开。对照：公开 itemList 没有的「对内/未对外/不对外」库才算。
 20. **收集表/问卷填报详情 JSON 的 relative / 关联表挂着答卷 sheet 别停。** 人打开的是填报页，答卷表可能另有 id。不登录打答卷表详情/opendoc。对照：填报页只是题目，答卷表才出身份证/手机单元格。
 21. **内容预览口只要数字 contentId，回包 `isDelete=1` / 已删除 / 未发布别停。** 对照公开橱窗应没有这篇。出整页 H5 或编辑器 JSON 才算，不要只看标题。
+21.1 **建站正式落地口报「页面不存在」别停。** 同数字 id 打中间页/预览另一套 path（getPreview 一类）。对照：正式 getHtml 应不存在，预览仍出完整 pageJson / 整页 H5 才算。已投放、正式口也匿名 200 的不算。
+22. **作品/作业详情带 `published=0` / `hidden_code=1`（或同类可见性）别停在列表上架态。** 不登录打详情仍可能出源码 xml / 未发布作业正文。对照：公开列表没有这篇或标已隐藏。
+23. **落地页哈希 path 只是壳，别停。** HTML 内联 `$CONFIG.pageId`（连续数字），配置口只要这个 id（`get-page-config` 一类），`isLogin=false`。不登录换邻号。对照：哈希 URL 没有登录墙、官方帮助中心没有这篇。
+24. **公开市场/前台详情 406 或登录闸别停。** 同产品常另有后台或另一入口 host，JS 里是同一套详情/证照 path。对照：前台域应 406/请登录，后台域匿名出联系人手机或执照图才算。
 
 算成：未公开业务正文从列表出来（不是公开橱窗标题）；或他主体手机 / 证件；或证照图注册人行印着身份证号；或未发布/已下架作品源码正文。
 
@@ -286,6 +340,20 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 算成：出他人手机 / 住址 / 站点联系人，不是公开轨迹。
 
 假点：头过了业务仍请登录；只有公开轨迹没有 PII。单站没中不删短表这行。
+
+### CDN 备用网关配置口（短表有指针）
+
+认：寄件/企业 H5 `ENV`（或同类）并列 `mainHost` 与 `CDNHost` / 备用网关；配置、字典、Apollo 口前端标 `withToken`。mainHost 常 404 或要票，CDN 副本没套同一闸。
+
+打（不登录）：
+
+1. 从打包 JS 抄配置口 path 和两个 host  
+2. mainHost 对照应 404 / Token 闸  
+3. **改打 CDNHost 同 path 空包**，不要 `x-token` / Cookie  
+
+算成：配置 JSON 里是他人姓名+11 位手机+住址，不是运单正则或公开热线。
+
+假点：只有正则/开关；CDN 也要票。单站没中不删短表这行。
 
 ### 匿名会话读报名表（短表有指针）
 
@@ -398,6 +466,20 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 
 假点：只出广场 `GetSquareTasks`/`share_id`；换 guid 列表变空或只剩自己的。单站没中不删短表这行。
 
+### 客服 robot 补丢失消息（短表有指针）
+
+认：在线客服 H5 有补丢失消息口（`getLoseByLastMsgId` 一类）；前端或文档写死 `userId=robot`。不是助手 `GetHistoryList`。
+
+打（不登录）：
+
+1. POST 该口，`userId=robot`（数字 uid 常只有测试「你好」，别停）  
+2. 看 `extraParams.fullAnswer` / `messageContent`  
+3. 会话里签收底单 `fileName` / `remoteFileId` 丢给现签/下载口  
+
+算成：他人催件/理赔会话正文，或轨迹姓名+11 位手机，或底单原图真下到。
+
+假点：只有自己刚聊的；robot 空；只有公开 FAQ 标题。单站没中不删短表这行。
+
 ### 写死 appKey 打业务表（短表有指针）
 
 认：前端 `AV.init` / LeanCloud 写死 `appId`+`appKey`（或 `X-LC-Id`/`X-LC-Key`）；或 nocode/supabase 落地页写死 `role=anon` JWT。
@@ -426,11 +508,40 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 
 认：客服/开发者支持台 umi 有 `getKnowledgeList.json` + `getKnowledgeInfo.json`；或大厅/帮助 HTML 详情口吃数字篇号；或对外公告 JSON（bulletin / getbulletin 一类）用 `callname` + `callcontent` 当 RPC，页面只调公开菜单（`getKnowledgeByMenuId`）；或未登录 CMS `siteList` / `contentList` / `content` 能列出非官网站点，且频道名带「内部知识库」；或客服/IT chatbot 未登录检索口（菜单 id + 模糊 searchText），正文在 `buttonList`/`searchList` 的 `behavior.value`，不在标题 `content`。不要只认 umi 那一套 json。
 
-打（不登录）：对照 `queryUserInfo`/`queryFeedbackList` 应 deny。列表 `categoryId` 从 1 试，再把 `id` 丢给 Info。**没有 json 列表也打 HTML 详情**（`showKnowledgeInfo.htm?knowledgeId=` / `help_detail.htm?help_id=`），用现代 UA（IE 可能触 netd）。公告口：页面公开菜单对照条数很少时，把 `callname` 换成 `getKnowledgeList`（`callcontent` 带翻页），再 `getKnowledge` 打详情 id。CMS：先 `siteList` 抄非官网 siteId，再 `contentList` 看频道名，换 siteId 打 `content` 详情；默认官网 Banner 不是这枪。网关报 `loginMode is null` 别停，头加 `loginMode: 0`；siteList 仍缺 siteId 失败时，直接带内部 siteId 打 contentList。content 也要带 siteId，缺了会当没正文。chatbot：`chat_dir_id` 一类目录口 401 别停，改打检索口（`search_recommend` 一类），`searchText` 填常用字、`id` 填菜单号；正文看 `behavior.value`。
+打（不登录）：对照 `queryUserInfo`/`queryFeedbackList` 应 deny。列表 `categoryId` 从 1 试，再把 `id` 丢给 Info。**没有 json 列表也打 HTML 详情**（`showKnowledgeInfo.htm?knowledgeId=` / `help_detail.htm?help_id=`），用现代 UA（IE 可能触 netd）。公告口：页面公开菜单对照条数很少时，把 `callname` 换成 `getKnowledgeList`（`callcontent` 带翻页），再 `getKnowledge` 打详情 id。CMS：先 `siteList` 抄非官网 siteId，再 `contentList` 看频道名，换 siteId 打 `content` 详情；默认官网 Banner 不是这枪。网关报 `loginMode is null` 别停，头加 `loginMode: 0`；siteList 仍缺 siteId 失败时，直接带内部 siteId 打 contentList。content 也要带 siteId，缺了会当没正文。chatbot：`chat_dir_id` 一类目录口 401 别停，改打检索口（`search_recommend` 一类），`searchText` 填常用字、`id` 填菜单号；正文看 `behavior.value`。帮助 SPA JS 写死 Sanity `projectId` 且 dataset 分 production / pre-production（staging）时：**只打 production 会当没洞**。不登录 GROQ `GET https://{projectId}.api.sanity.io/v{日期}/data/query/{dataset}?query=`，对照同一 slug production count=0、pre-production 出内部篇；正文里的 snippet-ref `_id` 再打一次把 SOP 片段拉全。
 
 算成：列表 `pager.items` 上千或 count 海量，且 Info/HTML/详情/`behavior.value` 出**内部**话术/协查/短信/运营知识库正文，不是公开 FAQ / 对外协议。
 
-假点：只有公开帮助稿/错误码/对外协议/官网 Banner；Info 只要标题；工单口也放行（那是另一条）；只打了默认官网站点；dir 节点 401 就停；检索口只出标题 content。单站没中不删短表这行。
+假点：只有公开帮助稿/错误码/对外协议/官网 Banner；Info 只要标题；工单口也放行（那是另一条）；只打了默认官网站点；dir 节点 401 就停；检索口只出标题 content；production 与 pre-production 同一份对外 FAQ。单站没中不删短表这行。
+
+### 文档站语义搜索穿登录墙（短表有指针）
+
+认：文档站（Redocly 一类）首页 302 登录、篇章 `page-data` 401；JS 有 `SEMANTIC_SEARCH:"/_semantic-search"`。页面闸和检索口不是同一套。
+
+打（不登录）：
+
+1. 对照 GET `/` 应 302、`/page-data/.../data.json` 应 401  
+2. `POST /_semantic-search` body `{"query":"api"}`（以及 api key / graphql）  
+3. 看回包 `content`，不要只看 title  
+
+算成：`content` 是登录墙后的指南/接口参考正文。
+
+假点：搜索只出已公开文档；page-data 也匿名 200；只有 title 没有正文。单站没中不删短表这行。
+
+### 详情吐内容访问票（短表有指针）
+
+认：未登录业务详情 JSON 把**内容站访问票/签名串**一并吐出；主站或 CDN 内容 URL 要带这串才过登录墙。或 AI 转写 / prompt 下发口不要登录，回包对象存储带签 `downloadUrl`（社区 list/hot 仍 401 别停）。不是「运营配置深链里的会话票」（那是进号打 me/info），也不是分享鉴权 false 仍下媒体。
+
+打（不登录）：
+
+1. 打业务详情（可枚举/列表抄来的内容 id），从回包抄访问票字段  
+2. 假票对照：把票末尾改两字符，拼进主站内容 URL，应 302 登录/拦  
+3. 真票拼同一 URL 再 GET，看整页正文  
+4. **转写/prompt 下发口**直接 GET，抄带签 URL 再 GET 附件；list/hot 401 不是没口  
+
+算成：主站登录墙后的内容正文整页 200（标题+正文），或带签 URL 真下内部规范/附件全文；假票打不开。
+
+假点：票过期/占位；真假同一句错；详情本来就是公开橱窗；只有经营数字/列表没有可拼主站的票；带签只出公开帮助。字段名因站而异，不要只认某一家的票名。单站没中不删短表这行。密钥/票实值不进库。
 
 ### 开放支付假签枚举 appId（短表有指针）
 
@@ -553,6 +664,7 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 □ 助手 GetHistoryList 可选头：不登录调列表/详情（见「助手历史未授权读他人任务」）
 □ 前端写死 LeanCloud/supabase anon：打业务表（见「写死 appKey 打业务表」）
 □ 知识列表+详情未登录出内部话术（见「未授权内部话术正文」）
+□ 未登录详情回包带内容站访问票：假票对照后拼主站 URL（见「详情吐内容访问票」）
 □ 开放支付进件网关假签枚举 appId，活应用再换 merchantId（见「开放支付假签枚举 appId」）
 □ 短信短链首页 Welcome / 302 官网 / Hello 壳别停，猜 /open /app /s/ /www 看 302 query 手机（见「短链 302 query 带手机」）
 □ 未登录隐私号/虚拟号口失败时看是不是真下发真实手机，对象号可遍历（见「隐私号失败回真实号」）

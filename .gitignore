@@ -11,3 +11,4 @@ __pycache__/
 *.pyc
 .git.flat-bak/
 .dig_active
+mcp-servers/fofa_MCP/fofa_accounts.md

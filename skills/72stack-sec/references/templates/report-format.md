@@ -1,6 +1,6 @@
 # 通用提交报告格式(纯 Normal 段落 docx)
 
-> 定位:72stack-sec Phase 5 的**默认报告格式**,取代原三段式 Markdown 模板(旧文件 `report-submission.md` 保留仅作快稿参考)。
+> 定位:可选 **docx 提交格式**(旧文件 `report-submission.md` 保留仅作快稿参考)。黑盒正式报告正文仍只认 `~/.grok/rules/vuln-report-format.md`。
 > 来源:jsrc-report 实战验证的提交格式,泛化为通用。**平台=JSRC(京东 SRC)时**,第四节内容红线与第五节 V9.0 条款直接适用;其余平台按第六节换成对应平台定级(CVSS 对应条款),格式与诚实性矩阵不变。
 > 输出:通用平台输出到 `work/<target-slug>/report/<报告名>.docx`;JSRC 平台固定 `D:\SRC\京东\`。
 

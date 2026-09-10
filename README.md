@@ -39,8 +39,10 @@
 ├── README.md                 ← 你正在读的对外说明
 ├── NAMING.md                 ← 命名对照（精简版亦见于上文）
 ├── skills/
-│   ├── 72stack-sec/          ← 主 skill（仓库源）
-│   └── …                     ← 其它辅助 skill
+│   ├── 72stack-sec/          ← 主 skill（真源：本机 ~/.grok/skills/skill）
+│   ├── miniprogram-hunt/ / wxmini-security-audit/
+│   ├── src-audit-chain/ / jsrc-report/
+│   └── env-setup/
 ├── hooks/
 ├── mcp-servers/
 └── sms-bridge/

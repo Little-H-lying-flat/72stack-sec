@@ -6,7 +6,8 @@
   "notes": [
     "复制为本目录 register_profile.json 后填真号/授权码；该文件已 gitignore",
     "register_profile.json 禁止 Read 进对话；脚本自己 load",
-    "报告/台账手机号一律用 phone_masked"
+    "报告/台账手机号一律用 phone_masked",
+    "本机已有资料时不必复制：脚本会按 GROK_REGISTER_PROFILE → 本目录 → 已有同名文件 查找"
   ],
   "email": {
     "enabled": false,
@@ -16,6 +17,6 @@
     "user": "",
     "auth_code": "",
     "proxy": "",
-    "_设置说明": "auth_code=邮箱授权码(非登录密码);proxy留空=直连"
+    "_设置说明": "auth_code=邮箱授权码(非登录密码);proxy留空=直连;Gmail 国内填 http://127.0.0.1:7897"
   }
 }

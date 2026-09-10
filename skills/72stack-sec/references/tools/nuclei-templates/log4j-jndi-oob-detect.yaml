@@ -2,11 +2,10 @@ id: log4j-jndi-oob-detect
 
 info:
   name: Log4Shell JNDI OOB Detection
-  author: 72stack-sec
+  author: grok-skill
   severity: critical
   description: "Log4j JNDI injection detection via interactsh callback across multiple injectable headers. Source payload: playbooks/rce/10-framework.md (log4j-rce) and payloader/waf-bypass.md nested-expression variants."
   reference:
-    - https://github.com/Little-H-lying-flat/72stack-sec
   tags: log4j,jndi,rce,oob
 
 http:

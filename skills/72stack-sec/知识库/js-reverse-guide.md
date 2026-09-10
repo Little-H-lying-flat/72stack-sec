@@ -13,7 +13,9 @@
 
 ## 流程一：接口发现
 
-### 1. 查看网络请求
+默认 **HTTP**：curl 首页 HTML `script src` + 主包 chunk 映射整包下（未登录 → `js/{host}/anon/`）。不要为抽 JS 开浏览器。Playwright / js-reverse MCP 只在 CSRF 或 chunk 表抠不干净时用。
+
+### 1. 查看网络请求（仅必须交互时）
 
 使用 js-reverse MCP 工具（浏览器已打开目标页面时）：
 
@@ -142,7 +144,19 @@ def sign_hmac(data: str, app_secret: str) -> str:
 
 ---
 
-## 流程三：隐藏接口发现
+## 登录后懒加载（登录轨必做）
+
+未登录首页多半是壳。带着 **该产品 sid cookie** 再 GET 业务后台，script 列表会换一套。禁止用 C 端/未登录包打商家、广告主、公会。目录：未登录轨 → `js/{host}/anon/`；登录轨 → `js/{host}/{sid}/`，**先读 anon，只补本 sid 新 chunk**。
+
+懒加载 = 点菜单才 *下载*，不是点了才 *存在*。文件名在主包 chunk 映射 / `import(` / `__webpack_require__.e` / umi `authAndRouter` 里。
+
+1. Cookie GET 业务首页（各 sid 各打各的 HTML）。
+2. 收 HTML `script src`，再从主包抠所有 `.js` 相对路径，同一 CDN 前缀只把 **anon 里没有的** 下到 `js/{host}/{sid}/`。
+3. 试 `.js.map`。菜单 JSON / 权限接口回的 path 提前打，不必点侧栏。
+4. 路由表里有、页面没有的 path = hidden，直接打 API。
+5. 只有 chunk 表抠不干净或 CSRF 必须点时，才 Playwright 拦 `script` 或点开一级菜单——**不是每个按钮点完**。
+
+条数不当进度。§4.0 说清这摊 + 钥匙进清单才算抽完。抽全 JS ≠ 出洞：无店铺/无广告户时对象图仍空，转资质/开通口。
 
 ### 从 Webpack chunk 中提取
 

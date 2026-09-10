@@ -1,3 +1,17 @@
+# ⚠ 国内 SRC 主流程封条（乌鸦 · 2026-09-10）
+
+> **禁止**把本目录（`references/methodology/`）当第二套主库通读。  
+> Grok-only 国内 SRC：**只走** `~/.grok/skills/skill/SKILL.md` → `知识库/打穿短表.md` → 显式指针模块。  
+> 本目录文件**仅当**短表/模块/SKILL **写出相对路径指针**时才打开对应单篇。  
+> 与 `~/.grok/rules` 或 `SKILL.md` 冲突时，以 rules / SKILL 为准。  
+> 发现引擎正文若需语义审计：优先 `14-semantic-audit.md`（显式指针），不是通读 01–13。
+## ARCHIVE 声明（P1 · 2026-09-10）
+
+除短表/模块/SKILL **显式指针**到的单篇（常见：`14-semantic-audit.md`、`03-evidence-discipline.md`、`11-fullauto-pipeline.md`）外，本目录其余篇对国内 SRC 主流程视为 **ARCHIVE**：可按指针打开，**禁止**当开场通读或第二主库。
+
+
+---
+
 # src-hunter 方法论入口
 
 > 视角：黑盒 SRC / 众测 / 漏洞赏金（H1、Bugcrowd、补天、CNVD）

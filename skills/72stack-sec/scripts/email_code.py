@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """email_code.py — 从 IMAP 邮箱读验证码/激活链接(PEEK 只读,不标已读、不删信)
 
-配置: 同目录 register_profile.json 的 "email" 字段:
+配置: register_profile.json 的 "email" 字段(由 _profile.py 定位,禁止 Read 进对话):
   { "enabled": true, "address": "x@qq.com", "imap_host": "imap.qq.com",
     "imap_port": 993, "user": "x@qq.com", "auth_code": "授权码",
     "proxy": "http://127.0.0.1:7897" }   # proxy 可选,Gmail 国内必须
@@ -16,18 +16,18 @@
 隐私: 正文不打印不落盘;--peek 主题脱敏;PEEK 取信不改邮箱状态。
 """
 import argparse
-import base64
 import email
 import email.header
 import email.utils
 import imaplib
-import json
 import os
 import re
 import socket
 import ssl
 import sys
 import time
+
+from _profile import load_profile
 
 CODE_RE = re.compile(r'(?<!\d)(\d{4,8})(?!\d)')
 NEAR_RE = re.compile(r'(?:验证码|校验码|动态码|code|Code|OTP)[^\d]{0,6}(\d{4,8})')
@@ -41,12 +41,7 @@ def log(m):
 
 
 def load_conf():
-    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'register_profile.json')
-    try:
-        conf = json.load(open(p, encoding='utf-8')).get('email') or {}
-    except FileNotFoundError:
-        log('[E] 找不到 register_profile.json')
-        sys.exit(2)
+    conf = load_profile().get('email') or {}
     if not conf.get('enabled') or not conf.get('auth_code'):
         log('[E] 邮箱未配置:在 register_profile.json 的 email 字段填 address/imap_host/user/auth_code 并 enabled=true')
         sys.exit(2)

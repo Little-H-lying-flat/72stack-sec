@@ -26,3 +26,9 @@
 
 `线程必读.md` 中「禁 72stack」= **禁止 Agent 改用未安装的旁路 skill 名/路径**，避免和 `/hack`、`src-hunter` 混用。  
 对外文档、简历、仓库星标页继续使用 **72stack-sec**。
+
+
+## 同步方向（2026-09-10）
+
+以本机实战目录 `~/.grok/skills/skill` 为真源，覆盖仓库 `skills/72stack-sec/`。  
+安装回本机时仍落到 `~/.grok/skills/skill`（见该目录 `README.md`）。

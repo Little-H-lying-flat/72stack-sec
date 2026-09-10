@@ -1052,3 +1052,19 @@ Binary serialization formats may allow type confusion:
 | `msgpack-tools` | Encode/decode MessagePack CLI |
 | `wsdump` (websocket-client) | Raw frame capture and replay |
 | Wireshark | Dissect WebSocket frames at protocol level |
+
+### pathname namespace 漏 native publish（短表有指针）
+
+跨 runtime WS 把升级 URL 的 pathname 当 pub/sub namespace。uWS / Bun 的 `ws.publish(topic)`、CF Durable 扫全 socket，topic 不带 namespace。同一进程里不同 path、同名 topic 的 `peer.publish` 会串房间。
+
+不登录连 `/room-a` 和 `/room-b`，一边发正文。对照：Node 适配器应收不到。
+
+算成：另一房间收到正在广播的消息正文。假点：应用自己在 topic 里加了房间前缀；只漏同一 pathname；默认无业务消息。这和仅缺 Origin、没有读到他人数据不是同一套。
+
+### 客服 widget JS 写死长连票（短表有指针）
+
+客服/3rd widget 打包 JS 把 `wss` 地址、`appId`、IM token 写死。不是 HTTP 写死 appKey 打业务表，也不是未登录发签口再登 IM。
+
+不登录 Upgrade 长连，首帧 AUTH（常见 `type=1`）带 JS 里那串票。假票对照应 close；真票 AUTH_ACK 出 clientId / 同类会话身份。同一条会话再 BIND、topic 订 `#`。密钥实值只进正式报告。
+
+算成：生产认这把票并给出会话身份；能 BIND 或订 `#`。假点：票过期/占位；真假同一句错；只能游客空会话且订不了业务 topic。没聊天正文也可以交（再打会动线上），不要把 HTTP 客服名单口当成必须换站。

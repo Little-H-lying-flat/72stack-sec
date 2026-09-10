@@ -2,11 +2,10 @@ id: aliyun-oss-anonymous-listing
 
 info:
   name: Aliyun OSS Bucket Anonymous Listing
-  author: 72stack-sec
+  author: grok-skill
   severity: medium
   description: "OSS bucket allows anonymous ListObjects. Target the bucket host ({BUCKET}.oss-{region}.aliyuncs.com). Source: playbooks/ssrf-cache-host/11-cloud.md (cn-object-storage)."
   reference:
-    - https://github.com/Little-H-lying-flat/72stack-sec
   tags: oss,aliyun,misconfig,cloud
 
 http:

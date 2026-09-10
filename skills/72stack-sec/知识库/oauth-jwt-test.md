@@ -1,4 +1,5 @@
 > 结构：上半原有是主线（JWT / OAuth / SAML）；下半补充按 api-auth / jwt-oauth / oidc / saml 加深。标题搜即可。
+> 伪造枪（none / RS→HS / kid / jku / 弱密钥）细节在「一、JWT 测试」；**打穿后怎么算成**见「1.7 伪造后认钥 / 算成」。通用伪造枪不进短表（`hunt-iter` ②.1）。
 >
 > 跨域读 token：SRC 不挖 CORS，**勿开** `cors-test.md`。有跨站写走 `csrf-test.md`，有越权读走 `idor-test.md`。
 
@@ -116,6 +117,21 @@ payload = {
 # 原始: eyJhbGci...header.eyJ1c2Vy...payload.c2lnbmF0dXJl...signature
 # 修改: eyJhbGci...header.eyJ1c2Vy...payload.
 ```
+
+### 1.7 伪造后认钥 / 算成（升链，不定级）
+
+认：手里已有 JWT（登录回包、JS、深链、刷新口），或能自己造 header/payload。上节 none / RS→HS / kid / jku / 弱密钥是**怎么造**；本节约的是造完之后怎么证明生产认、怎么收口。通用伪造枪**不进短表**。
+
+打（每枪一次，进了或明确不行就下一项；用户会话禁止 `/logout`）：
+
+1. **假值对照。** 原票 / 乱改 payload 未重签 / 假密钥签 → 应 401/`invalid token`。伪造票（none、空签、弱密钥重签、RS 公钥匙当 HS、jku 指到你控 JWKS）打同一 `me` / 用户信息 / 业务只读口。
+2. **认身份。** 认钥枪须带出身份或列表：`/me` 姓名手机、角色列表、租户名单。只 200 空壳或和匿名一样 → 没认。
+3. **改声明再打。** `role`/`isAdmin`/`uid`/`sub`/`tenantId` 换成更高权或邻号；对照原票基线。出他主体或平台管理员面才算升上去。
+4. **弱密钥。** 离线爆出 secret 后必须拿真密钥现签打生产；假 secret 同句错 → 钥无效不写。密钥实值只进正式报告，不进短表/本库。
+
+算成：伪造票生产认了，且至少一枪只读带出**身份或他主体列表**（进了别人的号 / 改掉别人的密·绑 → 按 format 走严重档，不在本模块定级）。
+
+假点：none 只本地解码、服务端仍验签；RS→HS 服务端拒 HS；kid/jku 白名单；弱密钥字典没命中；票过了但 me 仍是自己且换 uid 无效。单站没中不删上节手法。
 
 ---
 

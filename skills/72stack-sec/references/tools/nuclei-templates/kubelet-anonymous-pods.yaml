@@ -2,11 +2,10 @@ id: kubelet-anonymous-pods
 
 info:
   name: Kubelet Anonymous Pod Listing (10250)
-  author: 72stack-sec
+  author: grok-skill
   severity: high
   description: "Kubelet HTTPS endpoint allows anonymous /pods read - pod specs may contain plaintext env credentials. Target https://{NODE}:10250, run nuclei with -insecure. Source: playbooks/cloud/40-k8s.md (k8s-api-unauth)."
   reference:
-    - https://github.com/Little-H-lying-flat/72stack-sec
   tags: k8s,kubelet,unauth,cloud
 
 http:
