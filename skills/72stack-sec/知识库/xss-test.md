@@ -352,3 +352,12 @@ MCP 客户端把 OAuth `authorization_endpoint` 原样拼进 `open "URL"` / `xdg
 well-known 元数据里填 `http://127.0.0.1/$(whoami)`。对照：Windows `start "URL"` 把整段当窗口标题、cmd 不扩。
 
 算成：POSIX whoami/marker。假点：Windows cmd 不扩；URL 被白名单/编码吃掉 `$()`。这和 git ref 拼 `git log` 不是同一套（那边是 tag，这边是 OAuth 发现 URL 进 open）。
+
+### Mermaid 渲染先于净化（短表有指针）
+
+场景：Markdown 管道里 Mermaid（或同类图）`securityLevel: loose`，或 HTML 事件在 sanitize **之前**已进入 DOM。
+
+认：文档/工单/AI 对话可存图源码。
+打：持久化节点 label/`click` 嵌事件；有创建 PAT/API token 的页面再看升链。
+假：先净化再渲染；CSP 禁 inline；图只转安全 SVG。
+

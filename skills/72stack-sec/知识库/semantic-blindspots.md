@@ -93,6 +93,8 @@
 
 | 2026-09-10 | 命中 | 通用·服务端拉 URL | 后缀白名单若用 urlparse 取 hostname、请求用 urllib3，二者对 `\` 是否一致？单 `@` 放行是否等于请求也打到白名单？ | 可控拉取 URL + 域名后缀白名单 | SSRF/解析器差分 | 已写入短表+ssrf-test | 公号文：一次有意思的ssrf绕过 |
 
+| 2026-09-10 | 命中 | 配置中心·多作用域鉴权 | 管理写接口是否落在默认关闭的 Open 作用域？Admin 对照口拒绝时，用户/角色/权限写口是否仍放行？ | @Secured apiType / 多 Filter | 鉴权作用域错配 | 已写入短表+authbypass | Nacos 3.x 鉴权作用域错配分析 |
+
 ## 高频问句速查（从本表提炼，可增不可灌 payload）
 - 列表/目录的可见性过滤，是否被错误当成详情口的授权？（未上架/已删除仍出全文）
 
@@ -114,6 +116,13 @@
 - 前端构建产物是否硬编码**有效**第三方 API Key（应走后端代理）？
 - 对象存储直传是否允许 HTML/SVG 等可执行 MIME，并被同源打开执行？
 - 服务端拉 URL 的白名单：校验用的解析器与真正发请求的库，对 `@` / `\` 是否同一套规则？
+- 多 Filter/多 apiType 鉴权：管理写口是否漏标、掉进默认不鉴权作用域？
+- skip_auth/webhook 豁免正则是否匹配**完整 URI（含 query）**且未锚定？
+- 白名单校验解析失败时，是拒绝还是**静默跳过**仍出站？
+- 多 IdP 的 state/nonce/pkce cookie 是否绑定 provider？
+- OAuth state 是否同时满足：高熵、绑会话、跨 CLI/网页不互换？
+- MCP/OAuth 401 的 resource_metadata 是否先 fetch 再验同源？
+- Mermaid/图渲染是否在 sanitize 之前就执行 HTML 事件？
 ## 与 suspects 的关系
 
 - `suspects.md` = **本站**发现清单（任务目录）。

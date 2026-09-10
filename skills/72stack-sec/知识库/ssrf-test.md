@@ -202,3 +202,20 @@ http://internal-host/ → file:///etc/passwd
 ```
 
 ---
+
+### 校验解析失败却放行（短表有指针）
+
+场景：SSR/服务端出站前用严格 API（如 `URL.canParse`）做白名单，失败时**不当作拒绝**而是跳过校验；真正请求用另一套宽松解析仍能取出 host。
+
+认：双解析器 + 失败放行（不是反斜杠 userinfo 那条）。
+打：严格失败、宽松仍解析出攻击 host 的畸形 URL。对照合法白名单与明显外域。
+假：失败即 400；两套解析器一致。
+
+### 401 resource_metadata 客户端 SSRF（短表有指针）
+
+场景：MCP/OAuth PRM（RFC 9728）发现：客户端看到 401 的 `resource_metadata=` 后**先请求该 URL**，再谈同源校验；`authorization_servers` 可二段跳转。
+
+认：AI/MCP 客户端或跟 PRM 的 OAuth 库。
+打：资源端返回指向内网/元数据的 metadata；观察客户端出站。
+假：先校验 URL 再 fetch；关闭 PRM。
+

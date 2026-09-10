@@ -848,3 +848,20 @@ Load when:
 - XML parser attack depth: [xxe xml external entity](xxe-test.md)
 - OAuth or OIDC SSO alternatives: [oauth oidc misconfiguration](oauth-jwt-test.md)
 - Auth boundary issues after SSO: [authbypass authentication flaws](authbypass-test.md)
+
+### 多 IdP 校验 cookie 未绑 provider（短表有指针）
+
+场景：多登录提供商；`state`/`nonce`/`pkce` 类校验值放在全局 cookie，未绑定 `provider.id`。
+
+认：同一应用挂多个 IdP + account linking。
+打：低信任 IdP 流程产的校验 cookie，在高信任 callback 复用。
+假：单 IdP；cookie 名/值已含 provider。
+
+### state 三缺一（短表有指针）
+
+场景：表面有 OAuth `state`，但仍满足任一：低熵可预测；服务端只按 state 值缓存、不绑浏览器会话；CLI/设备码与网页 state 可互换。
+
+认：先列三属性 Present / Unpredictable / Session-bound（及跨介质隔离）。
+打：Login CSRF / session 注入；有 CLI poll 时优先看互换。
+假：高熵 + 绑 session + 跨介质隔离。
+
