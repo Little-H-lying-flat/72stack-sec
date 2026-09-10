@@ -86,6 +86,11 @@
 | 2026-09-10 | 命中 | Wolt·payment | payment-service 写卡接口是否暴露在无鉴权面？ | 原始卡号写入 | 未授权写/支付敏感 | 已批量回灌 | Wolt payment-service 匿名未授权批量写入原始卡号 |
 | 2026-09-10 | 命中 | Vercel OSS·HTTP客户端 | 跨源 302 是否剥离 Authorization/Cookie？URL 拉取是否挡内网？ | redirect follow / fetch URL | SSRF/凭证泄露 | 已批量回灌 | @emulators/linear GraphQL treats unauthenticated requests as admin — webhook ret… |
 
+| 2026-09-10 | 命中 | 宇树·UnifoLM 论坛 | 富文本 content 入库是否零过滤？详情/评论渲染是否未消毒直插（如 dangerouslySetInnerHTML）？ | 帖子/话题/评论 content HTML | 存储型 XSS | 已批量回灌 | 宇树 unifolm 存储型XSS（正文/评论） |
+| 2026-09-10 | 命中 | 宇树·统一账号 | 论坛等业务签发的 token 是否跨 security/钱包等面通用？XSS 窃票是否等于跨业务接管？ | localStorage token / token 请求头 | 会话票跨业务无隔离 | 已批量回灌 | 宇树 unifolm XSS 升链统一账号 |
+| 2026-09-10 | 命中 | 宇树·UnifoLM 前端 | 构建产物是否硬编码**有效**第三方 API Key（无后端代理）？ | 前端 JS Bearer/sk | 敏感信息泄露/硬编码密钥 | 已批量回灌 | 宇树 unifolm DeepSeek Key 硬编码 |
+| 2026-09-10 | 命中 | 宇树·UniStore | 应用商店上传签名/OSS 直传是否允许可执行内容类型，对象 URL 是否被同源当页面执行？ | 上传签名口 + OSS 对象 | 存储型 XSS/上传 | 已批量回灌 | 宇树 UniStore 匿名上传存储XSS |
+
 ## 高频问句速查（从本表提炼，可增不可灌 payload）
 - 列表/目录的可见性过滤，是否被错误当成详情口的授权？（未上架/已删除仍出全文）
 
@@ -102,6 +107,10 @@
 - OAuth/`state.url`/callback 是否校验为本域，code 是否原样外带？
 - 前端写死的 token/密钥是否可被当成**会话凭证**直接建连？
 - 配置下发（Apollo/低代码数据源）是否把 **PII** 写进可匿名拉取的配置？
+- 富文本入库是否**零过滤**，前端渲染是否**未消毒直插**（存储型 XSS）？
+- 业务 token 是否存在 **localStorage/自定义头** 且跨多个子业务通用？
+- 前端构建产物是否硬编码**有效**第三方 API Key（应走后端代理）？
+- 对象存储直传是否允许 HTML/SVG 等可执行 MIME，并被同源打开执行？
 ## 与 suspects 的关系
 
 - `suspects.md` = **本站**发现清单（任务目录）。
