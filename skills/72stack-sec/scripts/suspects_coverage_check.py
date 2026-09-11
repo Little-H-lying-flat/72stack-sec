@@ -11,9 +11,11 @@ from pathlib import Path
 REQUIRED_HINTS = [
     (r"威胁模型", "缺威胁模型头"),
     (r"覆盖率自检|硬闸", "缺覆盖率自检表"),
+    (r"凭证作用域|半径\s*[（(]|信任边界", "缺信任边界（凭证作用域/半径）"),
     (r"S-\d+|suspects:\s*N/A", "无 S-xx 行且未声明 N/A"),
 ]
 DONE_NAMES = ("DONE_anon.md", "DONE.md", "DONE_auth.md")
+AUTH_DONE = ("DONE_auth.md",)
 
 
 def check_host(host_dir: Path) -> tuple[str, list[str]]:
@@ -31,6 +33,9 @@ def check_host(host_dir: Path) -> tuple[str, list[str]]:
         unchecked = len(re.findall(r"\|\s*☐\s*\|", text))
         if unchecked >= 3:
             notes.append("覆盖率表未勾项偏多(☐×%d)" % unchecked)
+        # 信任边界行若存在且仍 ☐，点名（P1）
+        if re.search(r"信任边界[^\n]*☐", text):
+            notes.append("信任边界未勾（禁止 covered）")
     done_hit = False
     for name in DONE_NAMES:
         fp = host_dir / name
@@ -41,6 +46,16 @@ def check_host(host_dir: Path) -> tuple[str, list[str]]:
             break
     if not done_hit:
         notes.append("DONE* 未写 suspects= 字段（建议补）")
+    # P1: 有 DONE_auth 则强制 身份= 与 半径=
+    for name in AUTH_DONE:
+        fp = host_dir / name
+        if not fp.is_file():
+            continue
+        auth = fp.read_text(encoding="utf-8", errors="replace")
+        if not re.search(r"身份\s*=", auth):
+            notes.append("DONE_auth 缺 身份=（禁止 covered）")
+        if not re.search(r"半径\s*=", auth):
+            notes.append("DONE_auth 缺 半径=（禁止 covered）")
     if notes:
         return "FAIL", notes
     return "PASS", ["ok"]

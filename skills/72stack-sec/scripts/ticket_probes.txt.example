@@ -1,0 +1,4 @@
+# 每行一条验票口（只验票，不换 id）
+# METHOD URL
+# METHOD URL {"json":"body"}
+# GET https://example.com/rest/me/info

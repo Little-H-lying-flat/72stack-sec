@@ -30,7 +30,7 @@
 4. **跨任务记忆**  
    `知识库/semantic-blindspots.md`：命中 / 漏报回灌（不写利用步骤）。
 5. **辅助脚本**  
-   `suspects_coverage_check.py`、`pending_from_done.py`、`auth_flow.py`、`report_format_check.py` 等。
+   `suspects_coverage_check.py`、`pending_from_done.py`、`auth_flow.py`、`report_format_check.py`、`p2_gate.py`（DONE 字段+覆盖闸+可选验票）等。
 
 ## 仓库结构
 
