@@ -35,6 +35,7 @@ from urllib.parse import urlencode, urlparse
 from urllib.request import HTTPCookieProcessor, HTTPSHandler, Request, build_opener
 
 from _profile import load_profile
+from accounts_book import append_row, full_account, login_password
 
 HERE = Path(__file__).resolve().parent
 CAPTCHA_RE = re.compile(r"滑块|图形验证|captcha|yoda|geetest|人机校验", re.I)
@@ -67,6 +68,7 @@ def profile_sub(s: str, code: str = "") -> str:
         "{email}": str(email.get("address") or ""),
         "{email_alias}": str(p.get("email_alias") or email.get("address") or ""),
         "{name_alias}": str(p.get("name_alias") or ""),
+        "{password}": str(p.get("login_password") or ""),
         "{code}": code,
     }
     out = s
@@ -266,27 +268,20 @@ def extra_tokens(body: str) -> list[tuple[str, str]]:
     return _token_pairs(data)
 
 
-def append_accounts(path: Path, target: str, sid: str, cookie_path: str, channel: str, status: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    acct = masked_account(channel)
-    now = time.strftime("%Y-%m-%d %H:%M")
-    row = f"| {target} | {acct} | (验证码进号) | {now} | {status} | sid={sid or '无'} | {cookie_path} | auth_flow |"
-    if not path.is_file():
-        path.write_text(
-            "# 账号台账\n\n"
-            "| 目标 | 账号 | 密码 | 注册时间 | 状态 | sid/体系 | cookie路径 | 备注 |\n"
-            "|------|------|------|----------|------|----------|------------|------|\n"
-            + row
-            + "\n",
-            encoding="utf-8",
-        )
-        return
-    text = path.read_text(encoding="utf-8", errors="replace")
-    if cookie_path in text and target in text:
-        return
-    if not text.endswith("\n"):
-        text += "\n"
-    path.write_text(text + row + "\n", encoding="utf-8")
+def append_accounts(root: str, target: str, sid: str, cookie_path: str, channel: str, status: str, login_url: str) -> None:
+    pwd = "验证码进号" if channel in ("sms", "email", "email-link") else (login_password() or "验证码进号")
+    append_row(
+        root=root or "",
+        host=target,
+        account=full_account(channel),
+        password=pwd,
+        login_url=login_url,
+        cookie=cookie_path,
+        sid=sid,
+        status=status,
+        note="auth_flow",
+        channel=channel,
+    )
 
 
 def main() -> None:
@@ -308,7 +303,9 @@ def main() -> None:
     ap.add_argument("--origin", default=None)
     ap.add_argument("--referer", default=None)
     ap.add_argument("--save", required=True, help="session.cookie 路径")
-    ap.add_argument("--accounts", default=None, help="资产/accounts.md")
+    ap.add_argument("--accounts", default=None, help="资产/accounts.md（仍兼容；优先 --root）")
+    ap.add_argument("--root", default="", help="任务根，用于写 资产/accounts.md + 全局账密本")
+    ap.add_argument("--login-url", default="", help="人打开的登录页/进号网址")
     ap.add_argument("--target", default="")
     ap.add_argument("--sid", default="")
     args = ap.parse_args()
@@ -358,8 +355,12 @@ def main() -> None:
 
     extra = extra_tokens(text)
     save_netscape(save, jar, host, extra)
-    if args.accounts:
-        append_accounts(Path(args.accounts), host or args.target, args.sid, str(save), args.channel, "已进号")
+    root = args.root
+    if not root and args.accounts:
+        acc = Path(args.accounts)
+        root = str(acc.parent.parent) if acc.parent.name == "资产" else str(acc.parent)
+    login_url = args.login_url or (urlparse(args.submit_url).scheme + "://" + (urlparse(args.submit_url).hostname or host))
+    append_accounts(root, host or args.target, args.sid, str(save), args.channel, "已进号", login_url)
     print(f"OK\thost={host}\taccount={masked_account(args.channel)}\tcookie={save}")
 
 

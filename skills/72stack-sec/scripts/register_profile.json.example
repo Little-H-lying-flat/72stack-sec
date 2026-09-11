@@ -3,10 +3,12 @@
   "phone_masked": "138****0000",
   "name_alias": "示例假名",
   "email_alias": "",
+  "login_password": "",
   "notes": [
     "复制为本目录 register_profile.json 后填真号/授权码；该文件已 gitignore",
     "register_profile.json 禁止 Read 进对话；脚本自己 load",
-    "报告/台账手机号一律用 phone_masked",
+    "报告手机号用 phone_masked；账密本 accounts.md / ~/.grok/accounts/账密本.md 写明文账号+密码，禁止 Read 进对话",
+    "login_password=各站设密统一密码；验证码进号没有独立密码",
     "本机已有资料时不必复制：脚本会按 GROK_REGISTER_PROFILE → 本目录 → 已有同名文件 查找"
   ],
   "email": {

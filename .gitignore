@@ -13,3 +13,5 @@ __pycache__/
 .dig_active
 mcp-servers/fofa_MCP/fofa_accounts.md
 **/__pycache__/
+**/.grok/accounts/
+**/账密本.md
