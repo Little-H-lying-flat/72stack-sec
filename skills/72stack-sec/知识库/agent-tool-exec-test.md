@@ -13,7 +13,9 @@
 1. 问身份 / whoami / profile 一类口回未登录、401、`unauthenticated`，同一套前端的**对话口**（`/chat` / `createTask` 一类）不带 Cookie 仍接  
 2. **没有 whoami 对照也打**：公开页就能 POST 建会话，body 只要 `message`（或同类）
 
-再加：JS 或工具列表里有会跑命令的工具（常见名 `bash` / `shell` / `code_interpreter` / `python` / `execute`，**名字不封闭**，认的是会执行）。
+再加：JS 或工具列表里有会跑命令的工具（常见名 `bash` / `shell` / `code_interpreter` / `python` / `execute` / 访 URL，**名字不封闭**，认的是会执行）。
+
+3. 已登录会话里，分享/deeplink/预填参数进来**自动当本轮 prompt**，且本轮能调记忆或会执行的工具。对照：预填只开空白聊、本轮禁工具 → 假点。不是越狱话术。
 
 前端常见：helix-assistant、cloud-h5、带 tool 流的云助手。换皮照认，不钉产品名。
 
@@ -43,6 +45,7 @@ stdout / SSE 里是下面任一：
 - 沙箱拒命令、空工具列表  
 - 对话口同样要登录，和身份口同一道闸  
 - 只有 prompt 越狱、没有工具执行（那不是这枪）  
+- 预填/deeplink 只开空白聊；本轮调不了工具也读不到记忆  
 - 只 curl 到公网（百度首页 / ICP 号）当通内网
 
 ## 停

