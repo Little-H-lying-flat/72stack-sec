@@ -29,6 +29,45 @@
 
 和 S3 预签名「改自己的 Content-Type」、和「带签 URL 改租户读他文件」、和下面「桶策略对匿名全开」「签名没绑 Host」「签名覆盖 Content-Type」都不是一条：本条是 **凭证范围被通配成整桶，覆盖或清掉他人对象**。
 
+
+
+### 匿名权限三探针（短表开场 E 有指针）
+
+认：JS/抓包/子域出现 OSS/COS/OBS/S3/BOS/TOS 域名，或回包是 ListBucket XML / 预签 / STS / getUploadSign。
+
+打：不登录只发三枪（禁止覆盖既有 key）：
+
+1. 列根 `GET /?max-keys=10` 或 `/?list-type=2` — 200+ListBucketResult = 可列  
+2. `GET /nonexist-security-probe-<ts>` — **NoSuchKey** = 匿名可读语义；**AccessDenied** = 读被禁  
+3. `PUT /security-test-<ts>.txt` 无害内容 — 200 = 匿名可写（Critical 苗）；验完立刻删自己的对象  
+
+对得上再开本篇其它节（桶策略全开、versions、sign key=/、STS 通配、永久钥）。假点：只是公开官网静态；三枪全 AccessDenied；CDN 纯回源无存储 REST。
+
+### 可读不可列（短表有指针）
+
+认：列根匿名 403，但 GET 随机不存在 key 回 **NoSuchKey**（不是 AccessDenied）。这是国内备份桶最高产错配之一：禁列举、却允许直读知道的 key。
+
+打：
+
+1. 先用「匿名权限三探针」确认矩阵是「不可列 + 可读」  
+2. 从本站上传回包 / 详情 JSON / CDN URL 抄 **key 命名规律**（`userid/timestamp.ext`、日期分桶等），改 userid 或邻日直读  
+3. 无规律时用短备份字典直读（`backup.sql.gz`、`.env`、按日 `backup-YYYYMMDD.sql.gz` 一类）；**命中一条脱敏即停**，禁止整桶同步  
+
+算成：读到他人未公开对象原文。假点：不存在 key 也 403；只能下公开静态；空字典无 200。和「ListBucket 403 改打 versions」（换 API 列举）、「桶策略对匿名全开」（策略 Allow 可写）不是一条。
+
+### CNAME 挂已释放桶（短表有指针）
+
+认：业务子域 CNAME 指向 `*.oss-*.aliyuncs.com` / `*.cos.*.myqcloud.com` / `*.s3*.amazonaws.com` / OBS 同类；桶根或 HEAD 回 **NoSuchBucket**（桶已释放，DNS 还挂着）。
+
+打：
+
+1. `dig` 确认 CNAME 落在对象存储桶域  
+2. 直打桶域确认 NoSuchBucket（不是 AccessDenied、不是还在的 200）  
+3. **接管验证只在自己云账号、同 region 建同名桶**证明子域可落到你控内容；禁止在目标账号上重建、禁止写目标业务对象  
+
+算成：能证明悬挂可被同名桶接管。假点：桶还在；CNAME 已摘；只扫到 NoSuchBucket 未证明 DNS 仍挂业务子域。
+
+
 ### 签名没绑 Host（短表有指针）
 
 认：COS / OSS / S3 带签 URL；query 里 `q-header-list`、`SignedHeaders`、`X-Amz-SignedHeaders` **没有 host**。有对象存储带签才打，没有不要空换域名。
