@@ -14,7 +14,8 @@
   python auth_flow.py --channel email --wait 120 \\
     --send-json "{{\\"email\\":\\"{email}\\"}}" --submit-json "{{\\"email\\":\\"{email}\\",\\"code\\":\\"{code}\\"}}" ...
 
-退出码: 0=进号并落盘  1=取码超时/提交失败  2=参数/环境  3=遇盾
+退出码: 0=进号并落盘  1=发码业务失败/取码超时/提交失败  2=参数/环境  3=遇盾（含业务码要安全校验）
+发码成功后默认先快探 15s 再拉满 --wait；可用 --peek 0 关闭。失败/超时会往 --pending（或 --root/资产/pending_register.md）备注写 auth_flow:biz=…
 stdout: OK 一行（路径+打码账号，无 cookie 实值、无验证码）
 线程禁止跑本脚本。
 """
@@ -38,7 +39,7 @@ from _profile import load_profile
 from accounts_book import append_row, full_account, login_password
 
 HERE = Path(__file__).resolve().parent
-CAPTCHA_RE = re.compile(r"滑块|图形验证|captcha|yoda|geetest|人机校验", re.I)
+CAPTCHA_RE = re.compile(r"滑块|图形验证|captcha|yoda|geetest|人机校验|安全校验|需要验证|verify\.snssdk|易盾", re.I)
 TOKEN_KEYS = (
     "passToken",
     "passtoken",
@@ -131,6 +132,91 @@ def is_captcha(body: str, status: int) -> bool:
     return bool(CAPTCHA_RE.search(blob))
 
 
+
+def _biz_fields(body: str) -> tuple[object | None, str]:
+    """从常见信封抠业务码与短消息（不落盘、不打印账号）。"""
+    try:
+        j = json.loads(body or "")
+    except Exception:
+        return None, ""
+    if not isinstance(j, dict):
+        return None, ""
+    code = None
+    for k in ("code", "error_code", "errorCode", "errno", "status", "result", "ret", "errCode"):
+        if k in j and j.get(k) is not None and j.get(k) != "":
+            code = j.get(k)
+            break
+    if code is None and isinstance(j.get("data"), dict):
+        for k in ("code", "error_code", "errorCode", "status"):
+            if k in j["data"] and j["data"].get(k) is not None and j["data"].get(k) != "":
+                code = j["data"].get(k)
+                break
+    msg = ""
+    for k in ("message", "msg", "error", "error_msg", "errorMsg", "errmsg", "desc", "description"):
+        v = j.get(k)
+        if isinstance(v, str) and v.strip():
+            msg = v.strip()[:80]
+            break
+    if not msg and isinstance(j.get("data"), str):
+        msg = j["data"].strip()[:80]
+    return code, msg
+
+
+def biz_send_ok(body: str) -> str:
+    """发码回包业务态：ok / captcha / fail / unknown。
+
+    ok：明确成功才去等短信。
+    captcha：要安全校验/滑块 → 退出 3。
+    fail：明确失败 → 退出 1，不等短信。
+    unknown：非 JSON 或无业务码 → HTTP 已通就仍等，避免误杀怪信封。
+    """
+    if is_captcha(body, 200):
+        return "captcha"
+    code, msg = _biz_fields(body)
+    blob = f"{code} {msg}".lower()
+    if any(x in blob for x in ("需要安全校验", "安全校验", "滑动滑块", "人机", "captcha")):
+        return "captcha"
+    try:
+        c = int(code) if code is not None and str(code).strip() != "" else None
+    except (TypeError, ValueError):
+        c = None
+    if c is not None:
+        if c in (0, 200):
+            return "ok"
+        if c in (1100, 1105) or 400001 <= c <= 410999:
+            return "captcha"
+        # 明确失败族；其余数字码交给文案/unknown，避免把「1=成功」误杀
+        if c in (7, 16, 22, 1003, 1009, 1033, 401, 403, 400, 500, 100035) or c >= 400:
+            return "fail"
+        if any(x in msg for x in ("成功", "已发送", "发送成功", "验证码已")):
+            return "ok"
+        if any(x in msg for x in ("错误", "失败", "不正确", "无效", "不存在", "频繁", "无权限", "非法", "需要安全")):
+            return "fail" if "安全" not in msg else "captcha"
+        return "unknown"
+    try:
+        j = json.loads(body or "")
+    except Exception:
+        return "unknown"
+    if not isinstance(j, dict):
+        return "unknown"
+    for key in ("success", "ok", "Success"):
+        if key in j:
+            return "ok" if j.get(key) is True else "fail"
+    if isinstance(code, str):
+        cs = code.strip().lower()
+        if cs in ("0", "200", "ok", "success", "succ", "true"):
+            return "ok"
+        if cs in ("fail", "error", "false", "unauthorized"):
+            return "fail"
+    if code is None and not msg:
+        return "unknown"
+    if any(x in msg for x in ("成功", "已发送", "发送成功", "验证码已")):
+        return "ok"
+    if any(x in msg for x in ("错误", "失败", "不正确", "无效", "不存在", "频繁", "无权限", "非法")):
+        return "fail"
+    return "unknown"
+
+
 def _token_pairs(data: dict) -> list[tuple[str, str]]:
     out: list[tuple[str, str]] = []
     keys_l = {k.lower() for k in TOKEN_KEYS}
@@ -166,7 +252,8 @@ def session_hit(set_cookie: list[str], body: str) -> bool:
     return bool(_token_pairs(data))
 
 
-def wait_code(channel: str, wait: int, sender: str | None) -> str:
+def _wait_once(channel: str, wait: int, sender: str | None) -> tuple[int, str, str]:
+    """跑一轮取码。返回 (returncode, code_or_empty, stderr_tail)。"""
     if channel == "sms":
         cmd = [sys.executable, str(HERE / "sms_code.py"), "--wait", str(wait)]
         if sender:
@@ -180,18 +267,50 @@ def wait_code(channel: str, wait: int, sender: str | None) -> str:
         sys.exit(2)
     p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     err = (p.stderr or "").strip()
-    if err:
-        log(err[-400:])
-    if p.returncode != 0:
-        sys.exit(p.returncode if p.returncode in (1, 2) else 1)
-    code = (p.stdout or "").strip().splitlines()[-1] if p.stdout else ""
-    if channel != "email-link" and not (code.isdigit() and 4 <= len(code) <= 8):
-        log("[E] 取到的不像验证码")
-        sys.exit(1)
-    if channel == "email-link" and not code.startswith("http"):
-        log("[E] 取到的不像链接")
-        sys.exit(1)
-    return code
+    code = (p.stdout or "").strip().splitlines()[-1] if (p.stdout or "").strip() else ""
+    return p.returncode, code, err
+
+
+def wait_code(channel: str, wait: int, sender: str | None, peek: int = 15) -> str:
+    """两段等：先快探 15s，没有再拉满剩余 wait（避免慢信误杀，也少空等）。"""
+    wait = max(int(wait or 0), 1)
+    peek = int(peek or 0)
+    phases: list[int]
+    if peek <= 0 or wait <= peek + 5:
+        phases = [wait]
+    else:
+        phases = [peek, wait - peek]
+
+    last_err = ""
+    for i, w in enumerate(phases):
+        if len(phases) > 1 and i == 0:
+            log(f"[i] 快探 {w}s…")
+        elif len(phases) > 1 and i == 1:
+            log(f"[i] 快探未到，继续等 {w}s…")
+        rc, code, err = _wait_once(channel, w, sender)
+        if err:
+            last_err = err
+            # 环境错误（adb 等）立刻停，不进入二段
+            if rc == 2:
+                log(err[-400:])
+                sys.exit(2)
+        if rc == 0:
+            if channel != "email-link" and not (code.isdigit() and 4 <= len(code) <= 8):
+                log("[E] 取到的不像验证码")
+                sys.exit(1)
+            if channel == "email-link" and not code.startswith("http"):
+                log("[E] 取到的不像链接")
+                sys.exit(1)
+            if err:
+                log(err[-400:])
+            return code
+        # rc==1 超时：有下一段就继续
+        if i + 1 < len(phases):
+            continue
+        if last_err:
+            log(last_err[-400:])
+        return ""
+    return ""
 
 
 def opener_of():
@@ -284,6 +403,45 @@ def append_accounts(root: str, target: str, sid: str, cookie_path: str, channel:
     )
 
 
+
+def annotate_pending(pending: Path | None, host: str, tag: str) -> None:
+    """在 pending_register 对应 host 行备注追加短标签（替换旧 auth_flow:… 段）。不打印账号。"""
+    if not pending or not host or not tag:
+        return
+    if not pending.is_file():
+        log(f"[!] pending 不存在，跳过备注: {pending}")
+        return
+    text = pending.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    host_l = host.lower().strip()
+    hit = -1
+    for i, line in enumerate(lines):
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 8:
+            continue
+        if cells[0] in ("host", "----", "---") or set(cells[0]) <= set("-: "):
+            continue
+        h0 = cells[0].lower()
+        if h0 == host_l or host_l in h0 or h0.startswith(host_l) or host_l in h0.split()[0]:
+            hit = i
+            break
+    if hit < 0:
+        log(f"[!] pending 无 host={host} 行，跳过备注")
+        return
+    cells = [c.strip() for c in lines[hit].strip().strip("|").split("|")]
+    while len(cells) < 8:
+        cells.append("")
+    note = cells[7]
+    note = re.sub(r"(?:^|；)\s*auth_flow:[^；]*", "", note).strip("； ").strip()
+    piece = "auth_flow:" + tag.replace("|", "/").replace("\n", " ")[:120]
+    cells[7] = (note + "；" + piece) if note else piece
+    lines[hit] = "| " + " | ".join(cells) + " |"
+    pending.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    log(f"[i] pending 已注 {piece}")
+
+
 def main() -> None:
     os.environ.setdefault("NO_PROXY", "*")
     os.environ.setdefault("no_proxy", "*")
@@ -308,6 +466,8 @@ def main() -> None:
     ap.add_argument("--login-url", default="", help="人打开的登录页/进号网址")
     ap.add_argument("--target", default="")
     ap.add_argument("--sid", default="")
+    ap.add_argument("--pending", default="", help="资产/pending_register.md；默认可由 --root 推导")
+    ap.add_argument("--peek", type=int, default=15, help="发码成功后先快探秒数，再拉满 --wait；<=0 关闭")
     args = ap.parse_args()
 
     wait = args.wait or (120 if args.channel.startswith("email") else 90)
@@ -315,6 +475,14 @@ def main() -> None:
     host = args.target or (urlparse(args.submit_url).hostname or "")
 
     opener, jar = opener_of()
+
+    pending_path = Path(args.pending) if args.pending else None
+    if pending_path is None and args.root:
+        cand = Path(args.root) / "资产" / "pending_register.md"
+        if cand.is_file():
+            pending_path = cand
+    send_biz_tag = ""
+
 
     if args.send_url:
         raw = args.send_json if args.send_json is not None else args.send_data
@@ -326,15 +494,33 @@ def main() -> None:
             opener, args.method_send, profile_sub(args.send_url), body, ctype, args.header, args.origin, args.referer
         )
         text = raw_b.decode("utf-8", "replace")
-        if is_captcha(text, st):
-            log("[!] 发码口遇盾，pending 标 abandon「需人工过盾」")
-            sys.exit(3)
         if st >= 400:
             log(f"[E] 发码 HTTP {st} len={len(raw_b)}")
             sys.exit(1)
-        log(f"[i] 发码 HTTP {st} len={len(raw_b)}")
+        outcome = biz_send_ok(text)
+        code_b, msg_b = _biz_fields(text)
+        hint = f"biz={code_b!s} {msg_b}".strip()
+        send_biz_tag = hint
+        if outcome == "captcha" or is_captcha(text, st):
+            log(f"[!] 发码口遇盾（{hint}），pending 标 abandon「需人工过盾」")
+            annotate_pending(pending_path, host, f"send_captcha {hint}")
+            sys.exit(3)
+        if outcome == "fail":
+            log(f"[E] 发码业务失败 HTTP {st} len={len(raw_b)} {hint}（不等短信）")
+            annotate_pending(pending_path, host, f"send_fail {hint}")
+            sys.exit(1)
+        if outcome == "unknown":
+            log(f"[!] 发码回包无明确业务码 HTTP {st} len={len(raw_b)}，仍等短信")
+        else:
+            log(f"[i] 发码业务成功 HTTP {st} len={len(raw_b)} {hint}")
 
-    code = wait_code(args.channel, wait, args.sender)
+    code = wait_code(args.channel, wait, args.sender, peek=getattr(args, "peek", 15))
+    if not code:
+        tag = "sms_wait_timeout"
+        if send_biz_tag:
+            tag += f" after {send_biz_tag}"
+        annotate_pending(pending_path, host, tag)
+        sys.exit(1)
     log("[i] 已取码（不打印）")
 
     raw = args.submit_json if args.submit_json is not None else args.submit_data
@@ -346,11 +532,14 @@ def main() -> None:
         opener, args.method_submit, profile_sub(args.submit_url, code=code), body, ctype, args.header, args.origin, args.referer
     )
     text = raw_b.decode("utf-8", "replace")
-    if is_captcha(text, st):
-        log("[!] 提交口遇盾")
+    if is_captcha(text, st) or biz_send_ok(text) == "captcha":
+        code_b, msg_b = _biz_fields(text)
+        log(f"[!] 提交口遇盾（biz={code_b!s} {msg_b}）")
         sys.exit(3)
     if not session_hit(sc, text):
-        log(f"[E] 提交 HTTP {st} 未见会话字段 len={len(raw_b)}")
+        code_b, msg_b = _biz_fields(text)
+        hint = f" biz={code_b!s} {msg_b}".rstrip() if (code_b is not None or msg_b) else ""
+        log(f"[E] 提交 HTTP {st} 未见会话字段 len={len(raw_b)}{hint}")
         sys.exit(1)
 
     extra = extra_tokens(text)
