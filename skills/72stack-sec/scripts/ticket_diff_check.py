@@ -8,7 +8,8 @@
 探针来源（按优先级）:
   1) --url / --method / --body（可重复 --url）
   2) {host}/ticket_probes.txt  （每行: METHOD URL [可选 JSON body]）
-  3) DONE_auth.md / DONE.md 里的「验票口=METHOD URL」行
+  3) DONE_auth.md / DONE.md：「验票口=」「资质口=METHOD URL」；以及「基线 GET|POST `/path`」相对路径（用目录名当 host）
+  可用 --write-probes 把抽到的探针写回 ticket_probes.txt（不覆盖已有非空文件，除非 --force-write）
 
 用法:
   python ticket_diff_check.py --host-dir DIR
@@ -33,13 +34,107 @@ from urllib.error import HTTPError, URLError
 from urllib.request import ProxyHandler, Request, build_opener, HTTPSHandler
 
 PROBE_RE = re.compile(
-    r"验票口\s*=\s*(?P<method>GET|POST|PUT|HEAD)\s+(?P<url>https?://\S+)",
+    r"(?:验票口|资质口)\s*[:=：]\s*`?([A-Z]+)?\s*`?(/[^\s`|]+)`?",
     re.I,
 )
-PHONE_RE = re.compile(r"1\d{10}")
-TOKENISH_RE = re.compile(
-    r"(passToken|access_token|_st|_ph)=([^&\s\"']+)", re.I
-)
+BASELINE_GET_RE = re.compile(r"(?:GET|POST)\s+`(/[^`]+)`", re.I)
+
+
+def extract_from_done(host_dir: Path) -> list[tuple[str, str, Optional[str]]]:
+    """从 DONE_auth / DONE_* 抽验票口、资质口、基线身份口。"""
+    found: list[tuple[str, str, Optional[str]]] = []
+    seen: set[tuple[str, str]] = set()
+    for name in ("DONE_auth.md", "DONE.md"):
+        fp = host_dir / name
+        if not fp.is_file():
+            # also scan DONE_*.md
+            continue
+        text = fp.read_text(encoding="utf-8", errors="replace")
+        for m in PROBE_RE.finditer(text):
+            method = (m.group(1) or "GET").upper()
+            path = m.group(2).strip()
+            key = (method, path)
+            if key not in seen:
+                seen.add(key)
+                found.append((method, path, None))
+        for m in BASELINE_GET_RE.finditer(text):
+            path = m.group(1).strip()
+            key = ("GET", path)
+            if key not in seen and ("auth" in path.lower() or "user" in path.lower() or "me" in path.lower() or "profile" in path.lower() or "settle" in path.lower() or "progress" in path.lower()):
+                seen.add(key)
+                found.append(("GET", path, None))
+    for fp in sorted(host_dir.glob("DONE_*.md")):
+        if fp.name in ("DONE_auth.md", "DONE.md"):
+            continue
+        text = fp.read_text(encoding="utf-8", errors="replace")
+        for m in PROBE_RE.finditer(text):
+            method = (m.group(1) or "GET").upper()
+            path = m.group(2).strip()
+            key = (method, path)
+            if key not in seen:
+                seen.add(key)
+                found.append((method, path, None))
+    return found
+
+
+def write_probes(host_dir: Path, probes: list[tuple[str, str, Optional[str]]], force: bool = False) -> bool:
+    tf = host_dir / "ticket_probes.txt"
+    if tf.is_file() and not force:
+        return False
+    lines = [
+        "# auto from DONE — ticket_diff_check --write-probes",
+        "# METHOD /path  or  METHOD /path JSON_BODY",
+    ]
+    for method, path, body in probes:
+        if body:
+            lines.append("%s %s %s" % (method, path, body))
+        else:
+            lines.append("%s %s" % (method, path))
+    tf.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return True
+
+
+def load_probes(host_dir: Path, cli_urls: list[tuple[str, str, Optional[str]]]) -> list[tuple[str, str, Optional[str]]]:
+    if cli_urls:
+        return cli_urls
+    probes: list[tuple[str, str, Optional[str]]] = []
+    tf = host_dir / "ticket_probes.txt"
+    if tf.is_file():
+        for line in tf.read_text(encoding="utf-8", errors="replace").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            m = re.match(r"^(GET|POST|PUT|HEAD)\s+(\S+)(?:\s+(.+))?$", line, re.I)
+            if not m:
+                continue
+            body = m.group(3).strip() if m.group(3) else None
+            probes.append((m.group(1).upper(), m.group(2), body))
+        if probes:
+            return probes
+    probes.extend(extract_from_done(host_dir))
+    seen = set()
+    out = []
+    for p0 in probes:
+        key = (p0[0], p0[1], p0[2] or "")
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(p0)
+    return out
+
+
+def write_probes(host_dir: Path, probes: list[tuple[str, str, Optional[str]]], force: bool) -> bool:
+    tf = host_dir / "ticket_probes.txt"
+    if tf.is_file() and tf.read_text(encoding="utf-8", errors="replace").strip() and not force:
+        return False
+    lines = ["# auto from DONE_* via ticket_diff_check --write-probes", "# METHOD URL [body]"]
+    for method, url, body in probes:
+        if body:
+            lines.append("%s %s %s" % (method, url, body))
+        else:
+            lines.append("%s %s" % (method, url))
+    tf.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return True
 
 
 def redact(s: str) -> str:
@@ -236,6 +331,8 @@ def main() -> int:
     ap.add_argument("--timeout", type=float, default=25.0)
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--strict", action="store_true", help="网络 ERR 时退出 1")
+    ap.add_argument("--write-probes", action="store_true", help="无 ticket_probes.txt 时从 DONE 抽取并写入")
+    ap.add_argument("--force-write", action="store_true", help="覆盖已有 ticket_probes.txt")
     args = ap.parse_args()
 
     cli_urls: list[tuple[str, str, Optional[str]]] = [
@@ -247,10 +344,15 @@ def main() -> int:
         if not h.is_dir():
             print("ERROR 非目录: %s" % h, file=sys.stderr)
             return 2
-        status, lines = check_host(h, cli_urls if args.host_dir else [], args.proxy, args.timeout, args.dry_run)
-        # dig-root mode: per-host probes only (ignore cli unless single host)
-        if args.dig_root:
-            status, lines = check_host(h, [], args.proxy, args.timeout, args.dry_run)
+        use_cli = cli_urls if args.host_dir else []
+        if args.write_probes and not use_cli:
+            extracted = extract_from_done(h)
+            if extracted:
+                wrote = write_probes(h, extracted, force=args.force_write)
+                print("# write-probes %s n=%d wrote=%s" % (h.name, len(extracted), wrote))
+            else:
+                print("# write-probes %s n=0 (DONE 无验票/资质/基线身份口)" % h.name)
+        status, lines = check_host(h, use_cli, args.proxy, args.timeout, args.dry_run)
         print("==== %s [%s] ====" % (h.name, status))
         for ln in lines:
             print(ln)
