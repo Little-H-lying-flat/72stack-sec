@@ -2,7 +2,7 @@
 """pending_from_done.py — 扫 DONE_anon.md / 旧 DONE.md 缺号行，upsert 资产/pending_register.md（仅主控跑）
 
 用法:
-  python pending_from_done.py --root "Desktop\\某_SRC挖洞"
+  python pending_from_done.py --root "D:\SRC挖洞\某_SRC挖洞"
   python pending_from_done.py --root "..." --dry-run
 
 stdout: NEXT / REUSE / NOHTTP / ABANDON 行（无手机号、无 cookie 实值）
@@ -144,7 +144,7 @@ def parse_line(text: str) -> dict | None:
     m = OLD_RE.search(text)
     if m:
         url = m.group("url").rstrip(")。,，")
-        abandon = bool(re.search(r"放弃|滑块|实名|SSO|要发码", text))
+        abandon = bool(re.search(r"放弃|滑块|实名|人脸|SSO", text))
         # 登录页当无 HTTP 口，带 /api/ 或 send/register/sms 当干净
         looks_api = bool(re.search(r"/api/|send|sms|register|login\.(do|json)|pass/", url, re.I))
         if abandon and re.search(r"滑块|实名|人脸|SSO", text):
@@ -298,7 +298,7 @@ def merge(old: dict | None, new: dict, host: str) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="扫 DONE 缺号行 → pending_register")
-    ap.add_argument("--root", required=True, help="任务根 Desktop\\{任务}_SRC挖洞")
+    ap.add_argument("--root", required=True, help="任务根 D:\\SRC挖洞\\{任务}_SRC挖洞")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--verbose", action="store_true", help="把历史 NOHTTP/ABANDON 也打到 stdout")
     args = ap.parse_args()

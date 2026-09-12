@@ -12,7 +12,7 @@
 |------|--------|----------|
 | **72stack-sec** | GitHub 仓库 / 对外产品名 | 本机 Grok 运行时目录名 |
 | **`skills/72stack-sec/`** | 本仓库内的主 skill 源码树 | `~/.grok/skills/` 下的安装名 |
-| **`~/.grok/skills/skill`** | Grok 本机**当前实战安装目录**（文件夹名就叫 `skill`） | 与仓库内 `skills/72stack-sec/` 同源 |
+| **`~/.grok/skills/72stack-sec`** | Grok 本机**当前实战安装目录**（与仓库同名 `72stack-sec`） | 与仓库内 `skills/72stack-sec/` 同源 |
 | **主控调度.md** | 双轨 / 进号 / spawn / covered 细则 | 写在 `SKILL.md` 里的长文（已抽离） |
 
 线程必读：以本 skill 为主，可叠用其它已安装 skill；对外产品名仍叫 72stack-sec。
@@ -45,7 +45,7 @@
 ├── README.md                 ← 你正在读的对外说明
 ├── NAMING.md                 ← 命名对照
 ├── skills/
-│   ├── 72stack-sec/          ← 主 skill（真源：本机 ~/.grok/skills/skill）
+│   ├── 72stack-sec/          ← 主 skill（真源：本机 ~/.grok/skills/72stack-sec）
 │   ├── miniprogram-hunt/ / wxmini-security-audit/
 │   ├── src-audit-chain/ / jsrc-report/
 │   └── env-setup/
@@ -57,7 +57,7 @@
 本机 Grok 实战目录：
 
 ```
-~/.grok/skills/skill/
+~/.grok/skills/72stack-sec/
 ├── SKILL.md                  # 红线 + 自动边界 + 指针（薄）
 ├── 主控调度.md               # 双轨 / 进号 / 过盾 / 台账（厚）
 ├── 线程必读.md / 开场提示词.md
@@ -67,10 +67,10 @@
 └── 设计-做强路线.md
 
 ~/.grok/accounts/账密本.md    # 人翻总本（gitignore，不进仓库）
-~/.grok/skills/skill/scripts/register_profile.json  # 本机凭据（gitignore）
+~/.grok/skills/72stack-sec/scripts/register_profile.json  # 本机凭据（gitignore）
 ```
 
-若仓库源与本机安装树暂时不一致：以**本机 `~/.grok/skills/skill` 实战能力为准**，用本 README 的产品叙事对外；同步策略见 `NAMING.md`。
+若仓库源与本机安装树暂时不一致：以**本机 `~/.grok/skills/72stack-sec` 实战能力为准**，用本 README 的产品叙事对外；同步策略见 `NAMING.md`。
 
 ## 快速开始（授权 SRC）
 

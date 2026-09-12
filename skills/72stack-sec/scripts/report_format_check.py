@@ -6,8 +6,8 @@
 
 用法:
   python report_format_check.py <报告.md> [更多.md…]
-  python report_format_check.py --dir "C:\\Users\\H\\Desktop\\某_SRC挖洞\\报告"
-  python report_format_check.py --dir Desktop\\*_SRC挖洞\\报告   # 需 shell 展开；或传绝对路径
+  python report_format_check.py --dir "C:\\Users\\H\\D:\SRC挖洞\某_SRC挖洞\\报告"
+  python report_format_check.py --dir D:\SRC挖洞\*_SRC挖洞\报告   # 需 shell 展开；或传绝对路径
 
 退出码: 0=全部通过  1=有失败  2=参数/读文件错误
 """
@@ -126,6 +126,50 @@ def check_one(path: Path) -> list[str]:
     return errs
 
 
+def check_ready_for_pack(path: Path, text: str) -> list[str]:
+    """成包交接附加闸：Burp 可贴全头 + 禁词。"""
+    errs: list[str] = []
+    for bad in ("Burp 复测成立", "（原始截图）", "原始截图：", "测试日期"):
+        if bad in text:
+            errs.append(f"成包禁词: 出现 {bad!r}")
+
+    if not re.search(r"请求包说明|只换 Cookie|贴进 Burp|粘贴进 Burp|Repeater", text):
+        errs.append("成包交接: 缺「请求包说明 / 可贴 Burp 只换 Cookie」类提示")
+
+    has_req = re.search(
+        r"(?m)^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\s+\S+\s+HTTP/1\.[01]\s*$",
+        text,
+    )
+    if has_req:
+        if not re.search(r"(?mi)^Host\s*:", text):
+            errs.append("成包交接: 见 HTTP 请求行但缺 Host:")
+        if not re.search(r"(?mi)^User-Agent\s*:", text):
+            errs.append("成包交接: 见 HTTP 请求行但缺 User-Agent:")
+        if not re.search(r"(?mi)^Accept\s*:", text):
+            errs.append("成包交接: 见 HTTP 请求行但缺 Accept:")
+        if re.search(r"(?mi)^(Cookie|Authorization)\s*:\s*(\.\.\.|…)", text):
+            errs.append("成包交接: Cookie/Authorization 用省略号，无法直接贴 Burp")
+        # Non-Cookie ellipsis on header-like / JSON lines
+        for i, ln in enumerate(text.split("\n"), 1):
+            s = ln.strip()
+            if not s or re.match(r"(?i)^Cookie\s*:", s):
+                continue
+            if ("..." in s or "…" in s) and re.match(
+                r"(?i)^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD|Host|Accept|User-Agent|Origin|Referer|Connection|Content-Type|Content-Length|Cache-Control|Authorization)\b|^[\{\[]",
+                s,
+            ):
+                errs.append(f"成包交接: L{i} 非 Cookie 侧出现省略号，无法直接贴 Burp")
+                break
+    else:
+        if "复现步骤" in text:
+            errs.append("成包交接: 复现步骤未见 HTTP/1.x 请求行（无法贴进 Burp）")
+
+    return errs
+
+
+
+
+
 def iter_targets(args: argparse.Namespace) -> list[Path]:
     out: list[Path] = []
     for p in args.paths:
@@ -148,6 +192,11 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="SRC 报告版式闸（不定级）")
     ap.add_argument("paths", nargs="*", help="报告 .md 路径")
     ap.add_argument("--dir", help="扫描某任务 报告/ 目录下全部 .md")
+    ap.add_argument(
+        "--ready-for-pack",
+        action="store_true",
+        help="附加成包交接闸：Burp 全头 / 请求包说明 / 禁词",
+    )
     args = ap.parse_args()
     if not args.paths and not args.dir:
         ap.print_help()
@@ -161,6 +210,13 @@ def main() -> None:
     failed = 0
     for f in files:
         errs = check_one(f)
+        if args.ready_for_pack:
+            try:
+                raw = f.read_text(encoding="utf-8")
+            except OSError as e:
+                errs = errs + [f"读失败(ready-for-pack): {e}"]
+            else:
+                errs = errs + check_ready_for_pack(f, normalize_newlines(raw))
         if not errs:
             print(f"OK\t{f}")
         else:
@@ -172,7 +228,8 @@ def main() -> None:
     if failed:
         log(f"[!] {failed}/{len(files)} 未过版式闸")
         sys.exit(1)
-    log(f"[+] {len(files)} 全部过版式闸（不定级）")
+    tag = "版式+成包交接闸" if args.ready_for_pack else "版式闸（不定级）"
+    log(f"[+] {len(files)} 全部过{tag}")
     sys.exit(0)
 
 

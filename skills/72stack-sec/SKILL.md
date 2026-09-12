@@ -1,5 +1,5 @@
 ---
-name: skill
+name: 72stack-sec
 description: |
   SRC 漏洞挖掘 + 白盒 0day。Grok-only（start-grok.cmd）国内 SRC 主流程：短表→JS→矩阵→format；默认挖X=流水线双轨（未登录先铺、进号成功再插登录轨）；有号面短信(ADB)+邮箱 IMAP 取码（主控串行）。
   WHEN：挖 XXX SRC / 某品牌 / 挖域名 / 开线程 / 继续挖 / 有号挖 / 只未登录 / 自动注册 / 账号测试 / 用户点名本 skill / 白盒源码审计（Linux Kernel / Chromium / Laravel / Spring / Django）。
@@ -74,7 +74,7 @@ description: |
 | 盲区库回灌提醒、短表开场认法几枪 | 线程发码/注册/登录；空 cookie 开登录轨 |
 | 身份一枪 + 半径勾选（见 suspects / DONE_auth） | 高危拟进、新公网面、换生产号、动防火墙/服务器——**须用户确认** |
 
-人在环保险丝：高危拟进、要发码、开新公网面、换生产号、动服务器/防火墙 → Agent 只建议，不越级执行。
+人在环保险丝：高危拟进、给真实用户/非测试号发码、开新公网面、换生产号、动服务器/防火墙 → Agent 只建议，不越级执行。对自己测试号跑 `auth_flow`（ADB `sms_code` / IMAP `email_code`）= 可自动，不是这根保险丝。`accounts.md` 空不是停：无盾干净口必须 NEXT→`auth_flow`。禁止空 cookie 登录轨 = 禁止空 cookie spawn 有会话线程，不是禁止进号。禁止写「accounts 空不开登录轨」。
 
 ### 自由跳节奏红线（与 `~/.grok/rules/dig-scope-workflow.md` §1.0.1 / §1.6 对齐 · 不可违反）
 
@@ -169,9 +169,12 @@ JS 逆向细节 → `知识库/js-reverse-guide.md`。打开目标按 `dig-scope
 
 落盘前可跑版式闸（八块标签、全角＃、等级字面、匿名闸粗检）；**失败先改报告再交**。不定级、不替代 `vuln-report-format` 正文，也不验 curl 是否真打通。
 
+**成包交接：** 落盘前读 skill 包内 `references/templates/成包交接清单.md`（相对 skill 根；**不是** skill 根下 templates/）。请求块必须**可直接贴进 Burp、只换 Cookie**（Host/UA/Accept/Origin/Referer 等写齐，禁止 `…` 省略）。交成包前再跑 `--ready-for-pack`。
+
 ```
-python "{skill_dir}\scripts\pending_from_done.py" --root "Desktop\{任务}_SRC挖洞"
-python "{skill_dir}\scripts\report_format_check.py" --dir "Desktop\{任务}_SRC挖洞\报告"
+python "{skill_dir}\scripts\pending_from_done.py" --root "D:\SRC挖洞\{任务}_SRC挖洞"
+python "{skill_dir}\scripts\report_format_check.py" --dir "D:\SRC挖洞\{任务}_SRC挖洞\报告"
+python "{skill_dir}\scripts\report_format_check.py" --ready-for-pack --dir "D:\SRC挖洞\{任务}_SRC挖洞\报告"
 python "{skill_dir}\scripts\done_iter_scan.py" --only-real
 ```
 

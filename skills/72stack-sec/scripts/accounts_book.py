@@ -7,7 +7,7 @@
 
 用法:
   python accounts_book.py --append ^
-    --root "Desktop\\某_SRC挖洞" --host host.example.com ^
+    --root "D:\SRC挖洞\某_SRC挖洞" --host host.example.com ^
     --login-url "https://host.example.com/login" ^
     --account "13800000000" --password "验证码进号" ^
     --channel sms --sid web --cookie "D:\\...\\session.cookie" --note auth_flow

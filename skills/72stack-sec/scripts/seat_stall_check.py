@@ -7,7 +7,7 @@
 
 用法:
   python seat_stall_check.py --dig-root DIR
-  python seat_stall_check.py --root "Desktop\\某_SRC挖洞"   # 自动找 *_dig 与 资产/种子队列.md
+  python seat_stall_check.py --root "D:\SRC挖洞\某_SRC挖洞"   # 自动找 *_dig 与 资产/种子队列.md
   python seat_stall_check.py --dig-root DIR --hours 24
 
 退出码: 0=无告警  1=有 ALERT  2=参数错误
