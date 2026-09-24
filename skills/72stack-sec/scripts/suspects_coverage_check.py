@@ -8,6 +8,22 @@ import re
 import sys
 from pathlib import Path
 
+def has_field_assign(text: str, key: str) -> bool:
+    pat = re.compile(re.escape(key) + r"\s*=")
+    for m in pat.finditer(text):
+        start = m.start()
+        prefix = text[max(0, start - 4):start]
+        if re.search(r"(缺|未|无|非|禁)", prefix):
+            continue
+        line_start = text.rfind("\n", 0, start) + 1
+        line_end = text.find("\n", start)
+        line = text[line_start: line_end if line_end != -1 else len(text)]
+        if re.search(r"(缺|未写|未填|没有).{0,6}" + re.escape(key), line):
+            continue
+        return True
+    return False
+
+
 REQUIRED_HINTS = [
     (r"威胁模型", "缺威胁模型头"),
     (r"覆盖率自检|硬闸", "缺覆盖率自检表"),
@@ -36,6 +52,10 @@ def check_host(host_dir: Path) -> tuple[str, list[str]]:
         # 信任边界行若存在且仍 ☐，点名（P1）
         if re.search(r"信任边界[^\n]*☐", text):
             notes.append("信任边界未勾（禁止 covered）")
+        if re.search(r"写面探针", text) and re.search(r"写面探针[^\n]*☐", text):
+            notes.append("写面探针未勾（禁止只扫读轨 covered）")
+        elif not re.search(r"写面探针|写面\s*=\s*N/A", text, re.I):
+            notes.append("缺写面探针勾选或写面=N/A（建议补）")
     done_hit = False
     for name in DONE_NAMES:
         fp = host_dir / name
@@ -52,10 +72,15 @@ def check_host(host_dir: Path) -> tuple[str, list[str]]:
         if not fp.is_file():
             continue
         auth = fp.read_text(encoding="utf-8", errors="replace")
-        if not re.search(r"身份\s*=", auth):
+        if not has_field_assign(auth, "身份"):
             notes.append("DONE_auth 缺 身份=（禁止 covered）")
-        if not re.search(r"半径\s*=", auth):
+        if not has_field_assign(auth, "半径"):
             notes.append("DONE_auth 缺 半径=（禁止 covered）")
+        if re.search(r"身份\s*=\s*(空户|待确认)", auth) and re.search(
+            r"(POST|PUT|PATCH|DELETE)\s+/", auth
+        ):
+            if not re.search(r"空身份禁写", auth):
+                notes.append("空户/待确认却有写面结论且未标「空身份禁写」（禁止 covered）")
     if notes:
         return "FAIL", notes
     return "PASS", ["ok"]

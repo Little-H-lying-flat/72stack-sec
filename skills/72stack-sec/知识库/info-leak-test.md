@@ -34,6 +34,16 @@ curl "https://target.com/api/user?id[]=1"
 # 框架/版本信息
 ```
 
+### WAF 403 壳上 Whoops 错方法 env（短表有指针）
+
+认：首页是 LX-WAF / openresty `403 Forbidden` 空壳，容易当没业务。Laravel Passport（或同类）只允许 POST 的口，**GET 错方法**打到 Symfony Whoops（`MethodNotAllowedHttpException` + `sf-dump`），`APP_DEBUG=true` 整表 `$_ENV`。不是 `/_ignition`。
+
+打（不登录）：首页 403 别停。GET `/oauth/token`（或 Allow: POST 的同类口）。抄 APP_KEY 后，另 GET 会下发 `laravel_session` 的口，真假钥按 Laravel AES-256-CBC + HMAC-SHA256 解 Cookie。假钥 MAC 失败才算生产认。密钥实值只进正式报告。
+
+算成：假钥 MAC 失败，真钥解开生产 Cookie；或调试页出 APP_KEY/库账密且钥被生产认。
+
+假点：首页 403 本身不是洞；Whoops 只有堆栈没有钥；只扫了 `/_ignition`；APP_KEY 占位解不开生产 Cookie。单站没中不删短表这行。
+
 ---
 
 ## 二、文件/目录泄露
@@ -148,6 +158,16 @@ curl -s "https://api.github.com/user/repos?affiliation=owner&per_page=5" -H "Aut
 算成：问出 AccountId/Uin/AppId。长期钥，不是几分钟过期的临时票。
 
 假点：解开调云 API AuthFailure；`exampleValue` 解成 `hello_world` 占位。密钥实值只进正式报告，不进本篇。单站没中不删短表这行。
+
+### 市场列表夹 git 克隆账密（短表有指针）
+
+认：未登录模型/Agent/应用市场列表不过滤 `is_published` / 上架状态；行里 `codeup_git_uri`（或同类）把 git 克隆地址写成 `https://user:pass@codeup…` / `gitlab…`。
+
+打（不登录）：打市场 list 抄带账密的克隆 URI。假口令对照 `GET {repo}.git/info/refs?service=git-upload-pack` 应 401；真口令同一口列出分支。再换列表里另一个仓只读一枪（证明钥不绑死这一条）。不要 git clone 全仓、不要推送。
+
+算成：真钥 200 列出私仓分支；假 401；换仓仍认。
+
+假点：列表只有已上架且 uri 无账密；口令过期真假同一句。密钥实值只进正式报告，不进本篇。单站没中不删短表这行。
 
 ### 管理台 JS 写死 CI 仓钥（短表有指针）
 

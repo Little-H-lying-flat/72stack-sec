@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://72stack-sec.local/schemas/queue-item.schema.json",
+  "title": "72 queue-item (seed row)",
+  "description": "Maps to 资产/种子队列.md. FAIL->WARN only; FOFA down must not become closed. Validation FAIL is WARN only; never blocks vacuum flip / p2 / mark_covered.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "seed",
+    "coverage"
+  ],
+  "properties": {
+    "queue_item_id": {
+      "type": "string",
+      "pattern": "^AQ-[A-Z0-9-]+$"
+    },
+    "seed": {
+      "type": "string"
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "priority": {
+      "enum": [
+        "critical",
+        "high",
+        "normal",
+        "low"
+      ]
+    },
+    "authorization": {
+      "enum": [
+        "verified",
+        "pending",
+        "excluded"
+      ]
+    },
+    "liveness": {
+      "enum": [
+        "alive",
+        "dead",
+        "unknown"
+      ]
+    },
+    "coverage": {
+      "enum": [
+        "pending",
+        "doing",
+        "done",
+        "cold"
+      ],
+      "description": "72 seed queue state"
+    },
+    "last_action": {
+      "type": "string"
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

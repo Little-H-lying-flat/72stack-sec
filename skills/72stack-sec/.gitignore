@@ -1,0 +1,14 @@
+__pycache__/
+_trash/
+*.pyc
+*.pyo
+.DS_Store
+scripts/register_profile.json
+scripts/register_profile.json.bak
+scripts/*.cookie
+**/.env
+**/.env.*
+**/auth.json
+进化/**/episodes.jsonl
+进化/**/*.jsonl
+*.log

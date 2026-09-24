@@ -1,9 +1,9 @@
 # ⚠ 国内 SRC 主流程封条（乌鸦 · 2026-09-10）
 
 > **禁止**把本目录（`references/methodology/`）当第二套主库通读。  
-> Grok-only 国内 SRC：**只走** `~/.grok/skills/skill/SKILL.md` → `知识库/打穿短表.md` → 显式指针模块。  
+> Grok-only 国内 SRC：**只走** `D:\dsh-72stack-sec\skills\72stack-sec/SKILL.md` → `知识库/打穿短表.md` → 显式指针模块。  
 > 本目录文件**仅当**短表/模块/SKILL **写出相对路径指针**时才打开对应单篇。  
-> 与 `~/.grok/rules` 或 `SKILL.md` 冲突时，以 rules / SKILL 为准。  
+> 与 `D:\dsh-72stack-sec\rules` 或 `SKILL.md` 冲突时，以 rules / SKILL 为准。  
 > 发现引擎正文若需语义审计：优先 `14-semantic-audit.md`（显式指针），不是通读 01–13。
 ## ARCHIVE 声明（P1 · 2026-09-10）
 

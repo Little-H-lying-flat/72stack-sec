@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pending_from_done.py — 扫 DONE_anon.md / 旧 DONE.md 缺号行，upsert 资产/pending_register.md（仅主控跑）
+r"""pending_from_done.py — 扫 DONE_anon.md / 旧 DONE.md 缺号行，upsert 资产/pending_register.md（仅主控跑）
 
 用法:
   python pending_from_done.py --root "D:\SRC挖洞\某_SRC挖洞"
@@ -28,7 +28,16 @@ QUE_HEAD = (
 )
 QUE_SEP = "|------|---------------------|---------------------|------------------|--------|------|--------------------------------|------|"
 
-# 新格式
+# 新格式：按「；键=」切字段，允许发码/提交注解括号内再写中文分号
+NEW_KIND_RE = re.compile(
+    r"缺号\s*[：:]\s*(?P<kind>干净|放弃|无HTTP口)",
+    re.I,
+)
+NEW_FIELD_RE = re.compile(
+    r"[；;]\s*(?P<key>发码|提交|通道|sid|盾|原因)\s*=\s*",
+    re.I,
+)
+# 兼容旧调用：无内部；注解时的严格版仍保留
 NEW_RE = re.compile(
     r"缺号\s*[：:]\s*(?P<kind>干净|放弃|无HTTP口)"
     r"(?:；|;|,)?\s*发码\s*=\s*(?P<send>[^；;]+)"
@@ -46,6 +55,7 @@ OLD_RE = re.compile(
 )
 
 STATUSES = ("pending", "doing", "done", "abandon")
+N_COLS = 8
 
 
 def log(msg: str) -> None:
@@ -116,31 +126,79 @@ def norm_cell(s: str) -> str:
     return re.sub(r"\s+", " ", t)
 
 
+def shield_blocks_auto(shield: str) -> bool:
+    """仅「挡 auth_flow 本身」的人机盾才禁自动进号。
+
+    滑块/实名/人脸/SSO/IdP/人工过盾 → abandon（挂人工过盾续挖）。
+    WSG/签名/图形验证码/schema 校验 → 不拦：自有测试号仍可走 sms/email auth_flow。
+    """
+    t = (shield or "").strip()
+    if not t:
+        return False
+    if t in ("无", "none", "-", "N/A", "n/a"):
+        return False
+    if re.match(r"无", t):
+        return False
+    # 人机/身份墙才禁自动
+    if re.search(r"滑块|实名|人脸|SSO|IdP|人工过盾", t, re.I):
+        return True
+    return False
+
+
+def parse_new_format(text: str) -> dict | None:
+    """解析缺号新格式；字段值可含括号内中文分号。"""
+    km = NEW_KIND_RE.search(text)
+    if not km:
+        return None
+    kind = km.group("kind")
+    markers = list(NEW_FIELD_RE.finditer(text))
+    if not markers:
+        return None
+    fields: dict[str, str] = {}
+    for i, m in enumerate(markers):
+        key = m.group("key")
+        start = m.end()
+        end = markers[i + 1].start() if i + 1 < len(markers) else len(text)
+        fields[key] = text[start:end].strip().strip("*").strip()
+    # 至少要有发码+提交，否则不算完整新格式（交给 OLD/fallback）
+    if "发码" not in fields or "提交" not in fields:
+        return None
+    send = norm_cell(fields.get("发码", "无"))
+    sub = norm_cell(fields.get("提交", "无"))
+    ch = norm_cell(fields.get("通道", "无")).lower()
+    if ch not in ("sms", "email", "无"):
+        ch = "sms" if "sms" in ch else ("email" if "email" in ch else "无")
+    sid = norm_cell(fields.get("sid", "无"))
+    shield = norm_cell(fields.get("盾", "无"))
+    why = (fields.get("原因") or "").strip()
+    if kind == "干净" and send == "无" and sub == "无":
+        kind = "无HTTP口"
+    # 干净口但有盾：保留 kind 语义，队列不自动进号
+    if kind == "干净" and shield_blocks_auto(shield):
+        st = "abandon"
+    elif kind == "干净":
+        st = "pending"
+    else:
+        st = "abandon"
+    note = why[:120] if why else ""
+    if kind == "干净" and st == "abandon" and shield_blocks_auto(shield):
+        note = (("人机盾禁自动进号（滑块/实名/SSO）；" + note) if note else "人机盾禁自动进号（滑块/实名/SSO）")[:120]
+    return {
+        "kind": kind,
+        "send": send,
+        "submit": sub,
+        "channel": ch,
+        "sid": sid,
+        "shield": shield,
+        "status": st,
+        "note": note,
+    }
+
+
 def parse_line(text: str) -> dict | None:
-    m = NEW_RE.search(text)
-    if m:
-        kind = m.group("kind")
-        send = norm_cell(m.group("send"))
-        sub = norm_cell(m.group("sub"))
-        ch = norm_cell(m.group("ch")).lower()
-        if ch not in ("sms", "email", "无"):
-            ch = "sms" if "sms" in ch else ("email" if "email" in ch else "无")
-        sid = norm_cell(m.group("sid"))
-        shield = norm_cell(m.group("shield"))
-        why = (m.group("why") or "").strip()
-        if kind == "干净" and send == "无" and sub == "无":
-            kind = "无HTTP口"
-        st = "pending" if kind == "干净" else "abandon"
-        return {
-            "kind": kind,
-            "send": send,
-            "submit": sub,
-            "channel": ch,
-            "sid": sid,
-            "shield": shield,
-            "status": st,
-            "note": why[:120],
-        }
+    parsed = parse_new_format(text)
+    if parsed:
+        return parsed
     m = OLD_RE.search(text)
     if m:
         url = m.group("url").rstrip(")。,，")
@@ -163,7 +221,8 @@ def parse_line(text: str) -> dict | None:
             "status": st,
             "note": "旧格式 " + text.strip()[:80],
         }
-    if "缺号" in text:
+    # 只认「缺号：/缺号:」正式行；忽略「## 缺号行」「- [x] 缺号行」勾选标题
+    if re.search(r"缺号\s*[：:]", text):
         return {
             "kind": "放弃",
             "send": "无",
@@ -177,6 +236,55 @@ def parse_line(text: str) -> dict | None:
     return None
 
 
+def cell(s: str) -> str:
+    t = (s or "").replace("\r", " ").replace("\n", " ").replace("|", "／").strip()
+    t = re.sub(r"\s+", " ", t)
+    return t
+
+
+def parse_register_row(line: str) -> dict | None:
+    """8 列；盾/备注里的 | 会撑列。状态只认 STATUSES，找不到则列溢出按 abandon 回收。"""
+    cols = [c.strip() for c in line.strip().strip("|").split("|")]
+    if len(cols) < 7:
+        return None
+    host = cols[0]
+    if not host or host == "host":
+        return None
+    idx = None
+    for i, c in enumerate(cols):
+        if c in STATUSES:
+            idx = i
+    if idx is None:
+        status = "abandon" if len(cols) != N_COLS else "pending"
+        shield = cell("／".join(cols[5:-1])) if len(cols) > 6 else cell(cols[5] if len(cols) > 5 else "无")
+        note = cell(cols[-1] if len(cols) > 6 else "")
+        if len(cols) != N_COLS:
+            note = cell((note + " 列溢出已回收").strip())
+        send, submit, channel, sid = (cols[1] if len(cols) > 1 else "无",
+                                      cols[2] if len(cols) > 2 else "无",
+                                      cols[3] if len(cols) > 3 else "无",
+                                      cols[4] if len(cols) > 4 else "无")
+    else:
+        send = cols[1] if idx > 1 else "无"
+        submit = cols[2] if idx > 2 else "无"
+        channel = cols[3] if idx > 3 else "无"
+        sid = cols[4] if idx > 4 else "无"
+        shield = "／".join(cols[5:idx]) if idx > 5 else (cols[5] if idx == 6 else "无")
+        status = cols[idx]
+        note = "／".join(cols[idx + 1 :])
+    st = status if status in STATUSES else "pending"
+    return {
+        "host": host,
+        "send": cell(send) or "无",
+        "submit": cell(submit) or "无",
+        "channel": cell(channel) or "无",
+        "sid": cell(sid) or "无",
+        "shield": cell(shield) or "无",
+        "status": st,
+        "note": cell(note),
+    }
+
+
 def read_table(path: Path) -> dict[str, dict]:
     rows: dict[str, dict] = {}
     if not path.is_file():
@@ -188,22 +296,9 @@ def read_table(path: Path) -> dict[str, dict]:
     for line in text.splitlines():
         if not line.startswith("|") or line.startswith("| host") or re.match(r"\|[-: ]+\|", line):
             continue
-        cols = [c.strip() for c in line.strip("|").split("|")]
-        if len(cols) < 7:
-            continue
-        host = cols[0]
-        if not host or host == "host":
-            continue
-        rows[host] = {
-            "host": host,
-            "send": cols[1],
-            "submit": cols[2],
-            "channel": cols[3],
-            "sid": cols[4],
-            "shield": cols[5],
-            "status": cols[6] if cols[6] in STATUSES else "pending",
-            "note": cols[7] if len(cols) > 7 else "",
-        }
+        rec = parse_register_row(line)
+        if rec:
+            rows[rec["host"]] = rec
     return rows
 
 
@@ -217,9 +312,12 @@ def write_table(path: Path, rows: dict[str, dict]) -> None:
     ]
     for host in sorted(rows):
         r = rows[host]
+        st = r.get("status") or "pending"
+        if st not in STATUSES:
+            st = "pending"
         lines.append(
-            f"| {host} | {r.get('send','无')} | {r.get('submit','无')} | {r.get('channel','无')} "
-            f"| {r.get('sid','无')} | {r.get('shield','无')} | {r.get('status','pending')} | {r.get('note','')} |"
+            f"| {cell(host)} | {cell(r.get('send','无')) or '无'} | {cell(r.get('submit','无')) or '无'} | {cell(r.get('channel','无')) or '无'} "
+            f"| {cell(r.get('sid','无')) or '无'} | {cell(r.get('shield','无')) or '无'} | {st} | {cell(r.get('note',''))} |"
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -281,8 +379,13 @@ def merge(old: dict | None, new: dict, host: str) -> dict:
     if not old:
         return {"host": host, **new}
     st = old.get("status") or "pending"
-    # 已 done/doing 不降级；abandon 遇到新的干净 API 可翻回 pending
-    if new.get("status") == "pending" and st == "abandon" and is_http_api(new.get("send") or ""):
+    # 已 done/doing 不降级；abandon 遇到新的干净且无盾 API 可翻回 pending
+    if (
+        new.get("status") == "pending"
+        and st == "abandon"
+        and is_http_api(new.get("send") or "")
+        and not shield_blocks_auto(new.get("shield") or "")
+    ):
         st = "pending"
     if st in ("done", "doing") and new.get("status") == "pending":
         st = st

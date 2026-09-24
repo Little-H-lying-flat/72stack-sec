@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """report_format_check.py — SRC 报告版式闸（不定级、不替代 format 正文）
 
-对照 ~/.grok/rules/vuln-report-format.md 的「八块 + 排版」做静态检查。
+对照 D:\dsh-72stack-sec\rules/vuln-report-format.md 的「八块 + 排版」做静态检查。
 不定级对不对、不验 curl 是否真打通过生产。
 
 用法:

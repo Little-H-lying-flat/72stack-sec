@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://72stack-sec.local/schemas/asset.schema.json",
+  "title": "72 asset (host)",
+  "description": "host or stable asset_id=host. covered intent requires dig/{host}/ (mark_covered). Validation FAIL is WARN only; never blocks vacuum flip / p2 / mark_covered.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "host"
+  ],
+  "properties": {
+    "asset_id": {
+      "type": "string",
+      "pattern": "^ASSET-[A-Z0-9-]+$"
+    },
+    "canonical_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "host": {
+      "type": "string"
+    },
+    "source": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "fofa",
+          "user-list",
+          "code",
+          "response",
+          "manual"
+        ]
+      }
+    },
+    "authorization": {
+      "enum": [
+        "verified",
+        "pending",
+        "excluded"
+      ]
+    },
+    "liveness": {
+      "enum": [
+        "alive",
+        "dead",
+        "unknown"
+      ]
+    },
+    "coverage": {
+      "enum": [
+        "pending",
+        "in-progress",
+        "covered",
+        "blocked"
+      ]
+    },
+    "attack_surface": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_action": {
+      "type": "string"
+    }
+  }
+}

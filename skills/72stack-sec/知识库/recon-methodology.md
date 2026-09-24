@@ -20,12 +20,9 @@ port="8080"
 server="nginx" && domain="target.com"
 cert.subject="品牌"
 icon_hash="xxx"
-status_code="200"   ← 单码备忘，开场/翻页勿只用 200
-status_code="200||301||302||401||403"  ← 存活门脸（403/登录墙也进席；禁漏 pages 类）
+status_code="200"
 组合 && ；排除 !=
 ```
-
-开场测绘**禁止**只筛 `status_code="200"`：403/401/301/302 门脸（活动页/登录墙/反代）常才是肥面入口；集群 `fofa_advance` 同口径。
 
 Quake / 凤鸟只补**当前种子**缺口，不当开场必跑。语法对照与 ROI 过滤见下文各节；过滤仍服从 `dig-scope` 去废 / 去非存活 / 股权闸。
 

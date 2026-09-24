@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """accounts_book.py — 主控落账密（任务 accounts.md + 全局账密本）
 
-人打开 ~/.grok/accounts/账密本.md 看网址/账号/密码。
+人打开 D:/dsh-72stack-sec/accounts/账密本.md 看网址/账号/密码。
 禁止 Read 本文件、账密本、register_profile.json 进对话。
 线程禁止跑。
 
@@ -40,12 +40,13 @@ def log(msg: str) -> None:
 
 
 def global_book_path() -> Path:
-    env = (os.environ.get("GROK_ACCOUNTS_BOOK") or "").strip()
+    env = (os.environ.get("DSH_ACCOUNTS_BOOK") or os.environ.get("GROK_ACCOUNTS_BOOK") or "").strip()
     if env:
         return Path(env)
+    dsh = Path(r"D:\dsh-72stack-sec\accounts") / "账密本.md"
+    if dsh.parent.is_dir():
+        return dsh
     return Path.home() / ".grok" / "accounts" / "账密本.md"
-
-
 def ensure_md(path: Path, header: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.is_file() or path.stat().st_size == 0:

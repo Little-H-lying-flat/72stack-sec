@@ -1,0 +1,19 @@
+{
+  "id": "gmsrm.ctrip.com|anon|a1b2c3d4",
+  "ts": "2026-09-22T16:00:00+08:00",
+  "task": "携程_V3_SRC挖洞",
+  "host": "gmsrm.ctrip.com",
+  "track": "anon",
+  "fat_thin": "肥（邀请入驻 SPA + 写死上传票）",
+  "outcome": "high_report",
+  "win_patterns": ["hardcoded_token", "upload_html_exec", "samesite_api_read"],
+  "fail_modes": [],
+  "stuck": null,
+  "carry_hosts": ["gmcontentupload.ctrip.com", "file.c-ctrip.com", "m.ctrip.com"],
+  "carry_raw": "带出host=gmcontentupload.ctrip.com,file.c-ctrip.com,m.ctrip.com；CDN不灌",
+  "next": "补席",
+  "report_refs": ["报告/携程聚星大市场采购gmsrm前端写死上传票匿名任意文件上传且HTML可执行.md"],
+  "severity_hints": ["高危"],
+  "source_files": ["携程_dig/gmsrm.ctrip.com/DONE_anon.md"],
+  "notes": "CDN file 域仅危害验证，不派独立席"
+}

@@ -12,7 +12,7 @@
 |------|--------|----------|
 | **72stack-sec** | GitHub 仓库 / 对外产品名 | 本机 Grok 运行时目录名 |
 | **`skills/72stack-sec/`** | 本仓库内的主 skill 源码树 | `~/.grok/skills/` 下的安装名 |
-| **`~/.grok/skills/72stack-sec`** | Grok 本机**当前实战安装目录**（与仓库同名 `72stack-sec`） | 与仓库内 `skills/72stack-sec/` 同源 |
+| **`D:\dsh-72stack-sec\skills\72stack-sec`** | Grok 本机**当前实战安装目录**（与仓库同名 `72stack-sec`） | 与仓库内 `skills/72stack-sec/` 同源 |
 | **主控调度.md** | 双轨 / 进号 / spawn / covered 细则 | 写在 `SKILL.md` 里的长文（已抽离） |
 
 线程必读：以本 skill 为主，可叠用其它已安装 skill；对外产品名仍叫 72stack-sec。
@@ -32,7 +32,7 @@
 5. **人工过盾续挖**  
    AI 不过滑块。肥面遇盾写入任务 `资产/人工过盾续挖.md`；人过盾落 cookie → 主控插登录轨。模板：`references/templates/wait-captcha-queue.md`。
 6. **账密本（人翻）**  
-   进号 / 设密当场写明文：任务内 `资产/accounts.md` + 本机总本 `~/.grok/accounts/账密本.md`（登录网址 / 账号 / 密码）。`auth_flow.py` / `accounts_book.py` 负责落盘。验证码进号密码列写「验证码进号」；设密统一 `register_profile.json` 的 `login_password`。**禁止把账密本 / `register_profile.json` Read 进对话或提交进仓库。**
+   进号 / 设密当场写明文：任务内 `资产/accounts.md` + 本机总本 `D:\dsh-72stack-sec\accounts\账密本.md`（登录网址 / 账号 / 密码）。`auth_flow.py` / `accounts_book.py` 负责落盘。验证码进号密码列写「验证码进号」；设密统一 `register_profile.json` 的 `login_password`。**禁止把账密本 / `register_profile.json` Read 进对话或提交进仓库。**
 7. **跨任务记忆**  
    `知识库/semantic-blindspots.md`：命中 / 漏报回灌（不写利用步骤）。
 8. **辅助脚本**  
@@ -45,7 +45,7 @@
 ├── README.md                 ← 你正在读的对外说明
 ├── NAMING.md                 ← 命名对照
 ├── skills/
-│   ├── 72stack-sec/          ← 主 skill（真源：本机 ~/.grok/skills/72stack-sec）
+│   ├── 72stack-sec/          ← 主 skill（真源：本机 D:\dsh-72stack-sec\skills\72stack-sec）
 │   ├── miniprogram-hunt/ / wxmini-security-audit/
 │   ├── src-audit-chain/ / jsrc-report/
 │   └── env-setup/
@@ -57,7 +57,7 @@
 本机 Grok 实战目录：
 
 ```
-~/.grok/skills/72stack-sec/
+D:\dsh-72stack-sec\skills\72stack-sec/
 ├── SKILL.md                  # 红线 + 自动边界 + 指针（薄）
 ├── 主控调度.md               # 双轨 / 进号 / 过盾 / 台账（厚）
 ├── 线程必读.md / 开场提示词.md
@@ -66,11 +66,11 @@
 ├── scripts/                  # 进号 / 账密本 / P2 闸 / 报告闸
 └── 设计-做强路线.md
 
-~/.grok/accounts/账密本.md    # 人翻总本（gitignore，不进仓库）
-~/.grok/skills/72stack-sec/scripts/register_profile.json  # 本机凭据（gitignore）
+D:\dsh-72stack-sec\accounts\账密本.md    # 人翻总本（gitignore，不进仓库）
+D:\dsh-72stack-sec\skills\72stack-sec/scripts/register_profile.json  # 本机凭据（gitignore）
 ```
 
-若仓库源与本机安装树暂时不一致：以**本机 `~/.grok/skills/72stack-sec` 实战能力为准**，用本 README 的产品叙事对外；同步策略见 `NAMING.md`。
+若仓库源与本机安装树暂时不一致：以**本机 `D:\dsh-72stack-sec\skills\72stack-sec` 实战能力为准**，用本 README 的产品叙事对外；同步策略见 `NAMING.md`。
 
 ## 快速开始（授权 SRC）
 
@@ -85,14 +85,14 @@ python scripts/suspects_coverage_check.py --host-dir "{dig}/{host}"
 python scripts/p2_gate.py --dig-root "{dig}" --with-seat --alerts-only
 ```
 
-6. 进号成功后看：`{任务根}/资产/accounts.md` 与本机 `~/.grok/accounts/账密本.md`。  
+6. 进号成功后看：`{任务根}/资产/accounts.md` 与本机 `D:\dsh-72stack-sec\accounts\账密本.md`。  
 7. 中危+ 确认或明确漏报 → 追加一行 `知识库/semantic-blindspots.md`。
 
 ## 明确不做什么
 
 - 不提供未授权攻击教程，不把 nuclei 全量扫升为主路径。  
 - README / 设计文档不收录利用步骤、payload、PoC。  
-- CORS 默认不挖（国内 SRC 价值策略）；具体立法以 `~/.grok/rules` 为准。  
+- CORS 默认不挖（国内 SRC 价值策略）；具体立法以 `D:\dsh-72stack-sec\rules` 为准。  
 - 不把 `register_profile.json`、账密本、cookie、真号 / 验证码提交进仓库或读进对话。
 
 ## License
@@ -103,5 +103,5 @@ MIT（见根目录 `LICENSE`）。
 
 - P0：suspects 硬闸 + 盲区回灌 + methodology 通读封条  
 - P1：`主控调度.md` 抽离、`SKILL.md` 压薄、覆盖率检查脚本  
-- P2：`p2_gate` / 验票差分 / 空席巡检；人工过盾续挖；短表开场认法层；账密本（`accounts_book.py` + `~/.grok/accounts`）  
+- P2：`p2_gate` / 验票差分 / 空席巡检；人工过盾续挖；短表开场认法层；账密本（`accounts_book.py` + `D:\dsh-72stack-sec\accounts`）  
 - 本 README：与上对齐（2026-09-11）

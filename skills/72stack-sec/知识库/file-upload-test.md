@@ -1,4 +1,4 @@
-> 写不写只认 `~/.grok/rules/vuln-report-format.md`。本篇是测法：别停在能传能下，跟可执行/路径/SSRF/跨用户业务对象。
+> 写不写只认 `D:\dsh-72stack-sec\rules/vuln-report-format.md`。本篇是测法：别停在能传能下，跟可执行/路径/SSRF/跨用户业务对象。
 > 短表指针用标题搜。PHP 马 / GIFAR / ImageTragick / 英文附件已砍；没对象存储不要空打跨桶。
 
 # 文件上传漏洞测试手册

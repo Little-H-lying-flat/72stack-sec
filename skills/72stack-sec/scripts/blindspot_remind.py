@@ -44,8 +44,8 @@ def main() -> int:
     else:
         ap.error("need --host-dir or --dig-root")
 
-    print("P3 回灌提醒（人工确认后写 知识库/semantic-blindspots.md）：")
-    print("  - 本站若有中危+ 报告 → 同回合追加「命中」行")
+    print("P3 回灌提醒（主表 semantic-blindspots.md 或 auto 层 .auto.md）：")
+    print("  - 本站若有中危+ 报告 → 同回合确认主表或 auto 层已有「命中」行")
     print("  - 若明确漏问 → 追加「漏报」行 + suspects 补丁节")
     print("  - 无洞/瘦壳 → 回灌勾 N/A")
     print("操典: 知识库/回灌闭环.md")

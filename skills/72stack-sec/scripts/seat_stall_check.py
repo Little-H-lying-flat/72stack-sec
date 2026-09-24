@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""seat_stall_check.py — 空席/挂起告警（调度省心 · 只读）
+r"""seat_stall_check.py — 空席/挂起告警（调度省心 · 只读）
 
 主控回合自检：哪些 host 该派登录轨却没 DONE_auth、doing 挂太久、有 cookie 未验票探针等。
-不派线程、不发 HTTP（可用 --with-mtime-hours 调阈值）。
+不派线程、不发 HTTP（可用 --with-mtime-hours 调时效）。
+
+**动手清席/填席**请用同目录 `seat_watchdog.py`（假满席收尸 + _spawn_batch），本脚本只告警。
 
 用法:
   python seat_stall_check.py --dig-root DIR
@@ -102,12 +104,43 @@ def check_host(host_dir: Path, hours: float) -> list[tuple[str, str]]:
         if re.search(r"缺号\s*[：:]\s*干净", text) and not re.search(
             r"缺号\s*[：:]\s*(放弃|无HTTP口)", text
         ):
-            alerts.append(
-                (
-                    "ALERT",
-                    "DONE_anon 缺号=干净但无 cookie → 主控应跑 pending_from_done / auth_flow，禁止只派下一站",
+            forbid_auto = bool(
+                re.search(
+                    r"禁止\s*auth_flow|人工过盾|需人工过盾|挂人工过盾",
+                    text,
+                    re.I,
                 )
             )
+            # 盾= 后若不是「无 / N/A」，视为有盾（字段内分号截到「；原因=」或行尾）
+            shield_m = re.search(
+                r"盾\s*=\s*(.+?)(?:；\s*原因\s*=|\n|$)",
+                text,
+                re.I | re.S,
+            )
+            shield_val = (shield_m.group(1).strip() if shield_m else "")
+            # 与 pending_from_done.shield_blocks_auto 对齐：仅人机盾
+            human_gate = bool(
+                shield_val
+                and not (
+                    shield_val in ("无", "none", "-", "N/A", "n/a")
+                    or re.match(r"无\b", shield_val)
+                )
+                and re.search(r"滑块|实名|人脸|SSO|IdP|人工过盾", shield_val, re.I)
+            )
+            if forbid_auto or human_gate:
+                alerts.append(
+                    (
+                        "WARN",
+                        "DONE_anon 缺号=干净但人机盾/禁自动且无 cookie → 挂人工过盾续挖；WSG/图形不挡自有号 auth_flow",
+                    )
+                )
+            else:
+                alerts.append(
+                    (
+                        "ALERT",
+                        "DONE_anon 缺号=干净但无 cookie → 主控应跑 pending_from_done / auth_flow，禁止只派下一站",
+                    )
+                )
     if has_auth:
         text = auth.read_text(encoding="utf-8", errors="replace")
         if not re.search(r"身份\s*=", text) or not re.search(r"半径\s*=", text):

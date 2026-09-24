@@ -298,7 +298,7 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 
 1. 记下公开列表 id；列表没有的 id 丢给详情 / hidden / tab；详情 403 再跟预览 / 导出  
 2. 列表口自己加 `status=hidden` / `all` / `private`（或同类可见性参）。对照：不带参列表空或只有公开；同一 id 打详情仍「没有权限」也别停——闸可能只套在详情上  
-3. **这条列表口 401 / 要登录 / 空包别停。** 换同产品另一条 guest 查询，看回包 `hidden` / `is_public` / `isHidden`。公开 contents 404 再打 hidden/contents 同一 id。详情只要数字 id + 业务键仍打。`is_secret=1` 仍出全文别停在标题。  
+3. **这条列表口 401 / 要登录 / 空包别停。** 换同产品另一条 guest 查询，看回包 `hidden` / `is_public` / `isHidden`。公开 contents 404 再打 hidden/contents 同一 id。详情只要数字 id + 业务键仍打。`is_secret=1` 仍出全文别停在标题。招聘 ATS：公开列表/关键字搜 0 条时，把同一口的 `fromId`/职位编号塞回去，仍可能出未上架/测试岗全文。  
 4. **详情 200 且 JSON 已写尚未发布 / 要登录 / `canAnswer=false`，别停。** 看同包 `savedConfigDraft` / 同类草稿字段有没有未发布正文。拦截文案和草稿可以在同一份 JSON。  
 5. **对外详情 contact / mobile / email 置空别停。** 同一 id 再打审核 / approval / audit 详情；闸可能只套在对外展示口。  
 6. **作品/项目有 `period=edit|publish`（或同类状态参）别停在 publish。** 不登录打内容口 `period=edit`。对照：同一 id 的 publish 说不存在/已删除，info 挡「没权读别人的」。edit 仍出正文才算。  
@@ -322,6 +322,8 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 22. **作品/作业详情带 `published=0` / `hidden_code=1`（或同类可见性）别停在列表上架态。** 不登录打详情仍可能出源码 xml / 未发布作业正文。对照：公开列表没有这篇或标已隐藏。
 23. **落地页哈希 path 只是壳，别停。** HTML 内联 `$CONFIG.pageId`（连续数字），配置口只要这个 id（`get-page-config` 一类），`isLogin=false`。不登录换邻号。对照：哈希 URL 没有登录墙、官方帮助中心没有这篇。
 24. **公开市场/前台详情 406 或登录闸别停。** 同产品常另有后台或另一入口 host，JS 里是同一套详情/证照 path。对照：前台域应 406/请登录，后台域匿名出联系人手机或执照图才算。
+25. **公告/内部通知页中转「当前用户未登录」别停。** 同 SOA `queryBulletin` 空标题仍可能出全站列表（含 `isOnline=F`）；抄 bulletinId 打 `viewBulletin`。报「访问来源无效」时来源可能在自定义请求头（如 `x-tour-auth-from`），body 的 `source` 不吃。对照：人打开的公告页写着请登录。未发布稿正文和附件链才算，不要只看标题。
+26. **IDOCS / 文档门户公开侧栏未挂别停。** 导航只有对外 Legal Notice；未登录直接 GET 短 slug（`/docs/{product}/test` 一类）。hydrate `repoTags=Test` / `repoBaseNeedLogin=false` / 标题带误删 仍出未对外草稿全文。对照：公开导航和法律正式页不是这份。**API 别停：** 匿名 `GET /api/{portal}/{space}/{repo}/{page}/content`（legaltest001/pains 一类）仍出同一份未挂仓正文。
 
 算成：未公开业务正文从列表出来（不是公开橱窗标题）；或他主体手机 / 证件；或证照图注册人行印着身份证号；或未发布/已下架作品源码正文。
 
@@ -435,6 +437,7 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 1. 抄 JS 拦截器里的头名  
 2. 未登录打名单（空参/总部筛）。只有数字号**别停**  
 3. 把头换成这个号打当前人信息口。对照：不带头或填 `1` 应查空  
+4. **没有名单口别停。** 业务 JSON 口（维保首页一类）直接带头数字 uid。生产 sibling 要 XP-CLIENT / 证书一类闸、测试环境卸了只剩 uid 头时照打，不要当同闸一眼废  
 
 算成：出他人姓名+11 位手机。
 
@@ -506,27 +509,30 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 
 ### 未授权内部话术正文（短表有指针）
 
-认：客服/开发者支持台 umi 有 `getKnowledgeList.json` + `getKnowledgeInfo.json`；或大厅/帮助 HTML 详情口吃数字篇号；或对外公告 JSON（bulletin / getbulletin 一类）用 `callname` + `callcontent` 当 RPC，页面只调公开菜单（`getKnowledgeByMenuId`）；或未登录 CMS `siteList` / `contentList` / `content` 能列出非官网站点，且频道名带「内部知识库」；或客服/IT chatbot 未登录检索口（菜单 id + 模糊 searchText），正文在 `buttonList`/`searchList` 的 `behavior.value`，不在标题 `content`。不要只认 umi 那一套 json。
+认：客服/开发者支持台 umi 有 `getKnowledgeList.json` + `getKnowledgeInfo.json`；或大厅/帮助 HTML 详情口吃数字篇号；或对外公告 JSON（bulletin / getbulletin 一类）用 `callname` + `callcontent` 当 RPC，页面只调公开菜单（`getKnowledgeByMenuId`）；或未登录 CMS `siteList` / `contentList` / `content` 能列出非官网站点，且频道名带「内部知识库」；或客服/IT chatbot 未登录检索口（菜单 id + 模糊 searchText），正文在 `buttonList`/`searchList` 的 `behavior.value`，不在标题 `content`。不要只认 umi 那一套 json。或工厂 OP 公告 `getPage` 缺 `openId` 报不能为空（9001），不是登录闸。
 
-打（不登录）：对照 `queryUserInfo`/`queryFeedbackList` 应 deny。列表 `categoryId` 从 1 试，再把 `id` 丢给 Info。**没有 json 列表也打 HTML 详情**（`showKnowledgeInfo.htm?knowledgeId=` / `help_detail.htm?help_id=`），用现代 UA（IE 可能触 netd）。公告口：页面公开菜单对照条数很少时，把 `callname` 换成 `getKnowledgeList`（`callcontent` 带翻页），再 `getKnowledge` 打详情 id。CMS：先 `siteList` 抄非官网 siteId，再 `contentList` 看频道名，换 siteId 打 `content` 详情；默认官网 Banner 不是这枪。网关报 `loginMode is null` 别停，头加 `loginMode: 0`；siteList 仍缺 siteId 失败时，直接带内部 siteId 打 contentList。content 也要带 siteId，缺了会当没正文。chatbot：`chat_dir_id` 一类目录口 401 别停，改打检索口（`search_recommend` 一类），`searchText` 填常用字、`id` 填菜单号；正文看 `behavior.value`。帮助 SPA JS 写死 Sanity `projectId` 且 dataset 分 production / pre-production（staging）时：**只打 production 会当没洞**。不登录 GROQ `GET https://{projectId}.api.sanity.io/v{日期}/data/query/{dataset}?query=`，对照同一 slug production count=0、pre-production 出内部篇；正文里的 snippet-ref `_id` 再打一次把 SOP 片段拉全。
+打（不登录）：对照 `queryUserInfo`/`queryFeedbackList` 应 deny。列表 `categoryId` 从 1 试，再把 `id` 丢给 Info。**没有 json 列表也打 HTML 详情**（`showKnowledgeInfo.htm?knowledgeId=` / `help_detail.htm?help_id=`），用现代 UA（IE 可能触 netd）。公告口：页面公开菜单对照条数很少时，把 `callname` 换成 `getKnowledgeList`（`callcontent` 带翻页），再 `getKnowledge` 打详情 id。CMS：先 `siteList` 抄非官网 siteId，再 `contentList` 看频道名，换 siteId 打 `content` 详情；默认官网 Banner 不是这枪。网关报 `loginMode is null` 别停，头加 `loginMode: 0`；siteList 仍缺 siteId 失败时，直接带内部 siteId 打 contentList。content 也要带 siteId，缺了会当没正文。chatbot：`chat_dir_id` 一类目录口 401 别停，改打检索口（`search_recommend` 一类），`searchText` 填常用字、`id` 填菜单号；正文看 `behavior.value`。帮助 SPA JS 写死 Sanity `projectId` 且 dataset 分 production / pre-production（staging）时：**只打 production 会当没洞**。不登录 GROQ `GET https://{projectId}.api.sanity.io/v{日期}/data/query/{dataset}?query=`，对照同一 slug production count=0、pre-production 出内部篇；正文里的 snippet-ref `_id` 再打一次把 SOP 片段拉全。工厂 OP `getPage`：缺 `openId` 对照应 9001；任意非空 `openId`（`1`/`test`）再打，看 records 是不是登录墙后的内部规范全文。同口 `total=0` 是假点，别停在结算/CSP 那份空列表。
 
 算成：列表 `pager.items` 上千或 count 海量，且 Info/HTML/详情/`behavior.value` 出**内部**话术/协查/短信/运营知识库正文，不是公开 FAQ / 对外协议。
 
-假点：只有公开帮助稿/错误码/对外协议/官网 Banner；Info 只要标题；工单口也放行（那是另一条）；只打了默认官网站点；dir 节点 401 就停；检索口只出标题 content；production 与 pre-production 同一份对外 FAQ。单站没中不删短表这行。
+假点：只有公开帮助稿/错误码/对外协议/官网 Banner；Info 只要标题；工单口也放行（那是另一条）；只打了默认官网站点；dir 节点 401 就停；检索口只出标题 content；production 与 pre-production 同一份对外 FAQ；工厂 OP 同口 `total=0`；缺参直接 401。单站没中不删短表这行。
 
 ### 文档站语义搜索穿登录墙（短表有指针）
 
-认：文档站（Redocly 一类）首页 302 登录、篇章 `page-data` 401；JS 有 `SEMANTIC_SEARCH:"/_semantic-search"`。页面闸和检索口不是同一套。
+认：文档站（Redocly 一类）首页 302 登录、篇章 `page-data` 401；JS 有 `SEMANTIC_SEARCH:"/_semantic-search"`。页面闸和检索口不是同一套。或 PlatformFE 文档中心 `type=preview` 回未登录，默认 `getDocDetail`（隐藏 Status）和搜索 FullContent 仍出正文；详情 JSON 把附件 CDN/TOS 直链一并吐出。
 
 打（不登录）：
 
 1. 对照 GET `/` 应 302、`/page-data/.../data.json` 应 401  
 2. `POST /_semantic-search` body `{"query":"api"}`（以及 api key / graphql）  
 3. 看回包 `content`，不要只看 title  
+4. **PlatformFE：** 对照 `type=preview` 应 401、详情 `not in online`、SSR 空壳。不登录打搜索 Query=隐藏发布/待评审，看 FullContent；抄 DocumentID 打**默认**详情（不要带 type=preview）；`attributes.src` / PDFURL 直链再 GET  
 
-算成：`content` 是登录墙后的指南/接口参考正文。
+5. **学院/培训 SPA：** 对照公开搜索 `total=0`、课 `needLogin=1`/`status=0` 别停。不登录打详情 RPC 和导学/视频 guide RPC（Shepherd `tdx*service_*` 一类），租户头按落地链抄。对照：搜索没有这篇，详情/导学仍出课纲或内部培训正文才算。
 
-假点：搜索只出已公开文档；page-data 也匿名 200；只有 title 没有正文。单站没中不删短表这行。
+算成：`content`/FullContent 是登录墙后的指南/接口参考，或隐藏发布/员工测试库正文；附件真下内部设计稿；或学院搜索空仍出未上架课纲/内部培训导学。
+
+假点：搜索只出已公开文档；page-data 也匿名 200；只有 title 没有正文；preview 和默认详情同一套公开稿。单站没中不删短表这行。
 
 ### 详情吐内容访问票（短表有指针）
 
@@ -677,6 +683,7 @@ userId=12345         → userId=%31%32%33%34%35（URL编码）
 □ 入驻/审核 query 只带业务 id 出空壳时加审核状态=已通过，回包 uid 跟邮箱口（见「列表过滤详情不闸」第 10 步）
 □ 文档站公开 itemList 只有对外产品别停，item 纯数字打详情/page（见「列表过滤详情不闸」第 19 步）
 □ 收集表/问卷填报详情 relative 挂答卷 sheet 别停，不登录打答卷表（见「列表过滤详情不闸」第 20 步）
+□ 公告页中转「当前用户未登录」别停，queryBulletin 空标题再 viewBulletin；isOnline=F 仍出正文和附件链（见「列表过滤详情不闸」第 25 步）
 □ supabase anon JWT：rest 表之外打 Storage REST + x-upsert 盖官方前缀（见 file-upload STS 第 9 步）
 □ Try UUIDs/GUIDs collected from your own account data
 □ Test sub-resources (attachments, comments, transactions)

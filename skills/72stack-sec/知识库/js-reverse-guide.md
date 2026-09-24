@@ -8,6 +8,7 @@
 - 需要从前端 JS 发现隐藏 API 接口
 - 需要了解签名/token 生成逻辑以构造任意请求
 - 路由表里 hidden/admin、webpack 异步 chunk、写死演示号/测试租户
+- 微信小程序：拆包后当 JS 清单抽，流程见 `miniprogram-unpack.md`
 
 ---
 

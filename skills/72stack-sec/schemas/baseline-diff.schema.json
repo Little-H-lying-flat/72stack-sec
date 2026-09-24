@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://72stack-sec.local/schemas/baseline-diff.schema.json",
+  "title": "72 baseline-diff",
+  "description": "Maps to diff#D-xx. RCE/SQLi signals stay in existing gates. Validation FAIL is WARN only; never blocks vacuum flip / p2 / mark_covered.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "diff_id",
+    "observations"
+  ],
+  "properties": {
+    "diff_id": {
+      "type": "string",
+      "pattern": "^DIF-[A-Z0-9-]+$"
+    },
+    "baseline": {
+      "type": "object",
+      "required": [
+        "request_ref",
+        "response_ref"
+      ],
+      "properties": {
+        "request_ref": {
+          "type": "string"
+        },
+        "response_ref": {
+          "type": "string"
+        },
+        "session_role": {
+          "type": "string"
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "required": [
+        "request_ref",
+        "response_ref"
+      ],
+      "properties": {
+        "request_ref": {
+          "type": "string"
+        },
+        "response_ref": {
+          "type": "string"
+        },
+        "session_role": {
+          "type": "string"
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "interpretation": {
+      "enum": [
+        "impact-confirmed",
+        "conditional",
+        "no-impact",
+        "inconclusive"
+      ]
+    },
+    "repeat_count": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

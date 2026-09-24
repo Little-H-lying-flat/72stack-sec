@@ -2,7 +2,7 @@
 
 > **仅当入口分流走到「靶场」或「全自动完整站」时才 Read。**
 > 国内默认「挖 XXX SRC / 某品牌」**禁止**把本文件当主流程，也不把 4.5 语义审计当必做。
-> 入口：`SKILL.md` 分流表。国内报告只认 `~/.grok/rules/vuln-report-format.md`。
+> 入口：`SKILL.md` 分流表。国内报告只认 `D:\dsh-72stack-sec\rules/vuln-report-format.md`。
 
 靶场（juice-shop / testfire / mlecms）：Phase 1–5 + `python scripts/gate_check.py --work <dir> --tier formal`。
 全自动完整站 + URL：先 `11-fullauto-pipeline.md`（默认 `tier=practice --host <当前host>`），本文件作 Phase 细节补页。
@@ -67,7 +67,7 @@ MUST 输出活资产矩阵（域→端口→服务→指纹→JS endpoint）。�
 
 ## Phase 5 · Report（靶场/平台 docx）
 
-国内 SRC 正式报告**不走本节**，只认 `~/.grok/rules/vuln-report-format.md`。
+国内 SRC 正式报告**不走本节**，只认 `D:\dsh-72stack-sec\rules/vuln-report-format.md`。
 
 0. findings.md 的 confirmed（经危害定性受理）行=提交清单
 1. Read `references/compliance.md`

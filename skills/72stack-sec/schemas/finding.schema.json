@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://72stack-sec.local/schemas/finding.schema.json",
+  "title": "72 finding (report)",
+  "description": "Maps to 报告/*.md. IDOR/cred/injection claims should point evidence_refs to diff#D-xx. Validation FAIL is WARN only; never blocks vacuum flip / p2 / mark_covered.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "title"
+  ],
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "pattern": "^FND-[A-Z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "hypothesis",
+        "conditional",
+        "validated",
+        "reportable",
+        "rejected",
+        "na"
+      ]
+    },
+    "asset_id": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "impact": {
+      "type": "object",
+      "required": [
+        "summary"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "subjects": {
+          "type": "string"
+        },
+        "data_class": {
+          "type": "string"
+        },
+        "reversibility": {
+          "enum": [
+            "reversible",
+            "partial",
+            "irreversible",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "rollback": {
+      "type": "string"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

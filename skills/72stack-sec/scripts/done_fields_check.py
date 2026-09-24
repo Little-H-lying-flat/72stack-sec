@@ -19,6 +19,22 @@ import re
 import sys
 from pathlib import Path
 
+def has_field_assign(text: str, key: str) -> bool:
+    """真赋值：身份=有店铺；排除「缺身份=」「未写身份=」「无 身份=」等否定句。"""
+    for m in re.finditer(rf"{{0}}\s*=".format(re.escape(key)), text):
+        start = m.start()
+        prefix = text[max(0, start - 4):start]
+        if re.search(r"(缺|未|无|非|禁)", prefix):
+            continue
+        # also deny if line says 缺/未写 before key
+        line_start = text.rfind("\n", 0, start) + 1
+        line = text[line_start:text.find("\n", start)]
+        if re.search(rf"(缺|未写|未填|没有).{{0,6}}{re.escape(key)}", line):
+            continue
+        return True
+    return False
+
+
 SKIP_DIR = frozenset(
     {"js", "资产", "报告", "node_modules", ".git", "_trash", "tmp", "temp", "__pycache__"}
 )
@@ -28,8 +44,12 @@ def check_anon(text: str) -> list[str]:
     notes: list[str] = []
     if not re.search(r"缺号\s*[：:]", text):
         notes.append("缺 缺号行")
+    if not re.search(r"带出host\s*=", text, re.I):
+        notes.append("缺 带出host=（禁止 covered）")
     if not re.search(r"suspects\s*=", text, re.I):
         notes.append("缺 suspects=（建议补）")
+    if not re.search(r"卡住对照\s*=", text):
+        notes.append("缺 卡住对照=（建议补；瘦壳写 N/A瘦壳）")
     # soft hints
     if not re.search(r"§?\s*4\.0|业务|对象", text):
         notes.append("建议补 §4.0/业务对象简述")
@@ -38,10 +58,12 @@ def check_anon(text: str) -> list[str]:
 
 def check_auth(text: str) -> list[str]:
     notes: list[str] = []
-    if not re.search(r"身份\s*=", text):
+    if not has_field_assign(text, "身份"):
         notes.append("缺 身份=（禁止 covered）")
-    if not re.search(r"半径\s*=", text):
+    if not has_field_assign(text, "半径"):
         notes.append("缺 半径=（禁止 covered）")
+    if not re.search(r"带出host\s*=", text, re.I):
+        notes.append("缺 带出host=（禁止 covered）")
     if not re.search(r"资质口\s*=", text):
         notes.append("缺 资质口=（建议补）")
     if not re.search(r"suspects\s*=", text, re.I):
@@ -72,18 +94,20 @@ def check_host(host_dir: Path) -> tuple[str, list[str]]:
         text = legacy.read_text(encoding="utf-8", errors="replace")
         if re.search(r"缺号\s*[：:]", text):
             notes.extend("legacy:" + n for n in check_anon(text))
-        if re.search(r"身份\s*=", text) or re.search(r"有会话|本轨\s*=\s*有会话", text):
+        if has_field_assign(text, "身份") or re.search(r"有会话|本轨\s*=\s*有会话", text):
             notes.extend("legacy:" + n for n in check_auth(text))
     hard = [n for n in notes if "禁止 covered" in n or n.endswith("缺 缺号行")]
     # treat missing 缺号 on anon as hard if DONE_anon exists
     soft_only = notes and not hard and not any(
-        n.startswith("anon:缺 缺号行") or n.startswith("auth:缺 身份") or n.startswith("auth:缺 半径")
+        n.startswith("anon:缺 缺号行") or n.startswith("anon:缺 带出host") or n.startswith("auth:缺 身份") or n.startswith("auth:缺 半径") or n.startswith("auth:缺 带出host")
         for n in notes
     )
     if any(
         n.startswith("anon:缺 缺号行")
+        or n.startswith("anon:缺 带出host")
         or n.startswith("auth:缺 身份")
         or n.startswith("auth:缺 半径")
+        or n.startswith("auth:缺 带出host")
         for n in notes
     ):
         return "FAIL", notes

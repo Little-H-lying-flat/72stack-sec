@@ -1,27 +1,28 @@
 # 知识库索引
 
-本目录是 Grok skill（`~/.grok/skills/skill`）的知识库正文。改这里只影响本 skill。
+本目录是 Grok skill（`D:\dsh-72stack-sec\skills\72stack-sec`）的知识库正文。改这里只影响本 skill。
 
 实战方法论 / 测试清单 / 场景矩阵。与 `SKILL.md` 流程配合使用。
 
 ## 使用约定
 
-- **开场单轨：** `打穿短表.md` → 对得上再开本目录对应模块 → 与 rules 冲突以 `~/.grok/rules` 为准。上级 `references/` 只在短表/模块**显式指针**时开，禁止当第二套主库通读。
+- **开场单轨：** `打穿短表.md` → 对得上再开本目录对应模块 → 与 rules 冲突以 `D:\dsh-72stack-sec\rules` 为准。上级 `references/` 只在短表/模块**显式指针**时开，禁止当第二套主库通读。
 - 进站先读 `打穿短表.md`；对得上再打开对应模块看细节。文件不长就整篇开；超长篇可先开点名节，不够就继续开。禁止每站通读本目录
 - 磁盘有 `*src经验.md` 才开专篇，没有不算缺。开 `SKILL.md` 不会再带集团日记
 - 短表和「注入/SSRF/XSS/RCE」都不是上限。本站过全类型矩阵；四件套打在有差分面上（防空窗），不是只测这四类，也不是每个 path 喷 `'`。有会话时越权/逻辑与四件套同硬（`dig-scope` §4.2.3）
 - 方便和能力优先；省 token 是顺带，不挡开模块；表上没有照样挖
 - 短表点名的手法用标题搜。有指针的肥篇只留实战中文 + 指针段；禁开/几乎不交的篇已收成一行。手法行不删、算成不改矮。
 - 篇内跳转已改成本目录真实文件（`idor-test.md` 一类）；不要再跟 `../xxx/SKILL.md`
-- 与 `~/.grok/rules` 冲突时 **以 rules 为准**（挖什么 `src-value`；CORS 不挖 `cors-vuln-report-priority`；写不写 `vuln-report-format`）
+- 与 `D:\dsh-72stack-sec\rules` 冲突时 **以 rules 为准**（挖什么 `src-value`；CORS 不挖 `cors-vuln-report-priority`；写不写 `vuln-report-format`）
 - **`cors-test.md` / `llm-security-test.md`：不挖/禁开越狱。** `401-403-bypass.md` 不磨登录 HTML。
-- 正式 SRC 报告：`~/.grok/rules/vuln-report-format.md`
+- 正式 SRC 报告：`D:\dsh-72stack-sec\rules/vuln-report-format.md`
 
 ## 文件清单
 
 | 文件 | 说明 |
 |------|------|
 | `打穿短表.md` | 挖洞手法索引（一行/指针；正文仍在各模块） |
+| `miniprogram-unpack.md` | 微信小程序拆包=测绘（wux1an；层0抠 appid；禁止全网爬） |
 | `同型对照.md` | playbook ↔ 知识库撞型对照（国内默认以知识库为准） |
 | `401-403-bypass.md` | **禁开磨登录 HTML**（已收成一行）；业务 API 401 现场自己打 |
 | `api-gateway-test.md` | API 网关 |
@@ -71,7 +72,7 @@
 | `xss-test.md` | XSS（中文开场 + 冷门事件 + XSS→RCE / 自定义协议） |
 | `xxe-test.md` | 专题知识（hack-skills 导入或融合） |
 
-**合计：50 个知识文件**（不含本 README，含 `同型对照.md`）。SRC 报告版式不在本库：见 `~/.grok/rules/vuln-report-format.md`。定级只认 format，本库不定级。
+**合计：50 个知识文件**（不含本 README，含 `同型对照.md`）。SRC 报告版式不在本库：见 `D:\dsh-72stack-sec\rules/vuln-report-format.md`。定级只认 format，本库不定级。
 
 ## 肥模块备忘（P1 评估 · 2026-09-08）
 
@@ -83,4 +84,5 @@
 
 `同型对照.md`：撞型区已规定知识库为准；开场仍走短表，不经对照通读 playbook。
 
-| `semantic-blindspots.md` | 跨任务语义盲区回灌（命中/漏报记忆；禁写利用步骤） |
+| `semantic-blindspots.md` | 跨任务语义盲区回灌主表（命中/漏报记忆；禁写利用步骤） |
+| `semantic-blindspots.auto.md` | 进化环安全档自动追加层（只追加问句；不改主表/rules/短表） |
